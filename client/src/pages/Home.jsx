@@ -8,7 +8,9 @@ const Home = () => {
   return (
     <>
       <Hero />
-      <About />
+      <div className="mt-20">
+        <About />
+      </div>
       <Services />
       <Packages />
       <ReviewCarousel />

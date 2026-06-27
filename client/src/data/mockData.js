@@ -68,7 +68,7 @@ export const services = [
     name: 'Coracle Ride',
     shortDescription: 'A traditional boat ride on the Kali river.',
     fullDescription: 'Experience a unique ride in a round, traditional coracle boat. Let the slow currents guide you as you take in the majestic surroundings of the river banks.',
-    image: 'https://images.unsplash.com/photo-1548056263-d34ea9c0fc3c?auto=format&fit=crop&q=80&w=800',
+    image: 'https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Faquaheaven.net%2Factivity%2Fcoracle-ride%2F&ved=0CBYQjRxqFwoTCPiGhLHMp5UDFQAAAAAdAAAAABAG&opi=89978449',
     duration: '1 Hour',
     difficulty: 'Easy',
     equipment: ['Life Jacket'],

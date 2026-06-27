@@ -10,7 +10,7 @@ function App() {
     <Router>
       <div className="flex flex-col min-h-screen bg-background text-gray-900 font-body">
         <Navbar />
-        <main className="flex-grow">
+        <main className="flex-grow pt-20 md:pt-0">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/booking" element={<Booking />} />

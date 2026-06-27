@@ -34,10 +34,10 @@ const Services = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.5 }}
-                className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 cursor-pointer group border border-gray-100 flex flex-col"
+                className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 cursor-pointer group border border-gray-100 flex flex-col p-4"
                 onClick={() => setSelectedService(service)}
               >
-                <div className="relative h-56 overflow-hidden flex-shrink-0">
+                <div className="relative h-56 overflow-hidden rounded-3xl">
                   <img 
                     src={service.image} 
                     alt={service.name} 
@@ -51,10 +51,10 @@ const Services = () => {
                     </p>
                   </div>
                 </div>
-                <div className="p-6 bg-white relative z-10 transform -translate-y-2 rounded-t-3xl transition-transform duration-500 flex-grow flex flex-col justify-between">
-                  <p className="text-gray-700 text-sm mb-6 font-body leading-relaxed line-clamp-2">{service.shortDescription}</p>
-                  <button className="flex items-center text-secondary font-semibold hover:text-green-700 transition-colors group/btn mt-auto">
-                    Learn more 
+                <div className="p-6 bg-white relative z-10 rounded-3xl transition-all duration-500 grow flex flex-col justify-between items-center text-center">
+                  <p className="text-gray-700 text-sm mb-6 font-body leading-relaxed line-clamp-2 max-w-[90%] mx-auto">{service.shortDescription}</p>
+                  <button className="flex w-full justify-center items-center text-secondary font-semibold hover:text-green-700 transition-colors group/btn mt-auto">
+                    Learn more
                     <ArrowRight className="w-4 h-4 ml-2 transform group-hover/btn:translate-x-1 transition-transform" />
                   </button>
                 </div>
@@ -82,7 +82,7 @@ const Services = () => {
       {/* Service Modal */}
       <AnimatePresence>
         {selectedService && (
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6">
+          <div className="fixed inset-0 z-60 flex items-center justify-center p-4 sm:p-6">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
