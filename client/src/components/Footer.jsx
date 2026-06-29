@@ -13,7 +13,7 @@ const Footer = () => {
               Dandeli<span className="text-accent">Adventure</span>
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Experience the thrill of nature with our premium adventure tourism packages. We provide safe, unforgettable experiences in the heart of Dandeli.
+              Experience nature with our adventure tourism packages. We provide safe, unforgettable experiences.
             </p>
           </div>
 

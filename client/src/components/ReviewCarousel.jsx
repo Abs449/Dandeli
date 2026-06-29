@@ -15,14 +15,11 @@ const ReviewCarousel = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-semibold tracking-wide text-sm mb-4 border border-secondary/20">
-            TESTIMONIALS
-          </div>
           <h2 className="text-4xl sm:text-5xl font-heading font-extrabold text-gray-900 mb-6">
             What Our <span className="text-secondary">Guests Say</span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto font-body">
-            Don't just take our word for it. Read about the unforgettable experiences of our adventurers.
+            Read about the experiences of our visitors.
           </p>
         </div>
 

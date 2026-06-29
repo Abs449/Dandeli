@@ -4,17 +4,14 @@ import { Shield, Clock, Leaf } from 'lucide-react';
 const About = () => {
   const features = [
     {
-      icon: <Shield className="w-8 h-8 text-secondary" />,
       title: 'Safety First',
       description: 'Certified instructors and top-quality equipment ensure your safety at every turn.'
     },
     {
-      icon: <Clock className="w-8 h-8 text-secondary" />,
       title: 'Years of Experience',
       description: 'Over a decade of organizing successful, deeply immersive adventure trips in Dandeli.'
     },
     {
-      icon: <Leaf className="w-8 h-8 text-secondary" />,
       title: 'Eco-conscious',
       description: 'We focus on sustainable, premium experiences that respect and preserve the untamed wild.'
     }
@@ -92,17 +89,13 @@ const About = () => {
               <span className="text-secondary">Untamed Nature</span>
             </h2>
             <p className="text-lg text-gray-700 mb-10 font-body leading-relaxed">
-              We are passionate about connecting people with the raw, lush beauty of Dandeli. 
-              Our mission is to provide unforgettable adventures while maintaining the highest 
+              We provide unforgettable adventures while maintaining the highest 
               standards of safety, quality, and environmental stewardship.
             </p>
 
             <div className="space-y-8">
               {features.map((feature, index) => (
                 <div key={index} className="flex items-start group">
-                  <div className="flex-shrink-0 mr-5 mt-1 p-3 bg-white rounded-2xl shadow-sm border border-gray-100 group-hover:border-secondary/30 group-hover:shadow-md transition-all">
-                    {feature.icon}
-                  </div>
                   <div>
                     <h3 className="text-xl font-heading font-bold text-gray-900 mb-2 group-hover:text-secondary transition-colors">
                       {feature.title}

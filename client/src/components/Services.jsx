@@ -13,14 +13,11 @@ const Services = () => {
     <section id="services" className="py-24 bg-green-100/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-semibold tracking-wide text-sm mb-4 border border-secondary/20">
-            EXPERIENCES
-          </div>
           <h2 className="text-4xl sm:text-5xl font-heading font-extrabold text-gray-900 mb-6">
             Adventure <span className="text-secondary">Activities</span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto font-body">
-            Explore our wide range of thrilling activities designed to give you the ultimate adrenaline rush in the heart of nature.
+            Explore our wide range of thrilling activities.
           </p>
         </div>
 
