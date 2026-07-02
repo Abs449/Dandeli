@@ -141,9 +141,6 @@ const Booking = () => {
             >
               Submit Booking Inquiry
             </button>
-            <p className="text-center text-sm text-gray-500 mt-4">
-              * No payment is required at this stage.
-            </p>
           </form>
         </motion.div>
       </div>

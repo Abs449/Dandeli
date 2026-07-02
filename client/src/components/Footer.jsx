@@ -41,15 +41,15 @@ const Footer = () => {
             <h4 className="text-lg font-heading font-semibold mb-6">Contact Us</h4>
             <ul className="space-y-4">
               <li className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-accent mt-1 flex-shrink-0" />
+                <MapPin className="w-5 h-5 text-accent mt-1 shrink-0" />
                 <span className="text-gray-400">123 Adventure Camp Road, Dandeli, Karnataka 581325</span>
               </li>
               <li className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-accent flex-shrink-0" />
+                <Phone className="w-5 h-5 text-accent shrink-0" />
                 <span className="text-gray-400">+91 98765 43210</span>
               </li>
               <li className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-accent flex-shrink-0" />
+                <Mail className="w-5 h-5 text-accent shrink-0" />
                 <span className="text-gray-400">info@dandeliadventure.com</span>
               </li>
             </ul>

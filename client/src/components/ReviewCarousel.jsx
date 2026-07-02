@@ -52,7 +52,6 @@ const ReviewCarousel = () => {
               <SwiperSlide key={review.id} className="h-auto pb-4">
                 <div className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col justify-between border border-gray-100 relative group">
                   <div className="absolute top-6 right-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Quote size={60} className="text-secondary" />
                   </div>
                   <div className="relative z-10">
                     <div className="flex items-center space-x-1 mb-6 text-yellow-400">

@@ -27,7 +27,7 @@ const Packages = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className={`relative rounded-[2rem] p-10 sm:p-12 transition-all duration-500 ${
+              className={`relative rounded-4xl p-10 sm:p-12 transition-all duration-500 ${
                 pkg.recommended 
                   ? 'bg-gray-900 text-white transform md:-translate-y-6 shadow-2xl border border-gray-700' 
                   : 'bg-white border border-gray-100 text-gray-900 shadow-xl hover:shadow-2xl hover:-translate-y-2'
@@ -63,7 +63,7 @@ const Packages = () => {
               <div className="space-y-5 mb-10">
                 {pkg.activities.map((activity, idx) => (
                   <div key={idx} className="flex items-start">
-                    <Check className={`w-5 h-5 mr-4 flex-shrink-0 mt-0.5 ${pkg.recommended ? 'text-secondary' : 'text-secondary'}`} />
+                    <Check className={`w-5 h-5 mr-4 shrink-0 mt-0.5 ${pkg.recommended ? 'text-secondary' : 'text-secondary'}`} />
                     <span className={`font-body leading-relaxed ${pkg.recommended ? 'text-gray-300' : 'text-gray-600'}`}>
                       {activity}
                     </span>

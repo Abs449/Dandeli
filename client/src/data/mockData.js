@@ -131,27 +131,35 @@ export const reviews = [
     name: 'Rahul Sharma',
     rating: 5,
     review: 'Absolutely brilliant experience! The rafting instructors were professional and made us feel safe. Highly recommend the weekend package.',
-    platform: 'Google Reviews'
+    platform: 'Google Reviews',
+    platformUrl: 'https://maps.app.goo.gl/Tc8hjRYpzHV7DD316',
+    url: 'https://maps.app.goo.gl/Tc8hjRYpzHV7DD316'
   },
   {
     id: 2,
     name: 'Priya Desai',
     rating: 5,
     review: 'The camping site was beautiful and clean. Waking up to the sound of birds in the Dandeli forest is something I will never forget.',
-    platform: 'TripAdvisor'
+    platform: 'TripAdvisor',
+    platformUrl: 'https://www.tripadvisor.in/',
+    url: 'https://www.tripadvisor.in/'
   },
   {
     id: 3,
     name: 'Amit Kumar',
     rating: 4,
     review: 'Great adventure activities. The kayaking was so peaceful. Food provided at the camp could be slightly better, but overall a 5-star trip.',
-    platform: 'Google Reviews'
+    platform: 'Google Reviews',
+    platformUrl: 'https://www.google.com/maps/search/?api=1&query=Dandeli+reviews',
+    url: 'https://www.google.com/maps/search/?api=1&query=Dandeli+reviews'
   },
   {
     id: 4,
     name: 'Neha Singh',
     rating: 5,
     review: 'We booked the Ultimate Forest Stay and it was worth every penny. The guides were knowledgeable during the safari.',
-    platform: 'Facebook'
+    platform: 'Facebook',
+    platformUrl: 'https://www.facebook.com/',
+    url: 'https://www.facebook.com/'
   }
 ];
