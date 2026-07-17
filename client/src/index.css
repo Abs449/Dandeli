@@ -2,12 +2,16 @@
 
 @theme {
   --color-primary: #2c5f2d; /* Deep Forest */
+  --color-primary-dark: #1f4520;
   --color-secondary: #a67c52; /* Earthy Brown */
   --color-accent: #d4a017; /* Muted Gold */
   --color-background: #f5f0e6; /* Soft Beige */
+  --color-river: #1e6b8c; /* River Blue — used for accents and dividers */
+  --color-river-light: #5fa3c4;
+  --color-foam: #ffffff;
 
-  --font-heading: "Merriweather", serif;
-  --font-body: "Inter", sans-serif;
+  --font-heading: "Merriweather", "Poppins", serif;
+  --font-body: "Inter", "Poppins", sans-serif;
 }
 
 /* Utility classes using custom theme variables */
@@ -18,25 +22,66 @@
 .text-primary { color: var(--color-primary); }
 .text-secondary { color: var(--color-secondary); }
 .text-accent { color: var(--color-accent); }
+.text-river { color: var(--color-river); }
+.bg-river { background-color: var(--color-river); }
+.bg-river-light { background-color: var(--color-river-light); }
 
 /* Subtle textured background pattern */
 .pattern-bg {
-  background-image: linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.02) 75%, rgba(0,0,0,0.02)),
-                    linear-gradient(45deg, rgba(0,0,0,0.02) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.02) 75%, rgba(0,0,0,0.02));
+  background-image:
+    linear-gradient(45deg, rgba(0, 0, 0, 0.02) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.02) 75%, rgba(0, 0, 0, 0.02)),
+    linear-gradient(45deg, rgba(0, 0, 0, 0.02) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.02) 75%, rgba(0, 0, 0, 0.02));
   background-size: 20px 20px;
   background-position: 0 0, 10px 10px;
 }
 
-/* Card hover effect */
+/* Card hover effect — subtle river-blue glow */
 .card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .card-hover:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 24px rgba(30, 107, 140, 0.15);
+}
+
+/* River-themed wave dividers between sections */
+.wave-divider {
+  display: block;
+  width: 100%;
+  height: 60px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.wave-divider-top {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%232c5f2d' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+}
+
+.wave-divider-bottom {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%232c5f2d' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+}
+
+.wave-divider-river-top {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%231e6b8c' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+}
+
+.wave-divider-river-bottom {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%231e6b8c' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
 }
 
 @layer base {
-  html { font-family: var(--font-body); }
-  h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
+  html {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Drifting water wave for the Hero. SVG width is 200% so the
+   translateX(-50%) loop is seamless. */
+@keyframes wave-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }

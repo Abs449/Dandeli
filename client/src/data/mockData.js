@@ -1,15 +1,13 @@
 export const services = [
   {
     id: 1,
-    name: "River Rafting",
-    shortDescription:
-      "Experience the thrill of white water rafting on the Kali River.",
-    fullDescription:
-      "Our river rafting experience on the Kali River is perfect for adrenaline junkies. Navigate through exciting rapids surrounded by lush green forests. Suitable for both beginners and experienced rafters.",
+    name: "Short Rafting",
+    shortDescription: "1km Short distance river rafting across Kali River",
     image:
       "https://images.unsplash.com/photo-1530866495561-507c9faab2ed?auto=format&fit=crop&q=80&w=800",
-    duration: "2-3 Hours",
-    difficulty: "Moderate",
+    price: "600₹ per person",
+    duration: "1-2hours",
+    difficulty: "Beginner",
     equipment: ["Life Jacket", "Helmet", "Paddles"],
     images: [
       "https://images.unsplash.com/photo-1530866495561-507c9faab2ed?auto=format&fit=crop&q=80&w=800",
@@ -18,41 +16,38 @@ export const services = [
   },
   {
     id: 2,
-    name: "Kayaking",
-    shortDescription:
-      "Paddle through calm waters and enjoy the serene environment.",
-    fullDescription:
-      "Kayaking in Dandeli is a peaceful yet exciting activity. Paddle along the quiet stretches of the Kali River, spotting local birds and enjoying the pristine natural beauty of the Western Ghats.",
+    name: "Mid Rafting",
+    shortDescription: "5-Km mid river rafting",
     image:
       "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=800",
-    duration: "1-2 Hours",
-    difficulty: "Easy",
-    equipment: ["Kayak", "Life Jacket", "Paddle"],
+    Price: "1350₹ per person",
+    duration: "2 Hours",
+    difficulty: "Moderate",
+    equipment: ["Helmet", "Life Jacket", "Paddles"],
     images: [
       "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=800",
     ],
   },
   {
     id: 3,
-    name: "Jungle Camping",
-    shortDescription: "Stay overnight in tents under the starry sky.",
-    fullDescription:
-      "Disconnect from the world and connect with nature. Our camping sites are located in safe, scenic spots within the forest. Enjoy a bonfire, barbecue, and the soothing sounds of the jungle at night.",
+    name: "Long Rafting",
+    shortDescription:
+      "Navigate 11 km of thrilling white-water rapids along the scenic Kali River.",
     image:
       "https://images.unsplash.com/photo-1504280390467-3174246194b1?auto=format&fit=crop&q=80&w=800",
-    duration: "1 Night / 2 Days",
-    difficulty: "Easy",
-    equipment: ["Tent", "Sleeping Bag", "Meals"],
+    Price: "1750₹ per person",
+    duration: "3hrs",
+    difficulty: "Amateur",
+    equipment: ["LifeJacket", "paddles", "Helmet"],
     images: [
       "https://images.unsplash.com/photo-1504280390467-3174246194b1?auto=format&fit=crop&q=80&w=800",
     ],
   },
   {
     id: 4,
-    name: "Zipline",
-    shortDescription: "Fly across the river for a breathtaking view.",
-    fullDescription:
-      "Get a bird's eye view of the Kali River and surrounding forests as you zoom across our secure zipline. A short but unforgettable burst of excitement for adventure lovers.",
+    name: "River Zipline",
+    shortDescription: "Zipline across the river for a breathtaking view.",
+    Price: "350₹ per person",
     image:
       "https://images.unsplash.com/photo-1596489813295-654dbdae3e53?auto=format&fit=crop&q=80&w=800",
     duration: "15 Minutes",
@@ -64,54 +59,52 @@ export const services = [
   },
   {
     id: 5,
-    name: "Jungle Safari",
-    shortDescription: "Explore the wildlife in their natural habitat.",
-    fullDescription:
-      "Embark on a guided jeep safari deep into the Dandeli Wildlife Sanctuary. Keep your eyes peeled for black panthers, elephants, and a diverse range of exotic birds.",
+    name: "River Swimming",
+    shortDescription: "Swim Across the Kali River",
     image:
       "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=800",
     duration: "3-4 Hours",
-    difficulty: "Easy",
-    equipment: ["Jeep", "Binoculars (Optional)", "Guide"],
+    Price: "150₹ per person",
+    difficulty: "Hard",
+    equipment: ["LifeJacket", "Boat", "Guide"],
     images: [],
   },
   {
     id: 6,
-    name: "Coracle Ride",
-    shortDescription: "A traditional boat ride on the Kali river.",
-    fullDescription:
-      "Experience a unique ride in a round, traditional coracle boat. Let the slow currents guide you as you take in the majestic surroundings of the river banks.",
+    name: "Zorbing",
+    shortDescription:
+      "Walk, roll, and balance on the water in a giant inflatable zorb ball.",
+
     image:
       "https://www.google.com/url?sa=t&source=web&rct=j&url=https%3A%2F%2Faquaheaven.net%2Factivity%2Fcoracle-ride%2F&ved=0CBYQjRxqFwoTCPiGhLHMp5UDFQAAAAAdAAAAABAG&opi=89978449",
-    duration: "1 Hour",
+    duration: "15mins",
+    Price: "300₹ per person",
     difficulty: "Easy",
-    equipment: ["Life Jacket"],
+    equipment: ["Rope"],
     images: [],
   },
   {
     id: 7,
-    name: "Trekking",
-    shortDescription: "Trek through the dense forests of the Western Ghats.",
-    fullDescription:
-      "Join our expert guides for a trek through the thick jungles of Dandeli. Discover hidden waterfalls, unique flora, and challenge yourself physically while breathing the freshest air.",
+    name: "River Boating",
+    shortDescription: "Calm boating across Kali river",
+    Price: "100₹ per person",
     image:
       "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&q=80&w=800",
-    duration: "4-5 Hours",
-    difficulty: "Hard",
-    equipment: ["Trekking Shoes", "Walking Stick", "Water Bottle"],
+    duration: "1-2Hours",
+    difficulty: "Easy",
+    equipment: ["Boat", "LifeJacket"],
     images: [],
   },
   {
     id: 8,
-    name: "Bird Watching",
-    shortDescription: "Spot over 200 species of birds in the sanctuary.",
-    fullDescription:
-      "Dandeli is a paradise for bird lovers. Accompanied by our naturalist, you will be able to spot Hornbills, Kingfishers, and many more rare species early in the morning.",
+    name: "River Kayaking",
+    shortDescription: "Kayaking across Kali river",
     image:
       "https://images.unsplash.com/photo-1555169062-013468b47731?auto=format&fit=crop&q=80&w=800",
+    Price: "300₹ per person",
     duration: "2 Hours",
     difficulty: "Easy",
-    equipment: ["Binoculars", "Guide Book"],
+    equipment: ["Kayak", "Paddles", "LifeJacket"],
     images: [],
   },
 ];
@@ -151,14 +144,13 @@ export const packages = [
 export const reviews = [
   {
     id: 1,
-    name: "Google Reviews",
+    name: "Rahul Sharma",
     rating: 5,
     review:
-      "The adventure activities were outstanding and the experience was unforgettable.",
+      "Absolutely brilliant experience! The rafting instructors were professional and made us feel safe. Highly recommend the weekend package.",
     platform: "Google Reviews",
-    platformUrl:
-      "https://www.google.com/maps/search/?api=1&query=Dandeli+reviews",
-    url: "https://www.google.com/maps/search/?api=1&query=Dandeli+reviews",
+    platformUrl: "https://maps.app.goo.gl/Tc8hjRYpzHV7DD316",
+    url: "https://maps.app.goo.gl/Tc8hjRYpzHV7DD316",
   },
   {
     id: 2,
