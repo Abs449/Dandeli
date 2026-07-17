@@ -13,17 +13,25 @@ export async function fetchSupaValue() {
 
   const $ = cheerio.load(html);
 
-  const supaText = $("#lblsupatot").text().trim();
+  const supaTotText = $("#lblsupatot").text().trim();
+  const supa1Text = $("#lblsupa1").text().trim();
+  const supa2Text = $("#lblsupa2").text().trim();
 
-  if (!supaText) {
-    throw new Error("SUPA value was not found in the SLDC page");
+  if (!supaTotText) {
+    throw new Error("SUPA total value was not found in the SLDC page");
   }
 
-  const supaValue = Number(supaText);
+  const total = Number(supaTotText);
+  const unit1 = supa1Text ? Number(supa1Text) : 0;
+  const unit2 = supa2Text ? Number(supa2Text) : 0;
 
-  if (Number.isNaN(supaValue)) {
-    throw new Error(`Invalid SUPA value received: ${supaText}`);
+  if (Number.isNaN(total)) {
+    throw new Error(`Invalid SUPA total value received: ${supaTotText}`);
   }
 
-  return supaValue;
+  return {
+    total,
+    unit1: Number.isNaN(unit1) ? 0 : unit1,
+    unit2: Number.isNaN(unit2) ? 0 : unit2,
+  };
 }

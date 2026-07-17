@@ -21,12 +21,12 @@ import { submitBookingToSheets } from "../lib/sheets";
 import { usePackages } from "../lib/data";
 
 const fieldClass =
-  "w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:ring-2 focus:ring-primary focus:border-primary transition-colors outline-none";
-const labelClass = "block text-sm font-semibold text-gray-700 mb-2";
-const errorClass = "mt-1 text-sm text-red-600";
+  "w-full px-5 py-3.5 rounded-2xl border border-neutral-200 bg-white/70 backdrop-blur-sm focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300 outline-none shadow-sm text-gray-900 text-sm";
+const labelClass = "block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-2";
+const errorClass = "mt-1.5 text-xs font-semibold text-red-600";
 
 const SectionTitle = ({ children }) => (
-  <h3 className="text-xl font-heading font-bold text-gray-900 mb-6 border-b pb-2 flex items-center gap-2">
+  <h3 className="text-lg font-heading font-black text-gray-900 mb-6 border-b border-neutral-200/50 pb-3 flex items-center gap-2">
     {children}
   </h3>
 );
@@ -46,13 +46,14 @@ const Booking = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
   } = useForm({
     defaultValues: {
       full_name: "",
       email: "",
       phone: "",
       whatsapp: "",
-      package_name: prefillPackage,
+      package_name: "",
       preferred_date: "",
       adults: 2,
       children: 0,
@@ -63,10 +64,17 @@ const Booking = () => {
     },
   });
 
-  // Keep package_name in sync with URL param (e.g. user navigates with new ?package=)
+  // Keep package_name in sync with URL param (matches package ID to package name)
   useEffect(() => {
-    reset((prev) => ({ ...prev, package_name: prefillPackage }));
-  }, [prefillPackage, reset]);
+    if (packages && prefillPackage) {
+      const matched = packages.find(
+        (pkg) => String(pkg.id) === String(prefillPackage) || pkg.name === prefillPackage
+      );
+      if (matched) {
+        setValue("package_name", matched.name);
+      }
+    }
+  }, [prefillPackage, packages, setValue]);
 
   const onSubmit = async (data) => {
     setSubmitState({ status: "submitting", error: null });
@@ -108,26 +116,32 @@ const Booking = () => {
 
   if (submitState.status === "success") {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center bg-gray-50 py-20 px-4">
+      <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-[#e0f2fe] via-[#f5efe6] to-[#decbb7] py-20 px-4 relative overflow-hidden">
+        {/* Decorative blurry backgrounds */}
+        <div className="absolute top-20 left-0 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-20 right-0 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
+        
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-white p-10 rounded-2xl shadow-xl text-center max-w-md w-full"
+          className="bg-white/95 backdrop-blur-md p-10 rounded-4xl shadow-xl text-center max-w-md w-full border border-neutral-200/50 relative z-10 text-gray-900"
         >
           <div className="flex justify-center mb-6">
-            <CheckCircle className="w-20 h-20 text-green-500" />
+            <div className="p-4 bg-emerald-50 rounded-full border border-emerald-100">
+              <CheckCircle className="w-14 h-14 text-emerald-500" />
+            </div>
           </div>
-          <h2 className="text-3xl font-heading font-bold text-gray-900 mb-4">
-            Booking received!
+          <h2 className="text-3xl font-heading font-black text-gray-900 mb-4 tracking-tight">
+            Booking Received!
           </h2>
-          <p className="text-gray-600 mb-8 leading-relaxed">
+          <p className="text-gray-655 mb-8 leading-relaxed font-body text-sm sm:text-base">
             Thank you for choosing Dandeli Adventure. We've received your
             inquiry and our team will contact you shortly to confirm the
             details.
           </p>
           <Link
             to="/"
-            className="block w-full bg-primary text-white py-3 rounded-xl font-medium hover:bg-primary-dark transition-colors"
+            className="block w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-md shadow-primary/20 hover:-translate-y-0.5"
           >
             Return Home
           </Link>
@@ -137,32 +151,35 @@ const Booking = () => {
   }
 
   return (
-    <div className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
-      <div className="max-w-3xl mx-auto">
+    <div className="bg-gradient-to-b from-[#e0f2fe] via-[#f5efe6] to-[#decbb7] py-20 px-4 sm:px-6 lg:px-8 min-h-screen relative overflow-hidden text-gray-900">
+      {/* Decorative blurry backgrounds */}
+      <div className="absolute top-20 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" />
+      <div className="absolute bottom-20 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" />
+
+      <div className="max-w-3xl mx-auto relative z-10">
         <div className="text-center mb-12">
-          <span className="inline-block text-river uppercase tracking-[0.3em] text-xs sm:text-sm font-semibold mb-3">
+          <span className="inline-block text-river uppercase tracking-[0.3em] text-xs sm:text-sm font-bold mb-3">
             Plan your trip
           </span>
-          <h1 className="text-4xl sm:text-5xl font-heading font-bold text-gray-900 mb-4">
-            Book Your <span className="text-accent">Adventure</span>
+          <h1 className="text-4xl sm:text-5xl font-heading font-black text-gray-900 mb-4 tracking-tight">
+            Book Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-river">Adventure</span>
           </h1>
-          <p className="text-lg text-gray-600">
-            Fill out the form and we'll get back to you within 24 hours to
-            confirm your trip.
+          <p className="text-lg text-gray-655 font-body">
+            Fill out the form and we'll get back to you within 24 hours to confirm your trip.
           </p>
         </div>
 
         {submitState.status === "error" && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
-            <p>{submitState.error}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-750 rounded-2xl flex items-start gap-3 shadow-sm font-medium">
+            <AlertCircle className="w-5 h-5 mt-0.5 shrink-0 text-red-600" />
+            <p className="text-sm">{submitState.error}</p>
           </div>
         )}
 
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white rounded-3xl shadow-xl overflow-hidden"
+          className="bg-white/95 backdrop-blur-md rounded-4xl shadow-xl border border-neutral-200/50 overflow-hidden"
         >
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -171,7 +188,7 @@ const Booking = () => {
           >
             <div className="mb-10">
               <SectionTitle>
-                <User size={18} className="text-secondary" />
+                <User size={18} className="text-primary" />
                 Customer details
               </SectionTitle>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -184,6 +201,7 @@ const Booking = () => {
                     type="text"
                     autoComplete="name"
                     placeholder="John Doe"
+                    disabled={isSubmitting}
                     className={fieldClass}
                     {...register("full_name", {
                       required: "Please enter your name",
@@ -203,6 +221,7 @@ const Booking = () => {
                     type="email"
                     autoComplete="email"
                     placeholder="john@example.com"
+                    disabled={isSubmitting}
                     className={fieldClass}
                     {...register("email", {
                       required: "Please enter your email",
@@ -226,6 +245,7 @@ const Booking = () => {
                     autoComplete="tel"
                     inputMode="tel"
                     placeholder="+91 98765 43210"
+                    disabled={isSubmitting}
                     className={fieldClass}
                     {...register("phone", {
                       required: "Please enter your phone number",
@@ -249,6 +269,7 @@ const Booking = () => {
                     autoComplete="tel"
                     inputMode="tel"
                     placeholder="Same as phone number"
+                    disabled={isSubmitting}
                     className={fieldClass}
                     {...register("whatsapp", {
                       pattern: {
@@ -266,7 +287,7 @@ const Booking = () => {
 
             <div className="mb-10">
               <SectionTitle>
-                <CalendarDays size={18} className="text-secondary" />
+                <CalendarDays size={18} className="text-primary" />
                 Booking information
               </SectionTitle>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -276,6 +297,7 @@ const Booking = () => {
                   </label>
                   <select
                     id="package_name"
+                    disabled={isSubmitting}
                     className={fieldClass}
                     {...register("package_name")}
                   >
@@ -295,6 +317,7 @@ const Booking = () => {
                   <input
                     id="preferred_date"
                     type="date"
+                    disabled={isSubmitting}
                     className={fieldClass}
                     {...register("preferred_date")}
                   />
@@ -308,6 +331,7 @@ const Booking = () => {
                       id="adults"
                       type="number"
                       min="1"
+                      disabled={isSubmitting}
                       className={fieldClass}
                       {...register("adults", {
                         required: true,
@@ -326,6 +350,7 @@ const Booking = () => {
                       id="children"
                       type="number"
                       min="0"
+                      disabled={isSubmitting}
                       className={fieldClass}
                       {...register("children", { min: 0 })}
                     />
@@ -336,38 +361,39 @@ const Booking = () => {
 
             <div className="mb-10">
               <SectionTitle>
-                <Users size={18} className="text-secondary" />
+                <Users size={18} className="text-primary" />
                 Add-ons
               </SectionTitle>
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                   {
                     name: "accommodation",
-                    label: "Accommodation required",
+                    label: "Accommodation",
                     Icon: HomeIcon,
                   },
                   {
                     name: "transportation",
-                    label: "Transportation (pickup / drop-off)",
+                    label: "Transportation",
                     Icon: Car,
                   },
                   {
                     name: "food_package",
-                    label: "Include food package",
+                    label: "All meals package",
                     Icon: Utensils,
                   },
                 ].map(({ name, label, Icon }) => (
                   <label
                     key={name}
-                    className="flex items-center space-x-3 cursor-pointer p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 p-4 rounded-2xl border border-neutral-200/60 bg-white/50 backdrop-blur-sm cursor-pointer hover:bg-white hover:border-primary/20 transition-all duration-300 select-none shadow-sm text-gray-700"
                   >
                     <input
                       type="checkbox"
-                      className="w-5 h-5 rounded border-gray-300 text-accent focus:ring-accent"
+                      disabled={isSubmitting}
+                      className="w-4 h-4 rounded text-primary focus:ring-primary border-neutral-300"
                       {...register(name)}
                     />
-                    <Icon size={18} className="text-gray-500" />
-                    <span className="text-gray-700">{label}</span>
+                    <Icon className="w-4 h-4 text-river shrink-0" />
+                    <span className="text-xs font-bold text-gray-700">{label}</span>
                   </label>
                 ))}
               </div>
@@ -375,12 +401,13 @@ const Booking = () => {
 
             <div className="mb-10">
               <SectionTitle>
-                <MessageSquare size={18} className="text-secondary" />
+                <MessageSquare size={18} className="text-primary" />
                 Anything else?
               </SectionTitle>
               <textarea
                 rows={4}
                 placeholder="Allergies, special requirements, questions…"
+                disabled={isSubmitting}
                 className={`${fieldClass} resize-none`}
                 {...register("special_requests")}
               />
@@ -389,24 +416,24 @@ const Booking = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <a
                 href={`tel:+917075805883`}
-                className="sm:w-auto flex-1 inline-flex items-center justify-center gap-2 bg-white border border-secondary text-secondary py-4 rounded-xl font-bold hover:bg-secondary hover:text-white transition-colors"
+                className="sm:w-auto flex-1 inline-flex items-center justify-center gap-2 bg-white border border-neutral-200 hover:border-secondary/30 text-gray-750 py-4 px-8 rounded-full font-bold transition-all duration-300 hover:bg-neutral-50 shadow-sm hover:shadow cursor-pointer text-sm"
               >
-                <Phone size={18} />
+                <Phone size={16} className="text-river" />
                 Call instead
               </a>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-2 bg-accent text-white py-4 rounded-xl font-bold text-lg hover:bg-accent/90 transition-colors shadow-lg disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="flex-2 bg-primary hover:bg-primary-dark text-white py-4 px-8 rounded-full font-black text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:-translate-y-0.5 shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     Submitting…
                   </>
                 ) : (
                   <>
-                    <Mail size={18} />
+                    <Mail size={16} />
                     Submit booking inquiry
                   </>
                 )}

@@ -5,13 +5,15 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const supaValue = await fetchSupaValue();
+    const { total, unit1, unit2 } = await fetchSupaValue();
 
-    const isClosed = supaValue === 0;
+    const isClosed = total === 0;
 
     res.json({
       success: true,
-      supaValue,
+      supaValue: total,
+      unit1,
+      unit2,
       isClosed,
       status: isClosed ? "closed" : "open",
       message: isClosed

@@ -1,21 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #2c5f2d; /* Deep Forest */
-  --color-primary-dark: #1f4520;
-  --color-secondary: #a67c52; /* Earthy Brown */
-  --color-accent: #d4a017; /* Muted Gold */
-  --color-background: #f5f0e6; /* Soft Beige */
-  --color-river: #1e6b8c; /* River Blue — used for accents and dividers */
-  --color-river-light: #5fa3c4;
-  --color-foam: #ffffff;
+  --color-primary: #0f172a; /* Deep Slate Navy */
+  --color-primary-dark: #020617;
+  --color-secondary: #38bdf8; /* Glowing Cyan/Blue */
+  --color-secondary-dark: #0284c7;
+  --color-accent: #ff6b00; /* Life-Vest High-Vis Orange */
+  --color-accent-light: #ffedd5;
+  --color-background: #0a0f1d; /* Deep Midnight Navy */
+  --color-river: #0ea5e9; /* Splashing Sky Blue */
+  --color-river-light: #38bdf8;
+  --color-river-dark: #0284c7;
+  --color-foam: #0f172a; /* Slate Navy */
 
-  --font-heading: "Merriweather", "Poppins", serif;
-  --font-body: "Inter", "Poppins", sans-serif;
+  --font-heading: "Poppins", "Outfit", sans-serif;
+  --font-body: "Inter", "Plus Jakarta Sans", sans-serif;
 }
 
-/* Utility classes using custom theme variables */
+/* Custom Utilities using theme variables */
 .bg-primary { background-color: var(--color-primary); }
+.bg-primary-dark { background-color: var(--color-primary-dark); }
 .bg-secondary { background-color: var(--color-secondary); }
 .bg-accent { background-color: var(--color-accent); }
 .bg-beige { background-color: var(--color-background); }
@@ -26,22 +30,82 @@
 .bg-river { background-color: var(--color-river); }
 .bg-river-light { background-color: var(--color-river-light); }
 
-/* Subtle textured background pattern */
+/* Adventure-themed background pattern */
 .pattern-bg {
-  background-image:
-    linear-gradient(45deg, rgba(0, 0, 0, 0.02) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.02) 75%, rgba(0, 0, 0, 0.02)),
-    linear-gradient(45deg, rgba(0, 0, 0, 0.02) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.02) 75%, rgba(0, 0, 0, 0.02));
-  background-size: 20px 20px;
-  background-position: 0 0, 10px 10px;
+  background-image: 
+    radial-gradient(circle at 100% 150%, var(--color-river-light) 24%, white 24%, white 28%, var(--color-river-light) 28%, var(--color-river-light) 36%, white 36%, white 40%, transparent 40%),
+    radial-gradient(circle at 0% 150%, var(--color-river-light) 24%, white 24%, white 28%, var(--color-river-light) 28%, var(--color-river-light) 36%, white 36%, white 40%, transparent 40%);
+  background-size: 60px 36px;
+  opacity: 0.05;
 }
 
-/* Card hover effect — subtle river-blue glow */
-.card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Ripple effect for Live Radar Status */
+@keyframes ripple-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
-.card-hover:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 8px 24px rgba(30, 107, 140, 0.15);
+.ripple-effect {
+  animation: ripple-pulse 2s infinite ease-out;
+}
+
+/* Floating animation for elements/bubbles */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-2deg); }
+}
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite;
+}
+
+/* Bubbles rising effect */
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(100px) scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-800px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+.bubble {
+  position: absolute;
+  bottom: -20px;
+  background-color: rgba(56, 189, 248, 0.2);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bubble-rise 15s infinite linear;
+}
+
+/* Premium Card hover effects */
+.card-adventure {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.card-adventure:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(56, 189, 248, 0.08);
 }
 
 /* River-themed wave dividers between sections */
@@ -54,25 +118,50 @@
 }
 
 .wave-divider-top {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%232c5f2d' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
 }
 
 .wave-divider-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%232c5f2d' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
 }
 
 .wave-divider-river-top {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%231e6b8c' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230284c7' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
 }
 
 .wave-divider-river-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%231e6b8c' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230284c7' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+}
+
+.wave-divider-beige-top {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+}
+
+.wave-divider-beige-bottom {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+}
+
+.wave-divider-sky-bottom {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23bae6fd' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+}
+
+.wave-divider-sand-top {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23f4ebe1' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+}
+
+.wave-divider-sand-bottom {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23f4ebe1' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+}
+
+.wave-divider-darksand-bottom {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23decbb7' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
 }
 
 @layer base {
   html {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
@@ -84,4 +173,28 @@
 @keyframes wave-drift {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+/* Custom Scrollbar for Adventure Theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-dark);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-river);
+}
+
+/* Hide scrollbars but keep scrolling functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

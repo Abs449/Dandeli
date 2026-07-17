@@ -1,6 +1,9 @@
-// Cleaned-up seed data. This is the *canonical* shape used everywhere and
-// the fallback when Supabase is unreachable. The same rows are imported
-// into Supabase via supabase/seed.sql (or by pasting into the Table Editor).
+import imgShortRafting from "../assets/Backgroundimg/DSC_1226.JPG.jpeg";
+import imgLongRafting from "../assets/Backgroundimg/DSC_1225.JPG.jpeg";
+import imgKayaking from "../assets/Backgroundimg/kayakinwater.jpg.jpeg";
+import imgDrone from "../assets/Backgroundimg/dji_fly_20260103_124946_0149_1774087624546_photo.jpg.jpeg";
+import imgScenery from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
+import imgJungle from "../assets/Backgroundimg/IMG20250524114921.jpg.jpeg";
 
 export const seedServices = [
   {
@@ -9,8 +12,7 @@ export const seedServices = [
     shortDescription: '1 km short-distance river rafting across the Kali River.',
     fullDescription:
       'Perfect for first-timers and families. Navigate gentle Class II rapids on a 1 km stretch of the Kali River with a certified guide. Includes safety briefing and all equipment.',
-    image:
-      'https://images.unsplash.com/photo-1530866495561-507c9faab2ed?auto=format&fit=crop&q=80&w=1200',
+    image: imgShortRafting,
     price: '₹600 per person',
     duration: '1–2 hours',
     difficulty: 'Beginner',
@@ -24,8 +26,7 @@ export const seedServices = [
     shortDescription: '5 km of mid-range rapids through the Dandeli forests.',
     fullDescription:
       'A 5 km stretch combining Class II and III rapids with calmer pools for swimming breaks. Suitable for anyone with reasonable fitness.',
-    image:
-      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=1200',
+    image: imgShortRafting,
     price: '₹1,350 per person',
     duration: '2 hours',
     difficulty: 'Moderate',
@@ -39,8 +40,7 @@ export const seedServices = [
     shortDescription: '11 km of thrilling white-water rapids along the scenic Kali River.',
     fullDescription:
       'Our flagship trip. 11 km of continuous rapids, cliff jumps at designated points, and a riverside snack stop. Best for adventure-seekers.',
-    image:
-      'https://images.unsplash.com/photo-1504280390467-3174246194b1?auto=format&fit=crop&q=80&w=1200',
+    image: imgLongRafting,
     price: '₹1,750 per person',
     duration: '3 hours',
     difficulty: 'Hard',
@@ -69,8 +69,7 @@ export const seedServices = [
     shortDescription: 'Swim across the Kali River with a guide and boat support.',
     fullDescription:
       'A guided swim across a calm stretch of the Kali River with a support boat alongside. Life jackets provided; suitable for confident swimmers.',
-    image:
-      'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=1200',
+    image: imgJungle,
     price: '₹150 per person',
     duration: '3–4 hours',
     difficulty: 'Hard',
@@ -99,8 +98,7 @@ export const seedServices = [
     shortDescription: 'Calm boating across the Kali River — perfect for groups.',
     fullDescription:
       'A peaceful coracle or motorboat ride along a quiet stretch of the river. Great for families, photography, and bird-spotting.',
-    image:
-      'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&q=80&w=1200',
+    image: imgScenery,
     price: '₹100 per person',
     duration: '1–2 hours',
     difficulty: 'Easy',
@@ -114,8 +112,7 @@ export const seedServices = [
     shortDescription: 'Solo or tandem kayaking on the Kali River.',
     fullDescription:
       'Single and double kayaks available. Paddle a 2 km stretch of gentle rapids with our guide close by. No prior experience needed.',
-    image:
-      'https://images.unsplash.com/photo-1555169062-013468b47731?auto=format&fit=crop&q=80&w=1200',
+    image: imgKayaking,
     price: '₹300 per person',
     duration: '2 hours',
     difficulty: 'Easy',
@@ -133,8 +130,7 @@ export const seedPackages = [
     duration: '1 Day',
     activities: ['River Rafting (5 km)', 'Zipline', 'Lunch Included'],
     recommended: false,
-    image:
-      'https://images.unsplash.com/photo-1504280390467-3174246194b1?auto=format&fit=crop&q=80&w=1200',
+    image: imgLongRafting,
   },
   {
     id: 2,
@@ -143,8 +139,7 @@ export const seedPackages = [
     duration: '2 Days / 1 Night',
     activities: ['Camping', 'River Rafting', 'Kayaking', 'All Meals', 'Bonfire'],
     recommended: true,
-    image:
-      'https://images.unsplash.com/photo-1504280390367-3174246194b1?auto=format&fit=crop&q=80&w=1200',
+    image: imgDrone,
   },
   {
     id: 3,
@@ -159,8 +154,7 @@ export const seedPackages = [
       'Bird Watching',
     ],
     recommended: false,
-    image:
-      'https://images.unsplash.com/photo-1504280390467-3174246194b1?auto=format&fit=crop&q=80&w=1200',
+    image: imgScenery,
   },
 ];
 
