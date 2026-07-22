@@ -1,6 +1,6 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Package, Star, CalendarDays, Phone } from 'lucide-react';
-import { CONTACT } from '../lib/contact';
+import { useNavigate, useLocation } from "react-router-dom";
+import { Home, Package, Star, CalendarDays, Phone } from "lucide-react";
+import { CONTACT } from "../lib/contact";
 
 // Mobile-only persistent bottom navigation. Always visible on small screens
 // (hidden on md+). The `Book` button in the centre is the primary CTA —
@@ -8,20 +8,46 @@ import { CONTACT } from '../lib/contact';
 // but always one tap away on mobile.
 
 const items = [
-  { name: 'Home', Icon: Home, to: '/' },
-  { name: 'Packages', Icon: Package, to: '/#packages' },
-  { name: 'Book', Icon: CalendarDays, to: '/booking', primary: true },
-  { name: 'Reviews', Icon: Star, to: '/#reviews' },
-  { name: 'Call', Icon: Phone, href: `tel:${CONTACT.phoneRaw}` },
+  { name: "Home", Icon: Home, to: "/", targetId: "hero" },
+  { name: "Packages", Icon: Package, to: "/#packages", targetId: "packages" },
+  { name: "Book", Icon: CalendarDays, to: "/booking", primary: true },
+  { name: "Reviews", Icon: Star, to: "/#reviews", targetId: "reviews" },
+  { name: "Call", Icon: Phone, href: `tel:${CONTACT.phoneRaw}` },
 ];
 
 const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleSmoothScroll = (event, targetId) => {
+    event?.preventDefault();
+
+    if (targetId === "hero") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    const target = document.getElementById(targetId);
+    if (!target) {
+      return;
+    }
+
+    const navbarHeight = 72;
+    const top =
+      target.getBoundingClientRect().top + window.scrollY - navbarHeight;
+
+    window.scrollTo({ top, behavior: "smooth" });
+  };
+
   const handleClick = (item) => (e) => {
     if (item.href) return; // <a> handles it
     e.preventDefault();
+
+    if (item.targetId && location.pathname === "/") {
+      handleSmoothScroll(e, item.targetId);
+      return;
+    }
+
     navigate(item.to);
   };
 
@@ -34,8 +60,8 @@ const BottomNav = () => {
         {items.map((item) => {
           const isActive =
             !item.href &&
-            location.pathname === item.to.split('#')[0] &&
-            (item.to === '/' ? location.pathname === '/' : true);
+            location.pathname === item.to.split("#")[0] &&
+            (item.to === "/" ? location.pathname === "/" : true);
 
           if (item.primary) {
             return (
@@ -57,7 +83,7 @@ const BottomNav = () => {
           }
 
           const className = `flex-1 flex flex-col items-center justify-center gap-0.5 py-1 rounded-lg transition-colors ${
-            isActive ? 'text-secondary' : 'text-gray-600 hover:text-secondary'
+            isActive ? "text-secondary" : "text-gray-600 hover:text-secondary"
           }`;
 
           const inner = (

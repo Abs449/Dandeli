@@ -116,6 +116,7 @@ const Hero = () => {
 
   return (
     <div
+      id="hero"
       ref={heroRef}
       className="relative min-h-[105vh] flex items-center justify-center overflow-hidden pt-28 pb-20 md:py-0"
     >

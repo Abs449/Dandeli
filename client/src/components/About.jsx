@@ -46,7 +46,7 @@ const About = () => {
   // Calculate coordinates for the rotating stacked photo circle
   const getCardStyle = (cardIndex) => {
     const diff = (cardIndex - activeIndex + features.length) % features.length;
-    
+
     if (diff === 0) {
       // Front and active card
       return {
@@ -89,7 +89,7 @@ const About = () => {
       className="py-24 bg-gradient-to-b from-[#0a0f1d] via-[#1b4f72] to-[#e0f2fe] border-t border-b border-white/5 flex items-center relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        
+
         {/* Section Heading */}
         <div className="w-full text-center mb-20">
           <span className="inline-block text-river uppercase tracking-[0.3em] text-xs sm:text-sm font-bold mb-3">
@@ -101,7 +101,7 @@ const About = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          
+
           {/* Larger 3D Rotating Stack Photo Circle */}
           <div className="w-full lg:w-1/2 flex items-center justify-center min-h-[350px] sm:min-h-[440px] relative">
             <div className="relative w-[85%] aspect-video max-w-sm sm:max-w-md h-[260px] sm:h-[340px]">
@@ -147,11 +147,11 @@ const About = () => {
                     </span>
                     <div className="h-0.5 w-10 bg-accent shrink-0" />
                   </div>
-                  
+
                   <h4 className="text-3xl sm:text-4xl font-heading font-black text-gray-900 leading-tight">
                     {features[activeIndex].title}
                   </h4>
-                  
+
                   <p className="text-base sm:text-lg text-gray-655 font-body leading-relaxed max-w-xl mx-auto lg:mx-0">
                     {features[activeIndex].description}
                   </p>
@@ -165,9 +165,8 @@ const About = () => {
                 <button
                   key={idx}
                   onClick={() => setActiveIndex(idx)}
-                  className={`h-2 rounded-full transition-all duration-500 cursor-pointer ${
-                    activeIndex === idx ? "w-10 bg-accent" : "w-2 bg-neutral-300 hover:bg-neutral-400"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-500 cursor-pointer ${activeIndex === idx ? "w-10 bg-accent" : "w-2 bg-neutral-300 hover:bg-neutral-400"
+                    }`}
                   aria-label={`Show value slide ${idx + 1}`}
                 />
               ))}
