@@ -36,7 +36,7 @@ const items = [
 
 const Location = () => {
   return (
-    <section id="location" className="py-24 bg-gradient-to-b from-[#decbb7] via-[#f4efe8] to-[#e6dbcd] relative overflow-hidden border-b border-neutral-200/40 text-gray-900">
+    <section id="location" className="py-24 bg-gradient-to-b from-[#decbb7] via-[#f4efe8] to-[#e6dbcd] relative overflow-hidden text-gray-900">
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

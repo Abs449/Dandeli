@@ -16,30 +16,34 @@
 // a separate `/exec` redirect — the client uses `mode: 'no-cors'` so this is
 // purely informational.
 
-const SHEET_NAME = 'Bookings';
+const SHEET_NAME = "Bookings";
 
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+    const sheet =
+      SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
     if (!sheet) {
-      return _json({ ok: false, error: 'Sheet "' + SHEET_NAME + '" not found' });
+      return _json({
+        ok: false,
+        error: 'Sheet "' + SHEET_NAME + '" not found',
+      });
     }
 
-    const body = JSON.parse(e.postData.contents || '{}');
+    const body = JSON.parse(e.postData.contents || "{}");
     const row = [
       new Date(),
-      body.full_name || '',
-      body.email || '',
-      body.phone || '',
-      body.whatsapp || '',
-      body.package_name || '',
-      body.preferred_date || '',
-      body.adults ?? '',
-      body.children ?? '',
-      body.accommodation ? 'Yes' : 'No',
-      body.transportation ? 'Yes' : 'No',
-      body.food_package ? 'Yes' : 'No',
-      body.special_requests || '',
+      body.full_name || "",
+      body.email || "",
+      body.phone || "",
+      body.whatsapp || "",
+      body.package_name || "",
+      body.preferred_date || "",
+      body.adults ?? "",
+      body.children ?? "",
+      body.accommodation ? "Yes" : "No",
+      body.transportation ? "Yes" : "No",
+      body.food_package ? "Yes" : "No",
+      body.special_requests || "",
     ];
 
     sheet.appendRow(row);
@@ -50,11 +54,11 @@ function doPost(e) {
 }
 
 function doGet() {
-  return _json({ ok: true, message: 'Dandeli booking endpoint. Use POST.' });
+  return _json({ ok: true, message: "Dandeli booking endpoint. Use POST." });
 }
 
 function _json(payload) {
-  return ContentService
-    .createTextOutput(JSON.stringify(payload))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(
+    ContentService.MimeType.JSON,
+  );
 }

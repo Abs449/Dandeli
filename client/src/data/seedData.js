@@ -170,12 +170,12 @@ export const seedPackages = [
 export const seedReviews = [
   {
     id: 1,
-    name: "Rahul Sharma",
+    name: "Arman Warsi",
     rating: 5,
     review:
       "Absolutely brilliant experience! The rafting instructors were professional and made us feel safe. Highly recommend the weekend package.",
     platform: "Google Reviews",
-    platformUrl: "https://maps.app.goo.gl/Tc8hjRYpzHV7DD316",
+    platformUrl: "https://maps.app.goo.gl/eGaNJWqmP4yexYpg9",
   },
   {
     id: 2,

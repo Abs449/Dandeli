@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import Hero from "../components/Hero";
 import About from "../components/About";
 import Services from "../components/Services";
-import Activities from "../components/Activities";
 import Packages from "../components/Packages";
 import Location from "../components/Location";
 
@@ -27,11 +26,8 @@ const Home = () => {
   return (
     <>
       <Hero />
-      <div className="mt-14">
-        <About />
-      </div>
+      <About />
       <Services />
-      <Activities />
       <Packages />
       <Location />
       <Suspense fallback={<ReviewFallback />}>

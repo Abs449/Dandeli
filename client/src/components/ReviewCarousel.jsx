@@ -12,7 +12,7 @@ const ReviewCarousel = () => {
   return (
     <section
       id="reviews"
-      className="py-24 bg-linear-to-b from-[#e6dbcd] via-[#f5efe6] to-[#faf8f5] relative overflow-hidden border-b border-neutral-200/40 text-gray-900"
+      className="py-24 bg-linear-to-b from-[#e6dbcd] via-[#f5efe6] to-[#faf8f5] relative overflow-hidden text-gray-900"
     >
       <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute bottom-20 right-10 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />

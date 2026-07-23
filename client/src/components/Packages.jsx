@@ -103,7 +103,7 @@ const Packages = () => {
   return (
     <section
       id="packages"
-      className="py-24 bg-gradient-to-b from-[#f4ebe1] via-[#eae0d5] to-[#decbb7] relative overflow-hidden border-b border-neutral-200/40 text-gray-900"
+      className="py-24 bg-gradient-to-b from-[#f4ebe1] via-[#eae0d5] to-[#decbb7] relative overflow-hidden text-gray-900"
     >
       {/* Wave top transition */}
       <div className="absolute top-0 left-0 w-full z-10 rotate-180">

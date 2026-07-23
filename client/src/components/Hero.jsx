@@ -62,44 +62,44 @@ const Hero = () => {
 
   const loadDamStatus = async () => {
     try {
-       const apiUrl = import.meta.env.VITE_API_URL || "";
-       const response = await fetch(`${apiUrl}/api/dam-status`);
-       const data = await response.json();
- 
-       if (response.ok && data.success) {
-         setDamStatus({
-           loading: false,
-           status: data.status,
-           message: data.message,
-           supaValue: data.supaValue,
-           unit1: data.unit1,
-           unit2: data.unit2,
-           fetchedAt: data.fetchedAt,
-         });
-       } else {
-         setDamStatus({
-           loading: false,
-           status: "error",
-           message: data.message || "Unable to fetch live status.",
-           supaValue: null,
-           unit1: null,
-           unit2: null,
-           fetchedAt: null,
-         });
-       }
-     } catch (error) {
-       console.error("Unable to load dam status", error);
-       setDamStatus({
-         loading: false,
-         status: "error",
-         message: "Live status is temporarily unavailable.",
-         supaValue: null,
-         unit1: null,
-         unit2: null,
-         fetchedAt: null,
-       });
-     }
-   };
+      const apiUrl = import.meta.env.VITE_API_URL || "";
+      const response = await fetch(`${apiUrl}/api/dam-status`);
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setDamStatus({
+          loading: false,
+          status: data.status,
+          message: data.message,
+          supaValue: data.supaValue,
+          unit1: data.unit1,
+          unit2: data.unit2,
+          fetchedAt: data.fetchedAt,
+        });
+      } else {
+        setDamStatus({
+          loading: false,
+          status: "error",
+          message: data.message || "Unable to fetch live status.",
+          supaValue: null,
+          unit1: null,
+          unit2: null,
+          fetchedAt: null,
+        });
+      }
+    } catch (error) {
+      console.error("Unable to load dam status", error);
+      setDamStatus({
+        loading: false,
+        status: "error",
+        message: "Live status is temporarily unavailable.",
+        supaValue: null,
+        unit1: null,
+        unit2: null,
+        fetchedAt: null,
+      });
+    }
+  };
 
   useEffect(() => {
     loadDamStatus();
@@ -124,7 +124,9 @@ const Hero = () => {
       <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-105"
         style={{
-          backgroundImage: shouldLoadBackground ? `url(${backgroundImage})` : "none",
+          backgroundImage: shouldLoadBackground
+            ? `url(${backgroundImage})`
+            : "none",
           backgroundColor: "#052e16",
         }}
       />
@@ -146,7 +148,6 @@ const Hero = () => {
 
       {/* Content Container (Centered layout) */}
       <div className="relative z-20 px-4 sm:px-6 lg:px-8 w-full max-w-5xl mx-auto text-center text-white">
-        
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
@@ -155,42 +156,60 @@ const Hero = () => {
           {/* Location Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-accent text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 hover:border-accent/40 transition-colors cursor-default">
             <Compass className="w-4 h-4 animate-spin-slow text-accent" />
-            Kali River · Ganeshgudi · Dandeli
+            Ganeshgudi · Dandeli
           </div>
 
           <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-balance">
-            Conquer the <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-400">Rapids</span> of Dandeli
+            Conquer the{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-400">
+              Rapids
+            </span>{" "}
+            of Dandeli
           </h1>
 
           <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-body font-light leading-relaxed text-balance">
-            Experience the ultimate white-water rafting, forest camping, and raw eco-adventures on the Kali River.
+            Experience the ultimate white-water rafting, forest camping, and raw
+            eco-adventures on the Kali River.
           </p>
 
           {/* Compact Live Water Status Pill */}
-          <div className="mx-auto mb-10 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm text-white shadow-lg backdrop-blur-sm">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusColor}`} />
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusColor}`} />
-            </span>
-            <span className="font-semibold">
-              {damStatus.loading
-                ? "Checking live status…"
-                : isOpen
-                  ? "Rafting is Active today"
-                  : damStatus.status === "closed"
-                    ? "Rafting is Suspended (Calm flow)"
-                    : "Live status offline"}
-            </span>
-            {damStatus.supaValue !== null && (
-              <span className="text-accent font-bold font-mono text-xs border-l border-white/20 pl-3 flex items-baseline gap-1.5">
-                <span>SUPA {damStatus.supaValue} MW</span>
-                {damStatus.unit1 !== null && damStatus.unit2 !== null && (
-                  <span className="text-[10px] text-gray-300 font-normal">
-                    (U1: {damStatus.unit1}MW · U2: {damStatus.unit2}MW)
-                  </span>
-                )}
+          <div className="flex flex-col items-center mb-10">
+            <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-700/80 shadow-md mb-2 text-[11px] font-extrabold uppercase tracking-widest text-white backdrop-blur-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
               </span>
-            )}
+              Live Update
+            </span>
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm text-white shadow-lg backdrop-blur-sm">
+              <span className="relative flex h-2.5 w-2.5">
+                <span
+                  className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusColor}`}
+                />
+                <span
+                  className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusColor}`}
+                />
+              </span>
+              <span className="font-semibold">
+                {damStatus.loading
+                  ? "Checking live status…"
+                  : isOpen
+                    ? "Rafting is Active today"
+                    : damStatus.status === "closed"
+                      ? "Rafting is Suspended (Calm flow)"
+                      : "Live status offline"}
+              </span>
+              {damStatus.supaValue !== null && (
+                <span className="text-accent font-bold font-mono text-xs border-l border-white/20 pl-3 flex items-baseline gap-1.5">
+                  <span>SUPA {damStatus.supaValue} MW</span>
+                  {damStatus.unit1 !== null && damStatus.unit2 !== null && (
+                    <span className="text-[10px] text-gray-300 font-normal">
+                      (U1: {damStatus.unit1}MW · U2: {damStatus.unit2}MW)
+                    </span>
+                  )}
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
@@ -209,9 +228,6 @@ const Hero = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Bottom wave divider */}
-      <div className="wave-divider wave-divider-bottom absolute bottom-0 left-0 z-20" />
     </div>
   );
 };
