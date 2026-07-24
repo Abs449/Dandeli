@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Calendar, Trees } from "lucide-react";
-import imgPaddlers from "../assets/Backgroundimg/DSC_1226.JPG.jpeg";
+// import { ShieldCheck, Calendar, Trees } from "lucide-react";
+// import imgPaddlers from "../assets/Backgroundimg/DSC_1226.JPG.jpeg";
 import imgJungle from "../assets/Backgroundimg/IMG20250524114921.jpg.jpeg";
 import imgRiver from "../assets/Backgroundimg/kayakinwater.jpg.jpeg";
-import djiimg from "../assets/Backgroundimg/DJI_0763.JPG";
-import photo from "../assets/Backgroundimg/Untitled design(3).png";
+// import djiimg from "../assets/Backgroundimg/DJI_0763.JPG";
+import photo from "../assets/Backgroundimg/clientimg.png";
+import img from "../assets/Backgroundimg/DJI_0763.JPG";
 
 const features = [
   {
@@ -13,7 +14,7 @@ const features = [
     title: "Safety First",
     description:
       "Certified instructors and top-quality equipment ensure your safety at every turn. We coordinate directly with live river radar updates.",
-    image: imgPaddlers,
+    image: photo,
     alt: "Safety First white water rafting in Dandeli",
   },
   {
@@ -93,7 +94,7 @@ const About = () => {
       <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-105 pointer-events-none"
         style={{
-          backgroundImage: `url(${djiimg})`,
+          backgroundImage: `url(${img})`,
         }}
       />
       <div className="absolute inset-0 bg-black/50 pointer-events-none" />

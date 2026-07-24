@@ -22,7 +22,8 @@ import { usePackages } from "../lib/data";
 
 const fieldClass =
   "w-full px-5 py-3.5 rounded-2xl border border-neutral-200 bg-white/70 backdrop-blur-sm focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-300 outline-none shadow-sm text-gray-900 text-sm";
-const labelClass = "block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-2";
+const labelClass =
+  "block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-2";
 const errorClass = "mt-1.5 text-xs font-semibold text-red-600";
 
 const SectionTitle = ({ children }) => (
@@ -66,14 +67,21 @@ const Booking = () => {
 
   // Keep package_name in sync with URL param (matches package ID to package name)
   useEffect(() => {
-    if (packages && prefillPackage) {
+    if (!prefillPackage) return;
+
+    if (packages) {
       const matched = packages.find(
-        (pkg) => String(pkg.id) === String(prefillPackage) || pkg.name === prefillPackage
+        (pkg) =>
+          String(pkg.id) === String(prefillPackage) ||
+          pkg.name === prefillPackage,
       );
       if (matched) {
         setValue("package_name", matched.name);
+        return;
       }
     }
+
+    setValue("package_name", prefillPackage);
   }, [prefillPackage, packages, setValue]);
 
   const onSubmit = async (data) => {
@@ -120,7 +128,7 @@ const Booking = () => {
         {/* Decorative blurry backgrounds */}
         <div className="absolute top-20 left-0 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-20 right-0 w-80 h-80 bg-accent/5 rounded-full blur-[100px] pointer-events-none" />
-        
+
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -162,10 +170,14 @@ const Booking = () => {
             Plan your trip
           </span>
           <h1 className="text-4xl sm:text-5xl font-heading font-black text-gray-900 mb-4 tracking-tight">
-            Book Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-river">Adventure</span>
+            Book Your{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-river">
+              Adventure
+            </span>
           </h1>
           <p className="text-lg text-gray-655 font-body">
-            Fill out the form and we'll get back to you within 24 hours to confirm your trip.
+            Fill out the form and we'll get back to you within 24 hours to
+            confirm your trip.
           </p>
         </div>
 
@@ -393,7 +405,9 @@ const Booking = () => {
                       {...register(name)}
                     />
                     <Icon className="w-4 h-4 text-river shrink-0" />
-                    <span className="text-xs font-bold text-gray-700">{label}</span>
+                    <span className="text-xs font-bold text-gray-700">
+                      {label}
+                    </span>
                   </label>
                 ))}
               </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Clock, Tag, Shield, Compass, Waves } from "lucide-react";
 import { useServices } from "../lib/data";
@@ -215,8 +216,17 @@ const Services = () => {
 
                   {/* Details and Equipment */}
                   <div className="mt-auto">
+                    <div className="pt-4 border-t border-neutral-200/50">
+                      <Link
+                        to={`/booking?package=${encodeURIComponent(service.name)}`}
+                        className="inline-flex items-center justify-center w-full bg-primary hover:bg-primary-dark text-white rounded-full px-4 py-3 text-xs font-heading font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-md shadow-primary/20 hover:-translate-y-0.5"
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+
                     {service.equipment?.length > 0 && (
-                      <div className="border-t border-neutral-200/50 pt-4">
+                      <div className="border-t border-neutral-200/50 pt-4 mt-4">
                         <div className="flex items-center gap-1.5 mb-2">
                           <Shield className="w-4 h-4 text-accent" />
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
