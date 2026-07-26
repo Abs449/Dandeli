@@ -2,7 +2,7 @@
 
 ## Important
 
-make sure any changes applied should be also compatable to the mobile version of the website.
+Make sure all changes are also compatible with the mobile version of the website.
 
 ## Project Overview
 
@@ -324,7 +324,8 @@ Do not introduce paid services or services requiring complex infrastructure with
 
 Never expose secrets, credentials, service-account files, or private API keys in frontend code.
 
-Use environment variables when configuration values need to remain outside the source code.
+Use environment variables for public frontend configuration only; client-side environment variables are still exposed to users.
+Keep secrets and private API keys in server-side code or a trusted backend service.
 
 ## Git and Repository Safety
 
