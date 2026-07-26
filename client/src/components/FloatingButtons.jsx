@@ -5,7 +5,7 @@ const FloatingButtons = () => {
   return (
     <div className="fixed bottom-24 right-4 z-40 flex flex-col gap-3 sm:bottom-6 sm:right-6 sm:gap-4">
       <a
-        href={`https://wa.me/${CONTACT.whatsapp}`}
+        href={CONTACT.socials.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
         className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
@@ -18,7 +18,7 @@ const FloatingButtons = () => {
         className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
         aria-label="Call us"
       >
-        <FaPhoneAlt className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
+        <FaPhoneAlt className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
       </a>
     </div>
   );
