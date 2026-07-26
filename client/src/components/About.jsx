@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 // import { ShieldCheck, Calendar, Trees } from "lucide-react";
 // import imgPaddlers from "../assets/Backgroundimg/DSC_1226.JPG.jpeg";
-import imgJungle from "../assets/Backgroundimg/IMG20250524114921.jpg.jpeg";
-import imgRiver from "../assets/Backgroundimg/kayakinwater.jpg.jpeg";
+import imgJungle from "../assets/Backgroundimg/Aboutus.webp";
+import imgRiver from "../assets/Backgroundimg/kayakinwater.webp";
 // import djiimg from "../assets/Backgroundimg/DJI_0763.JPG";
 import photo from "../assets/Backgroundimg/clientimg.png";
 import img from "../assets/Backgroundimg/DJI_0763.JPG";
@@ -14,7 +14,7 @@ const features = [
     title: "Safety First",
     description:
       "Certified instructors and top-quality equipment ensure your safety at every turn. We coordinate directly with live river radar updates.",
-    image: photo,
+    image: imgRiver,
     alt: "Safety First white water rafting in Dandeli",
   },
   {
@@ -22,21 +22,37 @@ const features = [
     title: "Years of Experience",
     description:
       "Over a decade of organizing successful, deeply immersive adventure trips on the rapids of the Kali River.",
-    image: imgRiver,
-    alt: "Years of experience river kayaking in Dandeli",
+    image: imgJungle,
+    alt: "Years of experience in the lush Dandeli jungle",
   },
   {
     num: "03",
     title: "Eco-conscious",
     description:
       "We focus on sustainable, premium experiences that respect and preserve the untamed jungle wildlife.",
-    image: imgJungle,
-    alt: "Eco-conscious Dandeli forest stays",
+    image: img,
+    alt: "Eco-conscious Dandeli aerial forest view",
   },
 ];
 
 const About = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [showDesktopBackground, setShowDesktopBackground] = useState(false);
+
+  useEffect(() => {
+    const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateBackgroundVisibility = () =>
+      setShowDesktopBackground(desktopMediaQuery.matches);
+
+    updateBackgroundVisibility();
+    desktopMediaQuery.addEventListener("change", updateBackgroundVisibility);
+
+    return () =>
+      desktopMediaQuery.removeEventListener(
+        "change",
+        updateBackgroundVisibility,
+      );
+  }, []);
 
   // Auto loop slideshow
   useEffect(() => {
@@ -91,12 +107,12 @@ const About = () => {
       id="about"
       className="py-24 relative overflow-hidden flex items-center"
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-105 pointer-events-none"
-        style={{
-          backgroundImage: `url(${img})`,
-        }}
-      />
+      {showDesktopBackground && (
+        <div
+          className="pointer-events-none absolute inset-0 hidden bg-cover bg-center transition-transform duration-[20s] hover:scale-105 md:block"
+          style={{ backgroundImage: `url(${img})` }}
+        />
+      )}
       <div className="absolute inset-0 bg-black/50 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -112,26 +128,14 @@ const About = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-          {/* Larger 3D Rotating Stack Photo Circle */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center min-h-[350px] sm:min-h-[440px] relative">
-            <div className="relative w-[85%] aspect-video max-w-sm sm:max-w-md h-[260px] sm:h-[340px]">
-              {features.map((item, index) => (
-                <motion.div
-                  key={index}
-                  animate={getCardStyle(index)}
-                  transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}
-                  className="absolute inset-0 rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white cursor-pointer select-none group"
-                  onClick={() => setActiveIndex(index)}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.alt}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-750"
-                  />
-                  <div className="absolute inset-0 bg-black/[0.02] group-hover:bg-transparent transition-colors" />
-                </motion.div>
-              ))}
+          {/* Main cutout image display */}
+          <div className="w-full lg:w-1/2 flex items-center justify-center relative">
+            <div className="relative w-full max-w-2xl lg:max-w-none overflow-hidden">
+              <img
+                src={photo}
+                alt="Adventure guide cutout"
+                className="w-full h-auto object-contain object-center"
+              />
             </div>
           </div>
 
@@ -141,7 +145,7 @@ const About = () => {
               Our Base Values
             </h3>
 
-            <div className="min-h-[200px] w-full flex flex-col justify-start">
+            <div className="min-h-50 w-full flex flex-col justify-start">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeIndex}

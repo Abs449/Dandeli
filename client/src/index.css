@@ -103,9 +103,12 @@
 .card-adventure {
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.card-adventure:hover {
-  transform: translateY(-8px) scale(1.01);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(56, 189, 248, 0.08);
+
+@media (hover: hover) and (min-width: 768px) {
+  .card-adventure:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(56, 189, 248, 0.08);
+  }
 }
 
 /* River-themed wave dividers between sections */

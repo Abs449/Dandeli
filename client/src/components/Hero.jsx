@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Compass } from "lucide-react";
 import backgroundImage from "../assets/Backgroundimg/dji_fly_20260103_124946_0149_1774087624546_photo.jpg.jpeg";
+import mobileBackgroundImage from "../assets/Backgroundimg/Aboutus.webp";
 
 // A pure-CSS river wave animation. No JS animation library.
 const Wave = ({ color, opacity, duration, delay = "0s", offset = 0 }) => (
@@ -28,6 +29,7 @@ const Wave = ({ color, opacity, duration, delay = "0s", offset = 0 }) => (
 const Hero = () => {
   const heroRef = useRef(null);
   const [shouldLoadBackground, setShouldLoadBackground] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [damStatus, setDamStatus] = useState({
     loading: true,
     status: "loading",
@@ -58,6 +60,16 @@ const Hero = () => {
     observer.observe(node);
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateViewport = () => setIsDesktop(desktopMediaQuery.matches);
+
+    updateViewport();
+    desktopMediaQuery.addEventListener("change", updateViewport);
+
+    return () => desktopMediaQuery.removeEventListener("change", updateViewport);
   }, []);
 
   const loadDamStatus = async () => {
@@ -125,7 +137,7 @@ const Hero = () => {
         className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-105"
         style={{
           backgroundImage: shouldLoadBackground
-            ? `url(${backgroundImage})`
+            ? `url(${isDesktop ? backgroundImage : mobileBackgroundImage})`
             : "none",
           backgroundColor: "#052e16",
         }}

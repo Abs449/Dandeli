@@ -1,25 +1,24 @@
-import { FaWhatsapp, FaPhoneAlt } from 'react-icons/fa';
-import { CONTACT } from '../lib/contact';
+import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
+import { CONTACT } from "../lib/contact";
 
 const FloatingButtons = () => {
-  // Hidden on mobile (md:flex) — the BottomNav already has a Call item.
   return (
-    <div className="hidden md:flex fixed bottom-6 right-6 z-40 flex-col space-y-4">
+    <div className="fixed bottom-24 right-4 z-40 flex flex-col gap-3 sm:bottom-6 sm:right-6 sm:gap-4">
       <a
         href={`https://wa.me/${CONTACT.whatsapp}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
         aria-label="Chat on WhatsApp"
       >
-        <FaWhatsapp size={28} />
+        <FaWhatsapp className="h-6 w-6 sm:h-7 sm:w-7" />
       </a>
       <a
         href={`tel:${CONTACT.phoneRaw}`}
-        className="w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
         aria-label="Call us"
       >
-        <FaPhoneAlt size={22} />
+        <FaPhoneAlt className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
       </a>
     </div>
   );

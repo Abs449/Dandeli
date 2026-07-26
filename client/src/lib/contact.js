@@ -9,7 +9,7 @@ export const CONTACT = {
   address:
     "Dandeli Kali River Rafting Ganeshgudi, Ganeshgudi, Ilava, Dandeli, Ambeli, Karnataka 581365",
   hours: "Open Daily · 7:00 AM – 8:00 PM",
-  mapsUrl: "https://maps.app.goo.gl/Tc8hjRYpzHV7DD316",
+  mapsUrl: "https://maps.app.goo.gl/NsshXPKLpgvYYTJk6",
   socials: {
     instagram: "https://instagram.com/",
     facebook: "https://facebook.com/",

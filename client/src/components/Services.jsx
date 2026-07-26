@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Clock, Tag, Shield, Compass, Waves } from "lucide-react";
 import { useServices } from "../lib/data";
 import bckgroundimg from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
@@ -35,6 +35,19 @@ const Services = () => {
     loading: true,
     isOpen: false,
   });
+  const [showDesktopBackground, setShowDesktopBackground] = useState(false);
+
+  useEffect(() => {
+    const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
+    const updateBackgroundVisibility = () =>
+      setShowDesktopBackground(desktopMediaQuery.matches);
+
+    updateBackgroundVisibility();
+    desktopMediaQuery.addEventListener("change", updateBackgroundVisibility);
+
+    return () =>
+      desktopMediaQuery.removeEventListener("change", updateBackgroundVisibility);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -81,17 +94,17 @@ const Services = () => {
   return (
     <section
       id="services"
-      className="py-24 relative overflow-hidden text-gray-900"
+      className="relative overflow-hidden bg-[#f5f3ef] py-16 text-gray-900 sm:py-24"
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-105 pointer-events-none"
-        style={{
-          backgroundImage: `url(${bckgroundimg})`,
-        }}
-      />
+      {showDesktopBackground && (
+        <div
+          className="pointer-events-none absolute inset-0 hidden bg-cover bg-center transition-transform duration-[20s] hover:scale-105 md:block"
+          style={{ backgroundImage: `url(${bckgroundimg})` }}
+        />
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
+        <div className="mb-10 text-center sm:mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -101,10 +114,10 @@ const Services = () => {
             <span className="inline-block text-river uppercase tracking-[0.3em] text-xs sm:text-sm font-bold mb-3">
               Explore Adventures
             </span>
-            <h2 className="text-4xl sm:text-5xl font-heading font-black text-gray-900 mb-6">
+            <h2 className="mb-4 text-3xl font-heading font-black text-gray-900 sm:mb-6 sm:text-5xl">
               Our Adventure Services
             </h2>
-            <p className="text-lg text-gray-655 max-w-2xl mx-auto font-body">
+            <p className="mx-auto max-w-2xl text-base text-gray-600 font-body sm:text-lg">
               Pick your thrill level. From extreme white-water navigation to
               calm jungle boat cruises, we cover every adventure in Dandeli.
             </p>
@@ -112,12 +125,12 @@ const Services = () => {
         </div>
 
         {/* Tab Filters (Horizontally scrollable on mobile) */}
-        <div className="flex overflow-x-auto no-scrollbar gap-3 mb-12 pb-3 justify-start md:justify-center -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth">
+        <div className="-mx-4 mb-8 flex gap-3 overflow-x-auto px-4 pb-3 scroll-smooth no-scrollbar md:mx-0 md:mb-12 md:justify-center md:px-0">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveTab(cat.id)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-full font-heading text-sm font-bold transition-all duration-300 cursor-pointer shrink-0 ${
+              className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 font-heading text-sm font-bold transition-colors duration-200 cursor-pointer sm:px-5 sm:py-3 ${
                 activeTab === cat.id
                   ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105"
                   : "bg-white hover:bg-neutral-50 text-gray-600 border border-neutral-200/50"
@@ -130,7 +143,7 @@ const Services = () => {
         </div>
 
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
@@ -141,29 +154,20 @@ const Services = () => {
         )}
 
         {/* Services Grid */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered?.map((service, index) => (
-              <motion.div
-                layout
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+            {filtered?.map((service) => (
+              <article
                 key={service.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                className="group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 border border-neutral-200/50 hover:border-primary/20 flex flex-col h-full card-adventure text-gray-900"
+                className="card-adventure group flex h-full flex-col overflow-hidden rounded-3xl border border-neutral-200/50 bg-white text-gray-900 shadow-md transition-shadow duration-300 hover:border-primary/20 hover:shadow-xl"
               >
                 {/* Image Container with Zoom */}
-                <div className="relative h-64 overflow-hidden bg-neutral-100 shrink-0">
+                <div className="relative h-52 shrink-0 overflow-hidden bg-neutral-100 sm:h-64">
                   <img
                     src={service.image}
                     alt={service.name}
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="h-full w-full object-cover transition-transform duration-500 md:group-hover:scale-105"
                   />
                   <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-full shadow-md text-xs font-heading font-black text-primary border border-neutral-200/20">
                     {service.price?.replace(" per person", "") ||
@@ -173,7 +177,7 @@ const Services = () => {
                 </div>
 
                 {/* Content Box */}
-                <div className="p-6 flex flex-col grow justify-between">
+                <div className="flex grow flex-col justify-between p-5 sm:p-6">
                   <div>
                     <div className="flex flex-wrap items-center gap-2 mb-3">
                       <span
@@ -247,10 +251,9 @@ const Services = () => {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </article>
             ))}
-          </AnimatePresence>
-        </motion.div>
+        </div>
 
         {filtered?.length === 0 && (
           <div className="text-center py-16 text-gray-500 font-body">
