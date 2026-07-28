@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Compass } from "lucide-react";
 import backgroundImage from "../assets/Backgroundimg/dji_fly_20260103_124946_0149_1774087624546_photo.jpg.jpeg";
@@ -39,6 +39,15 @@ const Hero = () => {
     unit2: null,
     fetchedAt: null,
   });
+
+  // Scroll-linked background zoom effect
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  const heroBgScale = useTransform(scrollYProgress, [0, 1], [1.0, 1.3]);
+  const heroBgOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1.0, 0.7, 0.2]);
 
   useEffect(() => {
     const node = heroRef.current;
@@ -132,14 +141,16 @@ const Hero = () => {
       ref={heroRef}
       className="relative min-h-[105vh] flex items-center justify-center overflow-hidden pt-28 pb-20 md:py-0"
     >
-      {/* Background image with slow hover-scale */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-[20s] hover:scale-105"
+      {/* Background image with Scroll-Driven Zoom & Drift Animation */}
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center pointer-events-none"
         style={{
           backgroundImage: shouldLoadBackground
             ? `url(${isDesktop ? backgroundImage : mobileBackgroundImage})`
             : "none",
           backgroundColor: "#052e16",
+          scale: heroBgScale,
+          opacity: heroBgOpacity,
         }}
       />
 
@@ -161,31 +172,51 @@ const Hero = () => {
       {/* Content Container (Centered layout) */}
       <div className="relative z-20 px-4 sm:px-6 lg:px-8 w-full max-w-5xl mx-auto text-center text-white">
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
         >
           {/* Location Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-accent text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 hover:border-accent/40 transition-colors cursor-default">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-accent text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 hover:border-accent/40 transition-colors cursor-default"
+          >
             <Compass className="w-4 h-4 animate-spin-slow text-accent" />
             Ganeshgudi · Dandeli
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-balance">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-balance"
+          >
             Conquer the{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-400">
               Rapids
             </span>{" "}
             of Dandeli
-          </h1>
+          </motion.h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-body font-light leading-relaxed text-balance">
+          <motion.p
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-body font-light leading-relaxed text-balance"
+          >
             Experience the ultimate white-water rafting, forest camping, and raw
             eco-adventures on the Kali River.
-          </p>
+          </motion.p>
 
           {/* Compact Live Water Status Pill */}
-          <div className="flex flex-col items-center mb-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
+            className="flex flex-col items-center mb-10"
+          >
             <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-700/80 shadow-md mb-2 text-[11px] font-extrabold uppercase tracking-widest text-white backdrop-blur-sm">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
@@ -222,22 +253,31 @@ const Hero = () => {
                 </span>
               )}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <Link
-              to="/booking"
-              className="w-full sm:w-auto px-10 py-4 bg-accent text-white rounded-full font-black text-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-accent/20 text-center"
-            >
-              Book Adventure Now
-            </Link>
-            <a
-              href="#about"
-              className="w-full sm:w-auto px-10 py-4 bg-white/10 text-white border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 text-center"
-            >
-              Explore Nature
-            </a>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
+          >
+            <motion.div whileTap={{ scale: 0.96 }} className="w-full sm:w-auto">
+              <Link
+                to="/booking"
+                className="block w-full sm:w-auto px-10 py-4 bg-accent text-white rounded-full font-black text-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-accent/20 text-center"
+              >
+                Book Adventure Now
+              </Link>
+            </motion.div>
+            <motion.div whileTap={{ scale: 0.96 }} className="w-full sm:w-auto">
+              <a
+                href="#about"
+                className="block w-full sm:w-auto px-10 py-4 bg-white/10 text-white border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 text-center"
+              >
+                Explore Nature
+              </a>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
     </div>

@@ -159,7 +159,7 @@ const Booking = () => {
   }
 
   return (
-    <div className="bg-gradient-to-b from-[#e0f2fe] via-[#f5efe6] to-[#decbb7] py-20 px-4 sm:px-6 lg:px-8 min-h-screen relative overflow-hidden text-gray-900">
+    <div className="bg-gradient-to-b from-[#e0f2fe] via-[#f5efe6] to-[#decbb7] pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8 min-h-screen relative overflow-hidden text-gray-900">
       {/* Decorative blurry backgrounds */}
       <div className="absolute top-20 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" />
       <div className="absolute bottom-20 right-0 w-96 h-96 bg-accent/5 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" />
@@ -169,7 +169,7 @@ const Booking = () => {
           <span className="inline-block text-river uppercase tracking-[0.3em] text-xs sm:text-sm font-bold mb-3">
             Plan your trip
           </span>
-          <h1 className="text-4xl sm:text-5xl font-heading font-black text-gray-900 mb-4 tracking-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-gray-900 mb-4 tracking-tight leading-tight">
             Book Your{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-river">
               Adventure

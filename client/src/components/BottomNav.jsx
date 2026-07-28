@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Home, Package, Star, CalendarDays, Phone } from "lucide-react";
 import { CONTACT } from "../lib/contact";
 
@@ -52,11 +53,14 @@ const BottomNav = () => {
   };
 
   return (
-    <nav
+    <motion.nav
+      initial={{ y: 80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
       aria-label="Mobile navigation"
-      className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]"
+      className="fixed bottom-0 left-0 right-0 z-30 md:hidden bg-slate-900/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.3)] text-white"
     >
-      <ul className="flex items-stretch justify-between px-2 pt-1.5 pb-2 safe-area-bottom">
+      <ul className="flex items-stretch justify-between px-2 pt-1.5 pb-2.5 safe-area-bottom">
         {items.map((item) => {
           const isActive =
             !item.href &&
@@ -66,24 +70,26 @@ const BottomNav = () => {
           if (item.primary) {
             return (
               <li key={item.name} className="flex-1">
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
                   onClick={handleClick(item)}
-                  className="w-full flex flex-col items-center justify-center -mt-5"
+                  className="w-full flex flex-col items-center justify-center -mt-6"
                   aria-label="Book now"
                 >
-                  <span className="w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center shadow-lg shadow-accent/30 active:scale-95 transition-transform">
-                    <CalendarDays size={22} />
+                  <span className="relative w-13 h-13 rounded-full bg-accent text-white flex items-center justify-center shadow-lg shadow-accent/40 border-2 border-slate-900">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-30" />
+                    <CalendarDays size={22} className="relative z-10" />
                   </span>
-                  <span className="text-[10px] font-semibold text-accent mt-0.5">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-accent mt-1">
                     {item.name}
                   </span>
-                </button>
+                </motion.button>
               </li>
             );
           }
 
-          const className = `flex-1 flex flex-col items-center justify-center gap-0.5 py-1 rounded-lg transition-colors ${
-            isActive ? "text-secondary" : "text-gray-600 hover:text-secondary"
+          const className = `flex-1 flex flex-col items-center justify-center gap-0.5 py-1 rounded-xl transition-colors ${
+            isActive ? "text-secondary font-bold" : "text-gray-300 hover:text-white"
           }`;
 
           const inner = (
@@ -108,7 +114,7 @@ const BottomNav = () => {
           );
         })}
       </ul>
-    </nav>
+    </motion.nav>
   );
 };
 

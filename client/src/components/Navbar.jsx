@@ -1,31 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
-const handleSmoothScroll = (event, targetId) => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  event?.preventDefault();
-
+const handleSmoothScroll = (targetId) => {
+  if (typeof window === 'undefined') return;
   const target = document.getElementById(targetId);
-  if (!target) {
-    return;
-  }
-
-  const navbarHeight = 72;
+  if (!target) return;
+  const navbarHeight = 76;
   const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
-
   window.scrollTo({ top, behavior: 'smooth' });
 };
 
-// On the home page, the navbar is fully transparent while the hero is in
-// view, then becomes translucent (backdrop-blur) once the user scrolls.
-// On every other route, the navbar is translucent from the moment the
-// page mounts — there's no hero behind it.
-
-const Hero_OFFSET = 80;
+const HERO_OFFSET = 80;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +26,7 @@ const Navbar = () => {
       setScrolled(true);
       return;
     }
-    const onScroll = () => setScrolled(window.scrollY > Hero_OFFSET);
+    const onScroll = () => setScrolled(window.scrollY > HERO_OFFSET);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -52,10 +39,29 @@ const Navbar = () => {
     };
   }, [isOpen]);
 
-  // Close the drawer whenever the route changes.
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname, location.hash]);
+
+  const handleNavClick = (event, link) => {
+    event?.preventDefault();
+    setIsOpen(false);
+
+    if (!link.targetId) {
+      if (location.pathname !== '/') {
+        navigate('/');
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: link.targetId } });
+    } else {
+      handleSmoothScroll(link.targetId);
+    }
+  };
 
   const goToBooking = (e) => {
     e?.preventDefault();
@@ -71,7 +77,6 @@ const Navbar = () => {
     { name: 'Reviews', to: '/#reviews', targetId: 'reviews' },
   ];
 
-  // `isHome && !scrolled` is the "over the hero" state.
   const overHero = isHome && !scrolled;
 
   return (
@@ -100,21 +105,8 @@ const Navbar = () => {
                 <button
                   key={link.name}
                   type="button"
-                  onClick={(event) => {
-                    if (link.targetId) {
-                      handleSmoothScroll(event, link.targetId);
-                      setIsOpen(false);
-                      return;
-                    }
-
-                    if (location.pathname !== '/') {
-                      navigate('/');
-                      return;
-                    }
-
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className={`font-heading text-sm font-semibold tracking-wide transition-all duration-300 hover:text-accent relative py-1 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full ${
+                  onClick={(event) => handleNavClick(event, link)}
+                  className={`font-heading text-sm font-semibold tracking-wide transition-all duration-300 hover:text-accent relative py-1 cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full ${
                     overHero
                       ? 'text-white/90 hover:text-white drop-shadow'
                       : 'text-gray-700'
@@ -149,50 +141,61 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile drawer */}
-      {isOpen && (
-        <div className="fixed inset-0 z-40 flex flex-col bg-white shadow-2xl md:hidden">
-          <div className="flex justify-end p-4">
-            <button
-              onClick={() => setIsOpen(false)}
-              aria-label="Close menu"
-              className="text-gray-800 focus:outline-none"
-            >
-              <X size={28} />
-            </button>
-          </div>
-          <div className="px-4 pt-2 pb-6 space-y-3 flex-1 overflow-y-auto">
-            {navLinks.map((link) => (
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: "-100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 z-40 flex flex-col bg-slate-900/95 backdrop-blur-2xl text-white shadow-2xl md:hidden pt-20"
+          >
+            <div className="flex justify-between items-center px-6 py-4 border-b border-white/10">
+              <span className="font-heading font-black text-lg tracking-tight">
+                <span className="text-white">Dandeli</span>{" "}
+                <span className="text-accent">Menu</span>
+              </span>
               <button
-                key={link.name}
-                type="button"
-                onClick={(event) => {
-                  setIsOpen(false);
-                  if (link.targetId) {
-                    handleSmoothScroll(event, link.targetId);
-                    return;
-                  }
-
-                  if (location.pathname !== '/') {
-                    navigate('/');
-                    return;
-                  }
-
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="block w-full text-left px-4 py-3 rounded-xl text-base font-semibold text-gray-800 hover:text-white hover:bg-secondary transition-colors"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close menu"
+                className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 focus:outline-none transition-colors"
               >
-                {link.name}
+                <X size={26} />
               </button>
-            ))}
-            <button
-              onClick={goToBooking}
-              className="block w-full text-center mt-6 bg-accent text-white px-6 py-4 rounded-xl font-bold shadow-md hover:bg-accent/90 transition-colors"
-            >
-              Book Now
-            </button>
-          </div>
-        </div>
-      )}
+            </div>
+
+            <div className="px-6 pt-6 pb-8 space-y-4 flex-1 overflow-y-auto">
+              {navLinks.map((link, idx) => (
+                <motion.button
+                  key={link.name}
+                  type="button"
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.08 + 0.1, duration: 0.4 }}
+                  onClick={(event) => handleNavClick(event, link)}
+                  className="block w-full text-left px-5 py-3.5 rounded-2xl text-lg font-heading font-bold text-white/90 hover:text-white hover:bg-white/10 active:scale-98 transition-all border border-transparent hover:border-white/10 cursor-pointer"
+                >
+                  {link.name}
+                </motion.button>
+              ))}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+                className="pt-4"
+              >
+                <button
+                  onClick={goToBooking}
+                  className="block w-full text-center bg-accent text-white px-6 py-4 rounded-2xl font-heading font-black uppercase tracking-wider shadow-lg shadow-accent/25 hover:bg-accent/90 active:scale-95 transition-all text-base cursor-pointer"
+                >
+                  Book Adventure Now
+                </button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

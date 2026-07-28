@@ -201,3 +201,60 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Background image slow slide & zoom animations */
+@keyframes bg-slide-in {
+  0% {
+    transform: scale(1.15) translateY(-15px);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-bg-slide {
+  animation: bg-slide-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 12s linear infinite;
+}
+
+/* Prevent horizontal scroll jumps during slide animations */
+body, #root {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Swiper equal height cards and pagination styling */
+.swiper-wrapper {
+  align-items: stretch !important;
+}
+
+.swiper-slide {
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.swiper-pagination-bullet {
+  background: #0f172a !important;
+  opacity: 0.25 !important;
+  transition: all 0.3s ease !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: #15803d !important;
+  width: 24px !important;
+  border-radius: 9999px !important;
+  opacity: 1 !important;
+}
+
+

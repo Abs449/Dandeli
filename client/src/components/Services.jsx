@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Clock, Tag, Shield, Compass, Waves } from "lucide-react";
 import { useServices } from "../lib/data";
 import bckgroundimg from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
@@ -15,16 +15,16 @@ const categories = [
 const getDifficultyColor = (difficulty) => {
   switch ((difficulty || "").toLowerCase()) {
     case "easy":
-      return "bg-emerald-50 text-emerald-700 border border-emerald-200/55";
+      return "bg-emerald-950/80 text-emerald-300 border border-emerald-500/30";
     case "beginner":
-      return "bg-sky-50 text-sky-700 border border-sky-200/55";
+      return "bg-sky-950/80 text-sky-300 border border-sky-500/30";
     case "moderate":
-      return "bg-amber-50 text-amber-700 border border-amber-200/55";
+      return "bg-amber-950/80 text-amber-300 border border-amber-500/30";
     case "hard":
     case "amateur":
-      return "bg-rose-50 text-rose-700 border border-rose-200/55";
+      return "bg-rose-950/80 text-rose-300 border border-rose-500/30";
     default:
-      return "bg-slate-50 text-slate-700 border border-slate-200/55";
+      return "bg-slate-800 text-slate-300 border border-slate-700";
   }
 };
 
@@ -35,19 +35,20 @@ const Services = () => {
     loading: true,
     isOpen: false,
   });
-  const [showDesktopBackground, setShowDesktopBackground] = useState(false);
 
-  useEffect(() => {
-    const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
-    const updateBackgroundVisibility = () =>
-      setShowDesktopBackground(desktopMediaQuery.matches);
+  const sectionRef = useRef(null);
 
-    updateBackgroundVisibility();
-    desktopMediaQuery.addEventListener("change", updateBackgroundVisibility);
+  // Scroll-linked background zoom effect with spring physics smoothing
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
 
-    return () =>
-      desktopMediaQuery.removeEventListener("change", updateBackgroundVisibility);
-  }, []);
+  const rawScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.15, 1.05]);
+  const rawOpacity = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0.45, 0.85, 0.85, 0.45]);
+
+  const bgScale = useSpring(rawScale, { stiffness: 90, damping: 30, restDelta: 0.0001 });
+  const bgOpacity = useSpring(rawOpacity, { stiffness: 90, damping: 30, restDelta: 0.0001 });
 
   useEffect(() => {
     let active = true;
@@ -93,170 +94,188 @@ const Services = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="services"
-      className="relative overflow-hidden bg-[#f5f3ef] py-16 text-gray-900 sm:py-24"
+      className="relative overflow-hidden bg-slate-950 py-16 text-white sm:py-20"
     >
-      {showDesktopBackground && (
-        <div
-          className="pointer-events-none absolute inset-0 hidden bg-cover bg-center transition-transform duration-[20s] hover:scale-105 md:block"
-          style={{ backgroundImage: `url(${bckgroundimg})` }}
-        />
-      )}
+      {/* Scroll-Driven Background Image Layer */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${bckgroundimg})`,
+          scale: bgScale,
+          opacity: bgOpacity,
+        }}
+      />
+      
+      {/* Dark Ambient Overlay for Image Clarity */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/45 to-slate-950/80 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mb-10 text-center sm:mb-16">
+        <div className="mb-10 text-center sm:mb-14">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.7 }}
           >
-            <span className="inline-block text-river uppercase tracking-[0.3em] text-xs sm:text-sm font-bold mb-3">
+            <span className="inline-block text-accent uppercase tracking-[0.3em] text-xs font-bold mb-2.5">
               Explore Adventures
             </span>
-            <h2 className="mb-4 text-3xl font-heading font-black text-gray-900 sm:mb-6 sm:text-5xl">
+            <h2 className="mb-3 text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-white sm:mb-4 tracking-tight">
               Our Adventure Services
             </h2>
-            <p className="mx-auto max-w-2xl text-base text-gray-600 font-body sm:text-lg">
+            <p className="mx-auto max-w-xl text-sm text-gray-300 font-body sm:text-base">
               Pick your thrill level. From extreme white-water navigation to
               calm jungle boat cruises, we cover every adventure in Dandeli.
             </p>
           </motion.div>
         </div>
 
-        {/* Tab Filters (Horizontally scrollable on mobile) */}
-        <div className="-mx-4 mb-8 flex gap-3 overflow-x-auto px-4 pb-3 scroll-smooth no-scrollbar md:mx-0 md:mb-12 md:justify-center md:px-0">
+        {/* Tab Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="-mx-4 mb-8 flex gap-2.5 overflow-x-auto px-4 pb-3 scroll-smooth no-scrollbar md:mx-0 md:mb-10 md:justify-center md:px-0"
+        >
           {categories.map((cat) => (
-            <button
+            <motion.button
               key={cat.id}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab(cat.id)}
-              className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 font-heading text-sm font-bold transition-colors duration-200 cursor-pointer sm:px-5 sm:py-3 ${
+              className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 font-heading text-xs font-bold transition-all duration-300 cursor-pointer ${
                 activeTab === cat.id
-                  ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105"
-                  : "bg-white hover:bg-neutral-50 text-gray-600 border border-neutral-200/50"
+                  ? "bg-accent text-white shadow-lg shadow-accent/30 scale-105"
+                  : "bg-slate-900/80 backdrop-blur-md text-gray-300 border border-white/15 hover:bg-slate-800 hover:text-white"
               }`}
             >
-              <cat.Icon className="w-4 h-4" />
+              <cat.Icon className="w-3.5 h-3.5" />
               {cat.label}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {loading && (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className="rounded-3xl bg-white/70 animate-pulse h-96 border border-neutral-200/40"
+                className="rounded-3xl bg-slate-900/60 animate-pulse h-80 border border-white/10"
               />
             ))}
           </div>
         )}
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-            {filtered?.map((service) => (
-              <article
-                key={service.id}
-                className="card-adventure group flex h-full flex-col overflow-hidden rounded-3xl border border-neutral-200/50 bg-white text-gray-900 shadow-md transition-shadow duration-300 hover:border-primary/20 hover:shadow-xl"
-              >
-                {/* Image Container with Zoom */}
-                <div className="relative h-52 shrink-0 overflow-hidden bg-neutral-100 sm:h-64">
-                  <img
-                    src={service.image}
-                    alt={service.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover transition-transform duration-500 md:group-hover:scale-105"
-                  />
-                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-full shadow-md text-xs font-heading font-black text-primary border border-neutral-200/20">
-                    {service.price?.replace(" per person", "") ||
-                      "Inquire Price"}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+          {filtered?.map((service, index) => (
+            <motion.article
+              key={service.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
+              className="card-adventure group flex h-full flex-col overflow-hidden rounded-3xl border border-white/15 bg-slate-900/80 backdrop-blur-xl text-white shadow-xl hover:shadow-2xl hover:border-accent/40 transition-all duration-300"
+            >
+              {/* Image Container with Zoom & Slide */}
+              <div className="relative h-48 shrink-0 overflow-hidden bg-slate-950 sm:h-52">
+                <img
+                  src={service.image}
+                  alt={service.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
+                />
+                <div className="absolute top-3.5 right-3.5 bg-slate-900/90 backdrop-blur-md px-3.5 py-1 rounded-full shadow-lg text-[11px] font-heading font-black text-accent border border-white/20">
+                  {service.price?.replace(" per person", "") ||
+                    "Inquire Price"}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+              </div>
+
+              {/* Content Box */}
+              <div className="flex grow flex-col justify-between p-5 sm:p-6">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-2.5">
+                    <span
+                      className={`text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full ${getDifficultyColor(service.difficulty)}`}
+                    >
+                      {service.difficulty || "Easy"}
+                    </span>
+                    {service.duration && (
+                      <span className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase mr-1">
+                        <Clock className="w-3.5 h-3.5 text-accent" />
+                        {service.duration}
+                      </span>
+                    )}
+                    {service.name.toLowerCase().includes("rafting") &&
+                      (damStatus.loading ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-amber-950/80 text-amber-400 border border-amber-500/30 cursor-default animate-pulse">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                          Checking...
+                        </span>
+                      ) : damStatus.isOpen ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/30 cursor-default">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                          Rafting Available
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full bg-rose-950/80 text-rose-400 border border-rose-500/30 cursor-default">
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                          Rafting Unavailable
+                        </span>
+                      ))}
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent" />
+
+                  <h3 className="text-lg sm:text-xl font-heading font-black text-white mb-2 tracking-tight group-hover:text-accent transition-colors">
+                    {service.name}
+                  </h3>
+                  <p className="text-gray-300 text-xs sm:text-sm mb-5 font-body leading-relaxed line-clamp-3">
+                    {service.shortDescription}
+                  </p>
                 </div>
 
-                {/* Content Box */}
-                <div className="flex grow flex-col justify-between p-5 sm:p-6">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2 mb-3">
-                      <span
-                        className={`text-[10px] font-bold uppercase px-3 py-1 rounded-full ${getDifficultyColor(service.difficulty)}`}
-                      >
-                        {service.difficulty || "Easy"}
-                      </span>
-                      {service.duration && (
-                        <span className="flex items-center gap-1 text-[10px] text-gray-500 font-bold uppercase mr-1">
-                          <Clock className="w-3.5 h-3.5 text-river" />
-                          {service.duration}
+                {/* Details and Equipment */}
+                <div className="mt-auto">
+                  <div className="pt-3.5 border-t border-white/10">
+                    <Link
+                      to={`/booking?package=${encodeURIComponent(service.name)}`}
+                      className="inline-flex items-center justify-center w-full bg-accent hover:bg-accent/90 text-white rounded-full px-4 py-3 text-xs font-heading font-black uppercase tracking-[0.18em] transition-all duration-300 shadow-lg shadow-accent/25 hover:-translate-y-0.5 active:scale-98"
+                    >
+                      Book Now
+                    </Link>
+                  </div>
+
+                  {service.equipment?.length > 0 && (
+                    <div className="border-t border-white/10 pt-3 mt-3">
+                      <div className="flex items-center gap-1.5 mb-1.5">
+                        <Shield className="w-3.5 h-3.5 text-accent" />
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                          Safety Kit Included
                         </span>
-                      )}
-                      {service.name.toLowerCase().includes("rafting") &&
-                        (damStatus.loading ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200/50 cursor-default animate-pulse">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                            Checking...
-                          </span>
-                        ) : damStatus.isOpen ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full bg-emerald-55 text-emerald-600 border border-emerald-200/60 cursor-default">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                            Rafting Available
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2.5 py-1 rounded-full bg-rose-55 text-rose-600 border border-rose-200/60 cursor-default">
-                            <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                            Rafting Unavailable
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {service.equipment.map((item, idx) => (
+                          <span
+                            key={idx}
+                            className="text-[10px] bg-white/5 border border-white/10 text-gray-300 px-2 py-0.5 rounded-lg font-medium"
+                          >
+                            {item}
                           </span>
                         ))}
-                    </div>
-
-                    <h3 className="text-xl sm:text-2xl font-heading font-black text-gray-900 mb-2 tracking-tight group-hover:text-primary transition-colors">
-                      {service.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-6 font-body leading-relaxed line-clamp-3">
-                      {service.shortDescription}
-                    </p>
-                  </div>
-
-                  {/* Details and Equipment */}
-                  <div className="mt-auto">
-                    <div className="pt-4 border-t border-neutral-200/50">
-                      <Link
-                        to={`/booking?package=${encodeURIComponent(service.name)}`}
-                        className="inline-flex items-center justify-center w-full bg-primary hover:bg-primary-dark text-white rounded-full px-4 py-3 text-xs font-heading font-black uppercase tracking-[0.2em] transition-all duration-300 shadow-md shadow-primary/20 hover:-translate-y-0.5"
-                      >
-                        Book Now
-                      </Link>
-                    </div>
-
-                    {service.equipment?.length > 0 && (
-                      <div className="border-t border-neutral-200/50 pt-4 mt-4">
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <Shield className="w-4 h-4 text-accent" />
-                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                            Safety Kit Included
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-1.5">
-                          {service.equipment.map((item, idx) => (
-                            <span
-                              key={idx}
-                              className="text-[10px] bg-neutral-50 border border-neutral-200/40 text-gray-600 px-2 py-1 rounded-lg font-medium"
-                            >
-                              {item}
-                            </span>
-                          ))}
-                        </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
-              </article>
-            ))}
+              </div>
+            </motion.article>
+          ))}
         </div>
 
         {filtered?.length === 0 && (
-          <div className="text-center py-16 text-gray-500 font-body">
+          <div className="text-center py-14 text-gray-400 font-body text-sm">
             No activities available in this category at the moment.
           </div>
         )}

@@ -1,13 +1,11 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Hero from "../components/Hero";
 import About from "../components/About";
 import Services from "../components/Services";
 import Packages from "../components/Packages";
 import Location from "../components/Location";
 
-// ReviewCarousel pulls in Swiper (~150 kB), so lazy-load it and only ship
-// that chunk when the home page actually needs it. By the time the user
-// scrolls to the reviews section, the Swiper bundle is already in cache.
 const ReviewCarousel = lazy(() => import("../components/ReviewCarousel"));
 
 const ReviewFallback = () => (
@@ -23,6 +21,21 @@ const ReviewFallback = () => (
 );
 
 const Home = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const targetId = location.state?.scrollTo || location.hash?.replace('#', '');
+    if (targetId) {
+      setTimeout(() => {
+        const el = document.getElementById(targetId);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY - 76;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }, 150);
+    }
+  }, [location]);
+
   return (
     <>
       <Hero />
@@ -38,4 +51,3 @@ const Home = () => {
 };
 
 export default Home;
-

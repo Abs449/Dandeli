@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FloatingButtons from "./components/FloatingButtons";
-import BottomNav from "./components/BottomNav";
 
 const Home = lazy(() => import("./pages/Home"));
 const Booking = lazy(() => import("./pages/Booking"));
@@ -17,9 +16,9 @@ const RouteFallback = () => (
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-background text-gray-900 font-body">
+      <div className="flex flex-col min-h-screen bg-background text-gray-900 font-body overflow-x-hidden">
         <Navbar />
-        <main className="grow pt-20 md:pt-0 pb-16 md:pb-0">
+        <main className="grow pt-20 md:pt-0">
           <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -29,7 +28,6 @@ function App() {
         </main>
         <Footer />
         <FloatingButtons />
-        <BottomNav />
       </div>
     </Router>
   );

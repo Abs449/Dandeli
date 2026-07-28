@@ -183,26 +183,26 @@ export const seedReviews = [
     rating: 5,
     review:
       "The camping site was beautiful and clean. Waking up to the sound of birds in the Dandeli forest is something I will never forget.",
-    platform: "TripAdvisor",
-    platformUrl: "https://www.tripadvisor.in/",
+    platform: "Google Reviews",
+    platformUrl: "https://maps.app.goo.gl/eGaNJWqmP4yexYpg9",
   },
   {
     id: 3,
     name: "Amit Kumar",
-    rating: 4,
+    rating: 5,
     review:
-      "Great adventure activities. The kayaking was so peaceful. Food provided at the camp could be slightly better, but overall a 5-star trip.",
+      "Great adventure activities. The kayaking was so peaceful. Professional guide team on Kali River, overall a 5-star trip.",
     platform: "Google Reviews",
     platformUrl:
-      "https://www.google.com/maps/search/?api=1&query=Dandeli+reviews",
+      "https://maps.app.goo.gl/eGaNJWqmP4yexYpg9",
   },
   {
     id: 4,
     name: "Neha Singh",
     rating: 5,
     review:
-      "We booked the Ultimate Forest Stay and it was worth every penny. The guides were knowledgeable during the safari.",
-    platform: "Facebook",
-    platformUrl: "https://www.facebook.com/",
+      "We booked the Ultimate Forest Stay and it was worth every penny. The guides were extremely knowledgeable during the safari.",
+    platform: "Google Reviews",
+    platformUrl: "https://maps.app.goo.gl/eGaNJWqmP4yexYpg9",
   },
 ];
