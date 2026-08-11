@@ -151,7 +151,7 @@ const Location = () => {
             <iframe
               title="Basecamp Google Map"
               src={CONTACT.mapEmbedUrl}
-              className="w-full h-full min-h-[400px] border-0 grayscale opacity-90 hover:grayscale-0 transition-all duration-500"
+              className="w-full h-full min-h-[400px] border-0 transition-all duration-500"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             />
