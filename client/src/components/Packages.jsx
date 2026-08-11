@@ -1,105 +1,89 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { Check, Flame, Compass } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Check, Flame } from "lucide-react";
 import { usePackages } from "../lib/data";
-import bgAdventure from "../assets/Backgroundimg/kayakinwater.jpg.jpeg";
+import bgAdventure from "../assets/Backgroundimg/kayakinwater.webp";
 
 const PackageCard = ({ pkg, index, navigate }) => {
   const recommended = pkg.recommended;
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.7, delay: index * 0.15 }}
-      whileHover={{ y: -8 }}
-      className={`snap-center shrink-0 w-[85vw] max-w-[360px] sm:w-[360px] md:w-full relative rounded-3xl overflow-hidden transition-all duration-500 border flex flex-col justify-between ${
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className={`snap-center shrink-0 w-[85vw] sm:w-[340px] md:w-auto relative rounded-3xl overflow-hidden transition-all duration-300 ease-out border flex flex-col justify-between group cursor-pointer min-h-[580px] sm:min-h-[620px] transform-gpu hover:-translate-y-3 hover:scale-[1.02] ${
         recommended
-          ? "bg-slate-900 text-white shadow-2xl border-accent/50 ring-4 ring-accent/15 md:scale-[1.03] z-10"
-          : "bg-white/95 backdrop-blur-md border-neutral-200/60 text-gray-900 shadow-xl hover:shadow-2xl hover:border-primary/40"
-      } card-adventure`}
+          ? "bg-slate-950/90 text-white shadow-2xl border-cyan-400/60 ring-4 ring-cyan-400/30 md:scale-[1.03] z-10 hover:border-amber-400/80 hover:shadow-cyan-500/20"
+          : "bg-slate-900/90 text-white border-white/15 hover:border-cyan-400/50 shadow-xl hover:shadow-2xl hover:shadow-cyan-950/50"
+      }`}
     >
+      {/* Glassmorphic Most Popular Tag */}
       {recommended && (
-        <div className="absolute top-0 right-6 bg-accent text-white px-4 py-2 rounded-b-2xl text-[11px] font-heading font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg z-10 animate-pulse">
-          <Flame size={13} className="fill-current text-white" />
+        <div className="absolute top-3 right-3 bg-amber-400/90 text-slate-950 text-[10px] font-heading font-black uppercase tracking-widest px-3.5 py-1.5 rounded-full border border-amber-300/50 backdrop-blur-md shadow-lg flex items-center gap-1.5 z-20">
+          <Flame size={13} className="fill-current text-slate-950" />
           Most Popular
         </div>
       )}
 
-      {/* Top Image */}
-      <div className="relative w-full h-56 sm:h-64 overflow-hidden shrink-0">
-        <img
-          src={pkg.image}
-          alt={pkg.name}
-          loading="lazy"
-          decoding="async"
-          className="w-full h-full object-cover transition-transform duration-700 hover:scale-108"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent pointer-events-none" />
-        
-        {/* Bottom duration tag on image */}
-        <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1.5 text-primary border border-neutral-200/30">
-          <Compass className="w-4 h-4 text-accent animate-spin-slow" />
-          {pkg.duration}
-        </div>
-      </div>
-
-      {/* Content Column */}
-      <div className="p-6 sm:p-7 flex flex-col grow justify-between">
-        <div>
-          <div className="mb-5">
-            <h3 className={`text-2xl sm:text-3xl font-heading font-black tracking-tight ${recommended ? "text-white" : "text-gray-900"}`}>
-              {pkg.name}
-            </h3>
-            
-            <div className="flex flex-wrap items-baseline gap-2 mt-2">
-              <span
-                className={`text-4xl sm:text-5xl font-heading font-black tracking-tight ${
-                  recommended ? "text-accent" : "text-primary"
-                }`}
-              >
-                {pkg.price}
+      {/* Card Header & Image */}
+      <div>
+        <div className="h-64 sm:h-72 overflow-hidden relative">
+          <img
+            src={pkg.image}
+            alt={pkg.name}
+            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 transform-gpu"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+          
+          <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between z-10">
+            <div>
+              <span className="inline-block text-[10px] font-heading font-bold uppercase tracking-wider text-cyan-300 bg-cyan-950/80 px-3 py-1 rounded-full border border-cyan-500/30 backdrop-blur-md mb-2">
+                {pkg.duration}
               </span>
-              <span className={`text-[11px] font-bold uppercase tracking-wider ${recommended ? "text-slate-400" : "text-gray-500"}`}>
-                / adventurer
-              </span>
+              <h3 className="text-2xl sm:text-3xl font-heading font-black text-white leading-tight group-hover:text-cyan-300 transition-colors duration-200 tracking-tight">
+                {pkg.name}
+              </h3>
             </div>
           </div>
+        </div>
 
-          {/* Activities Check List */}
-          <ul className={`space-y-3 mb-6 border-t border-dashed pt-5 min-h-[170px] flex flex-col justify-start ${recommended ? "border-white/15" : "border-neutral-200/80"}`}>
-            {(pkg.activities || []).map((activity, idx) => (
-              <li key={idx} className="flex items-start">
-                <div className={`p-0.5 rounded-full mr-3 shrink-0 mt-0.5 ${
-                  recommended ? "bg-accent/20 text-accent" : "bg-primary/10 text-primary"
-                }`}>
-                  <Check className="w-3.5 h-3.5" />
+        {/* Price & Activities List */}
+        <div className="p-7 sm:p-8 space-y-6">
+          <div className="flex items-baseline gap-1.5 border-b border-white/10 pb-5">
+            <span className="text-4xl sm:text-5xl font-display font-black text-amber-400 tracking-tighter transition-transform duration-200 group-hover:scale-105 origin-left">
+              {pkg.price}
+            </span>
+            <span className="text-xs text-gray-400 font-body">/ all-inclusive</span>
+          </div>
+
+          <ul className="space-y-3.5">
+            {pkg.activities?.map((activity, idx) => (
+              <li key={idx} className="flex items-start gap-3 text-sm text-gray-200 font-body">
+                <div className="w-4.5 h-4.5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5 border border-cyan-400/30 group-hover:border-cyan-400 group-hover:bg-cyan-400 group-hover:text-slate-950 transition-colors duration-200">
+                  <Check size={11} />
                 </div>
-                <span
-                  className={`font-body text-sm sm:text-base leading-relaxed ${
-                    recommended ? "text-gray-200" : "text-gray-800"
-                  }`}
-                >
-                  {activity}
-                </span>
+                <span className="leading-relaxed">{activity}</span>
               </li>
             ))}
           </ul>
         </div>
+      </div>
 
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={() => navigate(`/booking?package=${pkg.id}`)}
-          className={`w-full py-4 rounded-full font-heading font-black text-xs sm:text-sm tracking-wider uppercase transition-all duration-300 shadow-lg hover:-translate-y-0.5 cursor-pointer mt-auto ${
+      {/* Card Action CTA Button */}
+      <div className="p-7 sm:p-8 pt-0 mt-auto">
+        <button
+          onClick={() => navigate(`/booking?package=${encodeURIComponent(pkg.name)}`)}
+          className={`w-full py-4 rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-md cursor-pointer flex items-center justify-center gap-2 ${
             recommended
-              ? "bg-accent hover:bg-accent/90 text-white shadow-accent/30"
-              : "bg-primary hover:bg-primary-dark text-white shadow-primary/25"
+              ? "bg-amber-400 hover:bg-yellow-300 text-slate-950 shadow-amber-400/25 hover:shadow-lg"
+              : "bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400"
           }`}
         >
-          Book {pkg.name.split(" ")[0]}
-        </motion.button>
+          <span>Book This Package</span>
+        </button>
       </div>
     </motion.article>
   );
@@ -110,66 +94,73 @@ const Packages = () => {
   const navigate = useNavigate();
   const sectionRef = useRef(null);
 
-  // Scroll-linked background zoom effect with spring physics smoothing
+  // Lightweight scroll transform
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
-  const rawScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.15, 1.05]);
-  const bgScale = useSpring(rawScale, { stiffness: 90, damping: 30, restDelta: 0.0001 });
+  const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.08, 1.02]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.6, 0.95, 0.95, 0.6]);
 
   return (
     <section
       ref={sectionRef}
       id="packages"
-      className="py-20 relative overflow-hidden text-gray-900"
+      className="py-28 sm:py-36 md:py-44 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
     >
-      {/* Original Background Image with Scroll-Driven Motion */}
+      {/* Background Image Layer with Parallax */}
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url(${bgAdventure})`,
           scale: bgScale,
-          opacity: 1,
+          opacity: bgOpacity,
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-6">
+      {/* Dark Ambient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#021915]/60 via-[#021915]/30 to-[#021915]/65 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-14"
+          className="text-center mb-16 sm:mb-20"
         >
-          <span className="inline-block text-accent uppercase tracking-[0.3em] text-xs font-bold mb-2.5 bg-slate-900/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 shadow-md">
-            Pricing Plans
+          <span className="inline-block text-cyan-400 text-xs font-bold uppercase tracking-widest mb-2.5 bg-cyan-950/60 px-4 py-1 rounded-full border border-cyan-500/30 shadow-md">
+            Handcrafted Deals
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-white mb-4 drop-shadow-lg">
-            Choose Your Adventure
+          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-white mb-4 drop-shadow-md italic tracking-tighter leading-tight">
+            Popular <span className="text-amber-400">Adventure Packages</span>
           </h2>
-          <p className="text-base sm:text-lg text-slate-100 max-w-xl mx-auto font-body font-medium drop-shadow-md">
-            Choose from our all-inclusive plans. Whether a day-trip or a full forest-camp weekend stay, we have you covered.
+          <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
+            All-inclusive multi-activity bundles designed for families, couples, and thrill-seeking groups.
           </p>
         </motion.div>
 
         {loading && (
-          <div className="flex flex-nowrap md:grid md:grid-cols-3 overflow-x-auto gap-6 pb-6 -mx-4 px-4 md:mx-0 md:px-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
-                className="snap-center shrink-0 w-[85vw] max-w-[360px] sm:w-[360px] md:w-full h-[540px] rounded-3xl bg-white/60 animate-pulse border border-neutral-200/40"
+                className="rounded-3xl bg-slate-900/60 animate-pulse h-96 border border-white/10"
               />
             ))}
           </div>
         )}
 
-        <div className="flex flex-nowrap md:grid md:grid-cols-3 overflow-x-auto md:overflow-x-visible gap-6 md:gap-8 snap-x snap-mandatory no-scrollbar pb-6 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth items-stretch">
-          {packages?.map((pkg, idx) => (
-            <PackageCard key={pkg.id} pkg={pkg} index={idx} navigate={navigate} />
-          ))}
-        </div>
+        {/* Layout: In-page 3-Column Grid on Desktop / Smooth Horizontal Touch Carousel on Mobile */}
+        {packages && (
+          <div className="flex md:grid md:grid-cols-3 gap-6 sm:gap-8 overflow-x-auto md:overflow-x-visible no-scrollbar snap-x snap-mandatory pb-4 md:pb-0 px-2 md:px-0">
+            {packages.map((pkg, index) => (
+              <PackageCard key={pkg.id} pkg={pkg} index={index} navigate={navigate} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

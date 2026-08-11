@@ -1,30 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Compass } from "lucide-react";
-import backgroundImage from "../assets/Backgroundimg/dji_fly_20260103_124946_0149_1774087624546_photo.jpg.jpeg";
-import mobileBackgroundImage from "../assets/Backgroundimg/Aboutus.webp";
-
-// A pure-CSS river wave animation. No JS animation library.
-const Wave = ({ color, opacity, duration, delay = "0s", offset = 0 }) => (
-  <svg
-    className="absolute inset-x-0 w-[200%] h-full pointer-events-none"
-    style={{
-      opacity,
-      bottom: offset,
-      animation: `wave-drift ${duration} linear infinite`,
-      animationDelay: delay,
-    }}
-    viewBox="0 0 1440 320"
-    preserveAspectRatio="none"
-    aria-hidden="true"
-  >
-    <path
-      fill={color}
-      d="M0,160 C240,260 480,60 720,140 C960,220 1200,80 1440,180 L1440,320 L0,320 Z"
-    />
-  </svg>
-);
+import { Waves } from "lucide-react";
+import backgroundImage from "../assets/Backgroundimg/background.jpeg";
+import raftCutout from "../assets/Backgroundimg/Empty_inflatable_white-water_raft_202608102025-removebg-preview.png";
+import personCutout from "../assets/Backgroundimg/person-removebg-preview.png";
 
 const Hero = () => {
   const heroRef = useRef(null);
@@ -40,22 +20,16 @@ const Hero = () => {
     fetchedAt: null,
   });
 
-  // Scroll-linked background zoom effect
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
 
-  const heroBgScale = useTransform(scrollYProgress, [0, 1], [1.0, 1.3]);
-  const heroBgOpacity = useTransform(scrollYProgress, [0, 0.8, 1], [1.0, 0.7, 0.2]);
+  const heroBgScale = useTransform(scrollYProgress, [0, 1], [1.0, 1.1]);
 
   useEffect(() => {
     const node = heroRef.current;
-
-    if (!node) {
-      return undefined;
-    }
-
+    if (!node) return undefined;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -65,20 +39,16 @@ const Hero = () => {
       },
       { rootMargin: "200px 0px" },
     );
-
     observer.observe(node);
-
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
-    const updateViewport = () => setIsDesktop(desktopMediaQuery.matches);
-
-    updateViewport();
-    desktopMediaQuery.addEventListener("change", updateViewport);
-
-    return () => desktopMediaQuery.removeEventListener("change", updateViewport);
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
   }, []);
 
   const loadDamStatus = async () => {
@@ -86,7 +56,6 @@ const Hero = () => {
       const apiUrl = import.meta.env.VITE_API_URL || "";
       const response = await fetch(`${apiUrl}/api/dam-status`);
       const data = await response.json();
-
       if (response.ok && data.success) {
         setDamStatus({
           loading: false,
@@ -113,7 +82,7 @@ const Hero = () => {
       setDamStatus({
         loading: false,
         status: "error",
-        message: "Live status is temporarily unavailable.",
+        message: "Live status temporarily unavailable.",
         supaValue: null,
         unit1: null,
         unit2: null,
@@ -128,157 +97,342 @@ const Hero = () => {
 
   const isOpen = damStatus.status === "open";
   const statusColor = damStatus.loading
-    ? "bg-amber-400"
+    ? "bg-amber-300"
     : isOpen
       ? "bg-emerald-400"
       : damStatus.status === "closed"
-        ? "bg-rose-500"
+        ? "bg-rose-400"
         : "bg-slate-400";
+
+  const bgUrl = shouldLoadBackground ? `url(${backgroundImage})` : "none";
 
   return (
     <div
       id="hero"
       ref={heroRef}
-      className="relative min-h-[105vh] flex items-center justify-center overflow-hidden pt-28 pb-20 md:py-0"
+      className="relative min-h-[100svh] flex flex-col overflow-hidden"
     >
-      {/* Background image with Scroll-Driven Zoom & Drift Animation */}
+      {/* ── LAYER 1 (z=0): Background photo — crisp, clear, full resolution ── */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center pointer-events-none"
+        className="absolute inset-0 pointer-events-none bg-cover"
         style={{
-          backgroundImage: shouldLoadBackground
-            ? `url(${isDesktop ? backgroundImage : mobileBackgroundImage})`
-            : "none",
-          backgroundColor: "#052e16",
+          backgroundImage: bgUrl,
+          backgroundPosition: isDesktop ? "45% 55%" : "50% 38%",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#021915",
           scale: heroBgScale,
-          opacity: heroBgOpacity,
+          zIndex: 0,
         }}
       />
 
-      {/* Animated water overlay */}
-      <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
-        <Wave color="#0284c7" opacity={0.15} duration="14s" offset="18%" />
-        <Wave
-          color="#38bdf8"
-          opacity={0.1}
-          duration="20s"
-          delay="-6s"
-          offset="8%"
-        />
-      </div>
+      {/* ── LAYER 2 (z=10): Clean, subtle vignette gradient for text contrast ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          zIndex: 10,
+          background:
+            "linear-gradient(to bottom, rgba(2,25,21,0.45) 0%, rgba(2,25,21,0.05) 50%, rgba(2,25,21,0.65) 100%)",
+        }}
+      />
 
-      {/* Dark gradient for text readability */}
-      <div className="absolute inset-0 z-10 bg-linear-to-b from-black/80 via-black/50 to-black/80" />
+      {/* ── FULL-SCREEN UI SHELL (z=40) ── */}
+      <div
+        className="relative flex flex-col w-full pointer-events-auto min-h-[100svh]"
+        style={{ zIndex: 40 }}
+      >
 
-      {/* Content Container (Centered layout) */}
-      <div className="relative z-20 px-4 sm:px-6 lg:px-8 w-full max-w-5xl mx-auto text-center text-white">
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-        >
-          {/* Location Badge */}
+        {/* ── TOP: Compact info row — location + live status in one line ── */}
+        <div className="flex items-center justify-center gap-2 pt-20 sm:pt-24 px-3">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-md text-accent text-xs sm:text-sm font-bold uppercase tracking-wider mb-6 hover:border-accent/40 transition-colors cursor-default"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/25 bg-slate-950/65 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.16em] shadow-lg"
+            style={{ marginTop: isDesktop ? "2vh" : "1rem",
+              marginBottom: isDesktop ? "1vh" : "2rem",
+             }}
           >
-            <Compass className="w-4 h-4 animate-spin-slow text-accent" />
-            Ganeshgudi · Dandeli
+            <Waves className="w-3 h-3 text-[#52b788] shrink-0" />
+            <span>Ganeshgudi · Dandeli Kali River</span>
+            <span className="w-px h-3 bg-white/25 mx-0.5" />
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusColor}`} />
+              <span className={`relative inline-flex rounded-full h-2 w-2 ${statusColor}`} />
+            </span>
+            <span className="font-semibold whitespace-nowrap">
+              {damStatus.loading
+                ? "Checking…"
+                : isOpen
+                  ? "Rafting Active"
+                  : damStatus.status === "closed"
+                    ? "Rafting Suspended"
+                    : "Status Offline"}
+            </span>
+            {damStatus.supaValue !== null && (
+              <span className="text-[#f5c97a] font-bold font-mono text-[8px] sm:text-[9px] border-l border-white/25 pl-1.5 whitespace-nowrap hidden sm:inline">
+                SUPA {damStatus.supaValue} MW
+              </span>
+            )}
           </motion.div>
+        </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight leading-none text-balance"
-          >
-            Conquer the{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-400">
-              Rapids
-            </span>{" "}
-            of Dandeli
-          </motion.h1>
+        {/* ── COMPOSITE STAGE: CONQUER THE + RAP[RAFT]DS + OF DANDELI ── */}
+        <div className="relative flex-1 w-full overflow-hidden flex flex-col items-center justify-center">
 
+          {/* CONQUER THE — top sub-headline pulled tight to raft */}
           <motion.p
-            initial={{ opacity: 0, y: 25 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto font-body font-light leading-relaxed text-balance"
+            transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display font-extrabold uppercase text-white/90 leading-none select-none pointer-events-none text-center z-30 relative"
+            style={{
+              fontSize: "clamp(11px, 7vw, 42px)",
+              letterSpacing: "0.28em",
+              paddingLeft: "0.28em",
+              paddingTop: isDesktop ? "clamp(16px, 3vh, 36px)" : "clamp(12px, 2vh, 24px)",
+              textShadow: "0 2px 12px rgba(0,0,0,0.9)",
+              marginBottom: isDesktop ? "-4vh" : "2rem",
+            }}
           >
-            Experience the ultimate white-water rafting, forest camping, and raw
-            eco-adventures on the Kali River.
+            Conquer The
           </motion.p>
 
-          {/* Compact Live Water Status Pill */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="flex flex-col items-center mb-10"
-          >
-            <span className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-700/80 shadow-md mb-2 text-[11px] font-extrabold uppercase tracking-widest text-white backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-              </span>
-              Live Update
-            </span>
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm text-white shadow-lg backdrop-blur-sm">
-              <span className="relative flex h-2.5 w-2.5">
-                <span
-                  className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusColor}`}
-                />
-                <span
-                  className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusColor}`}
-                />
-              </span>
-              <span className="font-semibold">
-                {damStatus.loading
-                  ? "Checking live status…"
-                  : isOpen
-                    ? "Rafting is Active today"
-                    : damStatus.status === "closed"
-                      ? "Rafting is Suspended (Calm flow)"
-                      : "Live status offline"}
-              </span>
-              {damStatus.supaValue !== null && (
-                <span className="text-accent font-bold font-mono text-xs border-l border-white/20 pl-3 flex items-baseline gap-1.5">
-                  <span>SUPA {damStatus.supaValue} MW</span>
-                  {damStatus.unit1 !== null && damStatus.unit2 !== null && (
-                    <span className="text-[10px] text-gray-300 font-normal">
-                      (U1: {damStatus.unit1}MW · U2: {damStatus.unit2}MW)
-                    </span>
-                  )}
-                </span>
+          {/* ── DESKTOP: RAP [RAFT+PEOPLE] DS layout ── */}
+          {isDesktop ? (
+            <div
+              className="relative w-full flex items-center justify-center select-none pointer-events-none"
+              style={{ zIndex: 30 }}
+            >
+              {/* RAP — left side */}
+              <motion.span
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="font-impact uppercase leading-none shrink-0"
+                style={{
+                  fontSize: "clamp(56px, 12vw, 220px)",
+                  color: "#52b788",
+                  letterSpacing: "0.05em",
+                  lineHeight: 0.82,
+                  opacity: 0.55,
+                  textShadow: "0 2px 20px rgba(0,0,0,0.7)",
+                }}
+              >
+                RAP
+              </motion.span>
+
+              {/* CENTRE: Raft + People — the hero visual (z=50 above the text) */}
+              {shouldLoadBackground && (
+                <div
+                  className="relative flex items-center justify-center shrink-0 pointer-events-none"
+                  style={{
+                    zIndex: 50,
+                    width: "clamp(380px, 45vw, 860px)",
+                    marginLeft: "-2vw",
+                    marginRight: "-2vw",
+                  }}
+                >
+                  {/* Raft — base layer */}
+                  <motion.img
+                    src={raftCutout}
+                    alt="Inflatable raft"
+                    draggable={false}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.2, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      display: "block",
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 16px 40px rgba(0,0,0,0.75)) brightness(1.05)",
+                      userSelect: "none",
+                      position: "relative",
+                      zIndex: 1,
+                    }}
+                  />
+                  {/* People — coupled, percentage-positioned inside same master container */}
+                  <motion.img
+                    src={personCutout}
+                    alt="Rafting group"
+                    draggable={false}
+                    initial={{ opacity: 0, y: 28 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      position: "absolute",
+                      bottom: "16%",
+                      left: "6%",
+                      transform: "translateX(-50%)",
+                      width: "92%",
+                      height: "auto",
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 4px 20px rgba(0,0,0,0.6)) brightness(1.04)",
+                      userSelect: "none",
+                      zIndex: 2,
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* DS — right side */}
+              <motion.span
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="font-impact uppercase leading-none shrink-0"
+                style={{
+                  fontSize: "clamp(56px, 12vw, 220px)",
+                  color: "#52b788",
+                  letterSpacing: "0.05em",
+                  lineHeight: 0.82,
+                  opacity: 0.55,
+                  textShadow: "0 2px 20px rgba(0,0,0,0.7)",
+                }}
+              >
+                DS
+              </motion.span>
+            </div>
+          ) : (
+            /* ── MOBILE: RAPIDS centered + raft below ── */
+            <div className="flex flex-col items-center w-full select-none pointer-events-none" style={{ zIndex: 30 }}>
+              {/* RAPIDS — large centered heading on mobile */}
+              <motion.p
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="font-impact uppercase leading-none w-full text-center"
+                style={{
+                  fontSize: "clamp(56px, 20vw, 130px)",
+                  color: "#52b788",
+                  letterSpacing: "0.14em",
+                  paddingLeft: "0.14em",
+                  lineHeight: 0.85,
+                  opacity: 0.6,
+                  textShadow: "0 2px 18px rgba(0,0,0,0.8)",
+                  marginBottom: "clamp(8px, 1.5vh, 18px)",
+                }}
+              >
+                RAPIDS
+              </motion.p>
+
+              {/* Raft + People — coupled on mobile, 88–92vw */}
+              {shouldLoadBackground && (
+                <div
+                  className="relative flex items-center justify-center shrink-0"
+                  style={{
+                    zIndex: 50,
+                    width: "clamp(260px, 88vw, 480px)",
+                  }}
+                >
+                  <motion.img
+                    src={raftCutout}
+                    alt="Inflatable raft"
+                    draggable={false}
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.2, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      display: "block",
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 12px 28px rgba(0,0,0,0.7)) brightness(1.05)",
+                      userSelect: "none",
+                      position: "relative",
+                      zIndex: 1,
+                    }}
+                  />
+                  <motion.img
+                    src={personCutout}
+                    alt="Rafting group"
+                    draggable={false}
+                    initial={{ opacity: 0, y: 22 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      position: "absolute",
+                      bottom: "16%",
+                      left: "6%",
+                      transform: "translateX(-50%)",
+                      width: "92%",
+                      height: "auto",
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 4px 16px rgba(0,0,0,0.6)) brightness(1.04)",
+                      userSelect: "none",
+                      zIndex: 2,
+                    }}
+                  />
+                </div>
               )}
             </div>
-          </motion.div>
+          )}
+
+          {/* OF DANDELI — completion headline pulled tight to raft */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="font-display font-extrabold uppercase text-white/90 leading-none select-none pointer-events-none text-center z-30 relative"
+            style={{
+              fontSize: "clamp(11px, 8vw, 42px)",
+              letterSpacing: "0.28em",
+              paddingLeft: "0.28em",
+              textShadow: "0 2px 12px rgba(0,0,0,0.9)",
+              marginTop: isDesktop ? "-4.5vh" : "0.5rem",
+            }}
+          >
+            Of Dandeli
+          </motion.p>
+        </div>
+
+        {/* ── BOTTOM: Subtitle + CTAs ── */}
+        <div
+          className="relative w-full flex flex-col items-center gap-3 px-4 sm:px-6 pb-6 sm:pb-8 pt-2"
+          style={{ zIndex: 50 }}
+        >
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.65 }}
+            className="text-xs sm:text-sm md:text-base text-white/90 font-body font-medium max-w-xs sm:max-w-md mx-auto text-center leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
+          >
+            White-water rafting, forest camping &amp; raw eco-adventures on the Kali River.
+          </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
+            transition={{ duration: 0.7, delay: 0.8 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xs sm:max-w-none"
           >
             <motion.div whileTap={{ scale: 0.96 }} className="w-full sm:w-auto">
               <Link
                 to="/booking"
-                className="block w-full sm:w-auto px-10 py-4 bg-accent text-white rounded-full font-black text-lg hover:bg-accent/90 transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-accent/20 text-center"
+                className="block w-full sm:w-auto px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-full font-bold text-xs sm:text-base transition-all duration-200 hover:-translate-y-0.5 text-center uppercase tracking-wider font-display text-white shadow-xl hover:brightness-110"
+                style={{
+                  backgroundColor: "#52b788",
+                  boxShadow: "0 8px 30px rgba(82,183,136,0.45)",
+                }}
               >
                 Book Adventure Now
               </Link>
             </motion.div>
             <motion.div whileTap={{ scale: 0.96 }} className="w-full sm:w-auto">
-              <a
-                href="#about"
-                className="block w-full sm:w-auto px-10 py-4 bg-white/10 text-white border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 text-center"
+              <button
+                type="button"
+                onClick={() => {
+                  const el = document.getElementById("about");
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="block w-full sm:w-auto px-6 sm:px-10 py-2.5 sm:py-3.5 bg-white/15 hover:bg-white/25 text-white border border-white/30 rounded-full font-semibold text-xs sm:text-base backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 text-center font-display cursor-pointer"
               >
                 Explore Nature
-              </a>
+              </button>
             </motion.div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

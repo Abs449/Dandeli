@@ -1,20 +1,39 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0f172a; /* Deep Slate Navy */
-  --color-primary-dark: #020617;
-  --color-secondary: #38bdf8; /* Glowing Cyan/Blue */
-  --color-secondary-dark: #0284c7;
-  --color-accent: #ff6b00; /* Life-Vest High-Vis Orange */
-  --color-accent-light: #ffedd5;
-  --color-background: #0a0f1d; /* Deep Midnight Navy */
-  --color-river: #0ea5e9; /* Splashing Sky Blue */
-  --color-river-light: #38bdf8;
-  --color-river-dark: #0284c7;
-  --color-foam: #0f172a; /* Slate Navy */
+  --color-primary: #052e26;      /* Deep Forest Slate */
+  --color-primary-dark: #021915; /* Midnight River Obsidian */
+  --color-secondary: #8ab4c8;    /* Muted Sky Pastel */
+  --color-secondary-dark: #5a8fa8;/* Deep Sky Pastel */
+  --color-accent: #f5c97a;       /* Dusty Amber Cream */
+  --color-accent-light: #fae4b0;
+  --color-coral: #e8715a;        /* Warm Coral — CTA & highlights */
+  --color-coral-light: #f09b89;
+  --color-sage: #7fb5a0;         /* Sage Mist — secondary accents */
+  --color-sage-light: #a8d0c4;
+  --color-background: #021915;   /* Midnight Forest Obsidian */
+  --color-river: #8ab4c8;        /* Muted Sky (replaces electric teal) */
+  --color-river-light: #b8d4e2;
+  --color-river-dark: #5a8fa8;
+  --color-foam: #08332a;
 
-  --font-heading: "Poppins", "Outfit", sans-serif;
-  --font-body: "Inter", "Plus Jakarta Sans", sans-serif;
+  --font-display: "Montserrat", "Plus Jakarta Sans", sans-serif;
+  --font-heading: "Outfit", "Poppins", sans-serif;
+  --font-impact: "Bebas Neue", "Montserrat", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+/* Custom font utilities */
+.font-display {
+  font-family: var(--font-display);
+}
+.font-impact {
+  font-family: var(--font-impact);
+}
+
+/* Smooth scroll handled via custom RAF animation in Navbar/Home — not CSS */
+html {
+  scroll-behavior: auto;
 }
 
 /* Custom Utilities using theme variables */
@@ -23,9 +42,13 @@
 .bg-secondary { background-color: var(--color-secondary); }
 .bg-accent { background-color: var(--color-accent); }
 .bg-beige { background-color: var(--color-background); }
+.bg-coral { background-color: var(--color-coral); }
+.bg-sage { background-color: var(--color-sage); }
 .text-primary { color: var(--color-primary); }
 .text-secondary { color: var(--color-secondary); }
 .text-accent { color: var(--color-accent); }
+.text-coral { color: var(--color-coral); }
+.text-sage { color: var(--color-sage); }
 .text-river { color: var(--color-river); }
 .bg-river { background-color: var(--color-river); }
 .bg-river-light { background-color: var(--color-river-light); }
@@ -107,7 +130,7 @@
 @media (hover: hover) and (min-width: 768px) {
   .card-adventure:hover {
     transform: translateY(-8px) scale(1.01);
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(56, 189, 248, 0.08);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(6, 182, 212, 0.15);
   }
 }
 
@@ -121,58 +144,33 @@
 }
 
 .wave-divider-top {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23021915' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
 }
 
 .wave-divider-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23021915' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
 }
 
 .wave-divider-river-top {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230284c7' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%2306b6d4' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
 }
 
 .wave-divider-river-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230284c7' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
-}
-
-.wave-divider-beige-top {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
-}
-
-.wave-divider-beige-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%230a0f1d' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
-}
-
-.wave-divider-sky-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23bae6fd' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
-}
-
-.wave-divider-sand-top {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23f4ebe1' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
-}
-
-.wave-divider-sand-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23f4ebe1' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
-}
-
-.wave-divider-darksand-bottom {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23decbb7' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%2306b6d4' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
 }
 
 @layer base {
   html {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
-    scroll-behavior: smooth;
+    scroll-behavior: auto; /* JS RAF handles smooth scrolling */
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
   }
 }
 
-/* Drifting water wave for the Hero. SVG width is 200% so the
-   translateX(-50%) loop is seamless. */
+/* Drifting water wave for the Hero */
 @keyframes wave-drift {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -183,14 +181,14 @@
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: #021915;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-primary-dark);
+  background: #08332a;
   border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-river);
+  background: #06b6d4;
 }
 
 /* Hide scrollbars but keep scrolling functionality */
@@ -244,17 +242,22 @@ body, #root {
   flex-direction: column !important;
 }
 
+.swiper-pagination {
+  position: relative !important;
+  bottom: 0 !important;
+  margin-top: 32px !important;
+}
+
 .swiper-pagination-bullet {
-  background: #0f172a !important;
-  opacity: 0.25 !important;
+  background: #8ab4c8 !important;
+  opacity: 0.3 !important;
   transition: all 0.3s ease !important;
+  margin: 0 6px !important;
 }
 
 .swiper-pagination-bullet-active {
-  background: #15803d !important;
-  width: 24px !important;
+  background: #f5c97a !important;
+  width: 28px !important;
   border-radius: 9999px !important;
   opacity: 1 !important;
 }
-
-

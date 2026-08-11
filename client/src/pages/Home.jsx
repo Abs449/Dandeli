@@ -25,15 +25,34 @@ const Home = () => {
 
   useEffect(() => {
     const targetId = location.state?.scrollTo || location.hash?.replace('#', '');
-    if (targetId) {
-      setTimeout(() => {
-        const el = document.getElementById(targetId);
-        if (el) {
-          const top = el.getBoundingClientRect().top + window.scrollY - 76;
-          window.scrollTo({ top, behavior: 'smooth' });
-        }
-      }, 150);
-    }
+    if (!targetId) return;
+
+    // Wait for page to fully render, then animate
+    const timer = setTimeout(() => {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+
+      const navbarHeight = 80;
+      const targetTop = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
+      const start = window.scrollY;
+      const distance = Math.abs(targetTop - start);
+      const duration = Math.min(1100 + distance * 0.18, 1800);
+      const startTime = performance.now();
+
+      const easeInOutCubic = (t) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      const step = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        window.scrollTo(0, start + (targetTop - start) * easeInOutCubic(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+
+      requestAnimationFrame(step);
+    }, 200);
+
+    return () => clearTimeout(timer);
   }, [location]);
 
   return (

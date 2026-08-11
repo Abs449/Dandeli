@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { MapPinned, Phone, Clock, Navigation, Mail } from "lucide-react";
 import { CONTACT } from "../lib/contact";
 import bgLocation from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
@@ -19,7 +19,7 @@ const items = [
     Icon: Phone,
     title: "Contact",
     body: (
-      <a href={`tel:${CONTACT.phoneRaw}`} className="hover:text-emerald-700 transition-colors font-semibold">
+      <a href={`tel:${CONTACT.phoneRaw}`} className="hover:text-cyan-400 transition-colors font-semibold">
         {CONTACT.phone}
       </a>
     ),
@@ -28,7 +28,7 @@ const items = [
     Icon: Mail,
     title: "Email",
     body: (
-      <a href={`mailto:${CONTACT.email}`} className="hover:text-emerald-700 transition-colors font-semibold">
+      <a href={`mailto:${CONTACT.email}`} className="hover:text-cyan-400 transition-colors font-semibold">
         {CONTACT.email}
       </a>
     ),
@@ -47,25 +47,22 @@ const items = [
 const Location = () => {
   const sectionRef = useRef(null);
 
-  // Scroll-linked background zoom effect with spring physics smoothing
+  // Lightweight scroll transform
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
-  const rawScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.15, 1.05]);
-  const rawOpacity = useTransform(scrollYProgress, [0, 0.25, 0.75, 1], [0.45, 0.85, 0.85, 0.45]);
-
-  const bgScale = useSpring(rawScale, { stiffness: 90, damping: 30, restDelta: 0.0001 });
-  const bgOpacity = useSpring(rawOpacity, { stiffness: 90, damping: 30, restDelta: 0.0001 });
+  const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.08, 1.02]);
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.6, 0.95, 0.95, 0.6]);
 
   return (
     <section
       ref={sectionRef}
       id="location"
-      className="py-20 relative overflow-hidden bg-slate-950 text-white"
+      className="py-28 sm:py-36 md:py-44 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
     >
-      {/* Scroll-Driven Background Image Layer */}
+      {/* Background Image Layer with Parallax */}
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
@@ -75,98 +72,89 @@ const Location = () => {
         }}
       />
 
-      {/* Ambient Gradient Overlay for high image clarity */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/70 pointer-events-none" />
+      {/* Dark Ambient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#021915]/60 via-[#021915]/30 to-[#021915]/65 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16 sm:mb-20"
         >
-          <span className="inline-block text-orange-400 uppercase tracking-[0.3em] text-xs font-bold mb-2.5 bg-black/40 backdrop-blur-md px-4 py-1 rounded-full border border-white/20">
+          <span className="inline-block text-cyan-400 text-xs font-bold uppercase tracking-widest mb-3 bg-cyan-950/60 px-5 py-1.5 rounded-full border border-cyan-500/30 shadow-md">
             Find Us
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-white mb-4 drop-shadow-md">
-            Where to Find Us
+          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-white mb-5 drop-shadow-md italic tracking-tighter leading-tight">
+            Basecamp & <span className="text-amber-400">Directions</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-100 max-w-xl mx-auto font-body font-medium drop-shadow-sm">
-            Located right on the banks of the scenic Kali River, near the famous Ganeshgudi Temple.
+          <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
+            Located right on the banks of the Kali River in Ganeshgudi, Dandeli.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
-          {/* Basecamp Details Card — Clean Solid White & Emerald Design */}
+        {/* Content Layout Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-stretch">
+          {/* Details Card */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white rounded-3xl border border-neutral-200 p-7 sm:p-9 flex flex-col justify-between text-gray-900 shadow-2xl"
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-5 bg-slate-900/90 border border-white/15 rounded-3xl p-8 sm:p-10 shadow-2xl flex flex-col justify-between"
           >
-            <div className="space-y-5">
-              <h3 className="text-2xl font-heading font-black text-gray-900 border-b border-neutral-200 pb-4 mb-2">
-                Basecamp Details
+            <div>
+              <h3 className="text-2xl sm:text-3xl font-heading font-black text-white mb-6 border-b border-white/10 pb-4 tracking-tight">
+                {CONTACT.businessName}
               </h3>
 
-              {items.map(({ Icon, title, body }, idx) => (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  className="flex items-start group"
-                >
-                  <div className="mr-4 p-3 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-200/60 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
-                    <Icon className="w-5 h-5 shrink-0" />
-                  </div>
-                  <div>
-                    <h4 className="font-heading font-black text-gray-900 text-base mb-0.5">
-                      {title}
-                    </h4>
-                    <div className="text-gray-600 leading-relaxed text-sm font-body">
-                      {body}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6 mb-8">
+                {items.map(({ Icon, title, body }, idx) => (
+                  <div key={idx} className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 border border-cyan-400/30 flex items-center justify-center shrink-0 mt-0.5">
+                      <Icon size={20} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-heading font-extrabold uppercase tracking-wider text-cyan-300 mb-1">
+                        {title}
+                      </h4>
+                      <div className="text-sm text-gray-200 font-body leading-relaxed">
+                        {body}
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-neutral-100">
-              <motion.a
-                whileTap={{ scale: 0.96 }}
-                href={CONTACT.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 transition-all duration-300 text-white font-heading font-black text-xs sm:text-sm tracking-wider uppercase px-8 py-3.5 rounded-full shadow-lg shadow-orange-600/25 cursor-pointer w-full sm:w-auto"
-              >
-                <Navigation className="w-4 h-4 animate-bounce" />
-                Get GPS Directions
-              </motion.a>
-            </div>
+            <a
+              href={CONTACT.directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2.5 w-full py-4 bg-amber-400 hover:bg-yellow-300 text-slate-950 rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-300 shadow-lg shadow-amber-400/25 hover:-translate-y-0.5 cursor-pointer mt-4"
+            >
+              <Navigation size={16} />
+              <span>Get GPS Directions</span>
+            </a>
           </motion.div>
 
-          {/* Map Frame Card */}
+          {/* Embedded Google Map */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white relative min-h-[350px] lg:min-h-auto"
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-7 bg-slate-900/90 border border-white/15 rounded-3xl overflow-hidden shadow-2xl min-h-[400px] lg:min-h-[480px] relative"
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3849.1037382614873!2d74.53715757464141!3d15.262137560539378!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbf1f8b04d05da1%3A0xbc49363b1f706ea6!2sDandeli%20Kali%20River%20Rafting%20Ganeshgudi!5e0!3m2!1sen!2sin!4v1785007702506!5m2!1sen!2sin"
-              width="100%"
-              height="100%"
-              style={{ border: 0, minHeight: "420px" }}
-              allowFullScreen
+              title="Basecamp Google Map"
+              src={CONTACT.mapEmbedUrl}
+              className="w-full h-full min-h-[400px] border-0 grayscale opacity-90 hover:grayscale-0 transition-all duration-500"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Dandeli Kali River Rafting — Google Maps"
-            ></iframe>
+            />
           </motion.div>
         </div>
       </div>

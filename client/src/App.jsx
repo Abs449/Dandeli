@@ -18,7 +18,7 @@ function App() {
     <Router>
       <div className="flex flex-col min-h-screen bg-background text-gray-900 font-body overflow-x-hidden">
         <Navbar />
-        <main className="grow pt-20 md:pt-0">
+        <main className="grow">
           <Suspense fallback={<RouteFallback />}>
             <Routes>
               <Route path="/" element={<Home />} />

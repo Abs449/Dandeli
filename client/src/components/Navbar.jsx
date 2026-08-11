@@ -3,34 +3,52 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
+/**
+ * Custom smooth-scroll with RAF + ease-in-out-cubic easing.
+ * Duration scales with scroll distance so you always see intermediate sections.
+ * The browser's built-in smooth scroll rushes past content — this doesn't.
+ */
+const smoothScrollTo = (targetTop, baseDuration = 1100) => {
+  const start = window.scrollY;
+  const distance = Math.abs(targetTop - start);
+  // Scale duration with distance: further = a bit longer, capped at 1800ms
+  const duration = Math.min(baseDuration + distance * 0.18, 1800);
+  const startTime = performance.now();
+
+  const easeInOutCubic = (t) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  const step = (now) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    window.scrollTo(0, start + (targetTop - start) * easeInOutCubic(progress));
+    if (progress < 1) requestAnimationFrame(step);
+  };
+
+  requestAnimationFrame(step);
+};
+
 const handleSmoothScroll = (targetId) => {
   if (typeof window === 'undefined') return;
   const target = document.getElementById(targetId);
   if (!target) return;
-  const navbarHeight = 76;
-  const top = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
-  window.scrollTo({ top, behavior: 'smooth' });
+  const navbarHeight = 80;
+  const targetTop = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
+  smoothScrollTo(targetTop);
 };
-
-const HERO_OFFSET = 80;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isHome = location.pathname === '/';
 
+  // Darken navbar background slightly after user scrolls down
   useEffect(() => {
-    if (!isHome) {
-      setScrolled(true);
-      return;
-    }
-    const onScroll = () => setScrolled(window.scrollY > HERO_OFFSET);
-    onScroll();
+    const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [isHome]);
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -57,6 +75,7 @@ const Navbar = () => {
     }
 
     if (location.pathname !== '/') {
+      // Navigate home first, then scroll — Home.jsx reads location.state.scrollTo
       navigate('/', { state: { scrollTo: link.targetId } });
     } else {
       handleSmoothScroll(link.targetId);
@@ -70,68 +89,79 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { name: 'Home', to: '/', targetId: null },
-    { name: 'About', to: '/#about', targetId: 'about' },
+    { name: 'Home',     to: '/',          targetId: null },
+    { name: 'About',    to: '/#about',    targetId: 'about' },
     { name: 'Services', to: '/#services', targetId: 'services' },
     { name: 'Packages', to: '/#packages', targetId: 'packages' },
-    { name: 'Reviews', to: '/#reviews', targetId: 'reviews' },
+    { name: 'Reviews',  to: '/#reviews',  targetId: 'reviews' },
   ];
-
-  const overHero = isHome && !scrolled;
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-3 md:py-4 px-4 sm:px-6 lg:px-8`}
-      >
+      <nav className="fixed top-0 left-0 right-0 z-50 py-3 md:py-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
         <div
-          className={`max-w-7xl mx-auto rounded-full transition-all duration-500 px-6 py-3 border ${
-            overHero
-              ? 'bg-transparent border-transparent'
-              : 'bg-white/90 backdrop-blur-xl border-white/20 shadow-xl shadow-primary-dark/5'
-          }`}
+          className="max-w-7xl mx-auto rounded-full px-6 py-3 border backdrop-blur-2xl shadow-2xl pointer-events-auto transition-all duration-300"
+          style={{
+            background: scrolled
+              ? 'rgba(2, 25, 21, 0.88)'
+              : 'rgba(2, 25, 21, 0.65)',
+            borderColor: 'rgba(255,255,255,0.12)',
+          }}
         >
           <div className="flex justify-between items-center h-10">
+            {/* Logo */}
             <Link
               to="/"
-              className={`text-xl sm:text-2xl font-heading font-black transition-colors duration-500 tracking-tight flex items-center gap-1`}
+              className="text-xl sm:text-2xl font-heading font-bold tracking-tight flex items-center gap-1.5 group"
             >
-              <span className={overHero ? 'text-white' : 'text-primary'}>Dandeli</span>
-              <span className="text-accent font-extrabold">Adventure</span>
+              <span className="text-white">Dandeli</span>
+              <span
+                className="font-extrabold transition-colors duration-150 group-hover:opacity-80"
+                style={{ color: '#e8715a' }}
+              >
+                Adventure
+              </span>
             </Link>
 
-            <div className="hidden md:flex items-center space-x-6">
+            {/* Desktop nav links */}
+            <div className="hidden md:flex items-center space-x-7">
               {navLinks.map((link) => (
                 <button
                   key={link.name}
                   type="button"
                   onClick={(event) => handleNavClick(event, link)}
-                  className={`font-heading text-sm font-semibold tracking-wide transition-all duration-300 hover:text-accent relative py-1 cursor-pointer after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-accent after:transition-all after:duration-300 hover:after:w-full ${
-                    overHero
-                      ? 'text-white/90 hover:text-white drop-shadow'
-                      : 'text-gray-700'
-                  }`}
+                  className="font-heading text-sm font-medium tracking-wide transition-all duration-150 text-gray-300 hover:text-white py-1 cursor-pointer relative group"
                 >
                   {link.name}
+                  {/* Subtle underline on hover */}
+                  <span
+                    className="absolute bottom-0 left-0 w-0 h-px group-hover:w-full transition-all duration-200"
+                    style={{ backgroundColor: '#f5c97a' }}
+                  />
                 </button>
               ))}
-              <Link
-                to="/booking"
-                className="px-6 py-2 rounded-full font-bold bg-accent text-white hover:bg-accent/90 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent/20 text-sm"
+              <button
+                type="button"
+                onClick={goToBooking}
+                className="px-6 py-2 rounded-full font-heading font-bold transition-all duration-150 active:scale-95 text-xs uppercase tracking-wider shadow-md cursor-pointer"
+                style={{
+                  backgroundColor: '#52b788',
+                  color: '#fff',
+                  boxShadow: '0 4px 18px rgba(82,183,136,0.35)',
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = '#62c496'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#52b788'}
               >
                 Book Now
-              </Link>
+              </button>
             </div>
 
+            {/* Mobile hamburger */}
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Open menu"
-                className={`focus:outline-none transition-colors p-1.5 rounded-full ${
-                  overHero
-                    ? 'text-white hover:bg-white/10'
-                    : 'text-gray-800 hover:bg-gray-100'
-                }`}
+                className="focus:outline-none transition-colors p-1.5 rounded-full text-white hover:bg-white/10"
               >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
               </button>
@@ -140,20 +170,20 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile drawer */}
+      {/* Mobile full-screen drawer */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: "-100%" }}
+            initial={{ opacity: 0, y: '-100%' }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "-100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 flex flex-col bg-slate-900/95 backdrop-blur-2xl text-white shadow-2xl md:hidden pt-20"
+            exit={{ opacity: 0, y: '-100%' }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            className="fixed inset-0 z-40 flex flex-col bg-slate-950/96 backdrop-blur-2xl text-white shadow-2xl md:hidden pt-20"
           >
             <div className="flex justify-between items-center px-6 py-4 border-b border-white/10">
-              <span className="font-heading font-black text-lg tracking-tight">
-                <span className="text-white">Dandeli</span>{" "}
-                <span className="text-accent">Menu</span>
+              <span className="font-heading font-bold text-lg tracking-tight">
+                <span className="text-white">Dandeli</span>{' '}
+                <span style={{ color: '#e8715a' }} className="font-extrabold">Menu</span>
               </span>
               <button
                 onClick={() => setIsOpen(false)}
@@ -164,34 +194,31 @@ const Navbar = () => {
               </button>
             </div>
 
-            <div className="px-6 pt-6 pb-8 space-y-4 flex-1 overflow-y-auto">
-              {navLinks.map((link, idx) => (
-                <motion.button
+            <div className="px-6 pt-6 pb-8 space-y-3 flex-1 overflow-y-auto">
+              {navLinks.map((link) => (
+                <button
                   key={link.name}
                   type="button"
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.08 + 0.1, duration: 0.4 }}
                   onClick={(event) => handleNavClick(event, link)}
-                  className="block w-full text-left px-5 py-3.5 rounded-2xl text-lg font-heading font-bold text-white/90 hover:text-white hover:bg-white/10 active:scale-98 transition-all border border-transparent hover:border-white/10 cursor-pointer"
+                  className="block w-full text-left px-5 py-4 rounded-2xl text-lg font-heading font-semibold text-white/85 hover:text-white hover:bg-white/8 active:scale-98 transition-all duration-150 border border-transparent hover:border-white/10 cursor-pointer"
                 >
                   {link.name}
-                </motion.button>
+                </button>
               ))}
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-                className="pt-4"
-              >
+              <div className="pt-4">
                 <button
                   onClick={goToBooking}
-                  className="block w-full text-center bg-accent text-white px-6 py-4 rounded-2xl font-heading font-black uppercase tracking-wider shadow-lg shadow-accent/25 hover:bg-accent/90 active:scale-95 transition-all text-base cursor-pointer"
+                  className="block w-full text-center px-6 py-4 rounded-2xl font-heading font-bold uppercase tracking-wider shadow-lg hover:opacity-90 active:scale-95 transition-all text-base cursor-pointer"
+                  style={{
+                    backgroundColor: '#52b788',
+                    color: '#fff',
+                    boxShadow: '0 6px 24px rgba(82,183,136,0.35)',
+                  }}
                 >
                   Book Adventure Now
                 </button>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
