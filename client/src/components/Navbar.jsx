@@ -98,7 +98,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 py-3 md:py-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
+      <nav className="fixed top-0 left-0 right-0 z-[100] py-3 md:py-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
         <div
           className="max-w-7xl mx-auto rounded-full px-6 py-3 border backdrop-blur-2xl shadow-2xl pointer-events-auto transition-all duration-300"
           style={{
@@ -178,29 +178,15 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
-            className="fixed inset-0 z-40 flex flex-col bg-slate-950/96 backdrop-blur-2xl text-white shadow-2xl md:hidden pt-20"
+            className="fixed inset-0 z-[90] flex flex-col bg-[#021915] text-white shadow-2xl md:hidden pt-24"
           >
-            <div className="flex justify-between items-center px-6 py-4 border-b border-white/10">
-              <span className="font-heading font-bold text-lg tracking-tight">
-                <span className="text-white">Dandeli</span>{' '}
-                <span style={{ color: '#e8715a' }} className="font-extrabold">Menu</span>
-              </span>
-              <button
-                onClick={() => setIsOpen(false)}
-                aria-label="Close menu"
-                className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 focus:outline-none transition-colors"
-              >
-                <X size={26} />
-              </button>
-            </div>
-
-            <div className="px-6 pt-6 pb-8 space-y-3 flex-1 overflow-y-auto">
+            <div className="px-6 pt-4 pb-8 space-y-3 flex-1 overflow-y-auto">
               {navLinks.map((link) => (
                 <button
                   key={link.name}
                   type="button"
                   onClick={(event) => handleNavClick(event, link)}
-                  className="block w-full text-left px-5 py-4 rounded-2xl text-lg font-heading font-semibold text-white/85 hover:text-white hover:bg-white/8 active:scale-98 transition-all duration-150 border border-transparent hover:border-white/10 cursor-pointer"
+                  className="block w-full text-left px-5 py-4 rounded-2xl text-lg font-heading font-semibold text-white/90 hover:text-white hover:bg-white/10 active:scale-98 transition-all duration-150 border border-transparent hover:border-white/10 cursor-pointer"
                 >
                   {link.name}
                 </button>

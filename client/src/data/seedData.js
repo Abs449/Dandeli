@@ -1,9 +1,9 @@
-import imgShortRafting from "../assets/Backgroundimg/DSC_1226.JPG.jpeg";
-import imgLongRafting from "../assets/Backgroundimg/DSC_1225.JPG.jpeg";
-import imgKayaking from "../assets/Backgroundimg/kayakinwater.webp";
-import imgDrone from "../assets/Backgroundimg/dji_fly_20260103_124946_0149_1774087624546_photo.jpg.jpeg";
-import imgScenery from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
-import imgJungle from "../assets/Backgroundimg/IMG20250524114921.jpg.jpeg";
+import imgShortRafting from "../assets/Backgroundimg/gallery-raft2.webp";
+import imgLongRafting from "../assets/Backgroundimg/gallery-raft1.webp";
+import imgKayaking from "../assets/Backgroundimg/kayak-bg.webp";
+import imgDrone from "../assets/Backgroundimg/gallery-drone.webp";
+import imgScenery from "../assets/Backgroundimg/river-scenery.webp";
+import imgJungle from "../assets/Backgroundimg/gallery-jungle.webp";
 
 export const seedServices = [
   {
@@ -157,42 +157,42 @@ export const seedPackages = [
 export const seedReviews = [
   {
     id: 1,
-    name: "Rohan & Priya Mehta",
+    name: "Karthik G Gadwal",
     rating: 5,
     review:
-      "Conquering the 9.5 km Kali River rapids was the highlight of our year! The guides were super professional, patient, and made safety priority #1.",
+      "Had an amazing river rafting experience in Dandeli! Huge thanks to guide Kiran for making it super fun, safe, and memorable. His energy and guidance made the whole adventure even better. Highly recommended! Jai Kali river .!!! 🌊🙌 …",
     platform: "Google Review",
-    platformUrl: "https://google.com",
+    platformUrl: "https://maps.app.goo.gl/YBoZaUZS4c8ekMhz5",
     displayOrder: 1,
   },
   {
     id: 2,
-    name: "Anand Kulkarni",
+    name: "Arman Warsi",
     rating: 5,
     review:
-      "Booked the 2-day Ultimate Adventure package with friends. Campfire night under the jungle stars + morning rafting was unforgettable. Transparent pricing, no hidden costs!",
+      "Had an amazing river rafting experience in Dandeli! The rapids were thrilling, the guides were professional and friendly, and all safety measures were well maintained. It was an unforgettable adventure and one of the best experiences of my trip. Highly recommended for anyone visiting Dandeli!",
     platform: "Google Review",
-    platformUrl: "https://google.com",
+    platformUrl: "https://maps.app.goo.gl/x1odGFHtCShQ3X6ZA",
     displayOrder: 2,
   },
   {
     id: 3,
-    name: "Dr. Kavita Shenoy",
+    name: "Sumit Marturkar",
     rating: 5,
     review:
-      "Wonderful experience for a first-timer! Short rafting run was exhilarating yet totally safe for our family. Highly recommend booking early.",
-    platform: "TripAdvisor",
-    platformUrl: "https://tripadvisor.com",
+      "Fantastic and thriller journey, River rafting was the best experience ever! The nature and greenery were so peaceful.Resort stay was comfortable and fun.Overall, a perfect 5/5 trip with unforgettable memories.",
+    platform: "Google Review",
+    platformUrl: "https://maps.app.goo.gl/Uno1Pd36VrhohLTq6",
     displayOrder: 3,
   },
   {
     id: 4,
-    name: "Vikram Sengupta",
+    name: "Varsha",
     rating: 5,
     review:
-      "The guides know every rock and wave on the Kali river. The live water release update feature on their website helped us pick the perfect date!",
+      "Visiting dandeli was one of my bucket list. Calm atmosphere that made me forget the city life. More importantly I loved the water activities- zip line and river rafting. ALL THANKS TO MR.KARTHIK he arranged everything in short duration and very nicely. The resort food was too good and rooms were hygienic and well maintained.",
     platform: "Google Review",
-    platformUrl: "https://google.com",
+    platformUrl: "https://maps.app.goo.gl/DMGKFgrN4nqofbX48",
     displayOrder: 4,
   },
 ];

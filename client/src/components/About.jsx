@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import { BookOpen, X, Sparkles, Heart } from "lucide-react";
-import photo from "../assets/Backgroundimg/clientimg.png";
-import imgJungle from "../assets/Backgroundimg/Aboutus.webp";
+import photo from "../assets/Backgroundimg/guide-photo.webp";
+import imgJungle from "../assets/Backgroundimg/aboutus-bg.webp";
 
 // Smooth Eased Number Counter Component
 const SmoothCountUp = ({ end, duration = 2.0, decimals = 0, suffix = "" }) => {
@@ -62,7 +62,7 @@ const About = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="py-20 relative overflow-hidden flex flex-col items-center bg-[#021915] text-white"
+      className="py-14 sm:py-18 md:py-20 relative overflow-hidden flex flex-col items-center bg-[#021915] text-white border-t border-white/10"
     >
       {/* Background Image Layer with Scroll-Driven Zoom Animation */}
       <motion.div
@@ -84,19 +84,19 @@ const About = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.7 }}
-          className="w-full text-center mb-14 sm:mb-16"
+          className="w-full text-center mb-8 sm:mb-10"
         >
           <span className="inline-block text-cyan-400 uppercase tracking-widest text-xs font-bold mb-2.5 bg-cyan-950/60 border border-cyan-500/30 px-4 py-1 rounded-full">
             About Us
           </span>
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-white tracking-tighter leading-tight italic">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black uppercase text-white tracking-wider leading-snug">
             Your Gateway to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">Untamed Nature</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200 pr-1">Untamed Nature</span>
           </h2>
         </motion.div>
 
         {/* 1. Guide Cutout Image & Quote Section */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10 lg:gap-14 mb-16">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12 mb-10">
           {/* Cutout Image */}
           <motion.div
             initial={{ opacity: 0, x: -80, scale: 0.95 }}
@@ -128,7 +128,7 @@ const About = () => {
               Lead Adventure Guide
             </div>
 
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-black italic text-white leading-tight tracking-tight">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-black uppercase text-white leading-snug tracking-wider">
               "Every Traveler who books with me leaves as a friend"
             </h3>
 

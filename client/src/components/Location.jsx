@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { MapPinned, Phone, Clock, Navigation, Mail } from "lucide-react";
 import { CONTACT } from "../lib/contact";
-import bgLocation from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
+import bgLocation from "../assets/Backgroundimg/river-scenery.webp";
 
 const items = [
   {
@@ -60,7 +60,7 @@ const Location = () => {
     <section
       ref={sectionRef}
       id="location"
-      className="py-28 sm:py-36 md:py-44 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
+      className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
     >
       {/* Background Image Layer with Parallax */}
       <motion.div
@@ -82,15 +82,15 @@ const Location = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16 sm:mb-20"
+          className="text-center mb-8 sm:mb-12"
         >
           <span className="inline-block text-cyan-400 text-xs font-bold uppercase tracking-widest mb-3 bg-cyan-950/60 px-5 py-1.5 rounded-full border border-cyan-500/30 shadow-md">
             Find Us
           </span>
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-white mb-5 drop-shadow-md italic tracking-tighter leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black uppercase text-white mb-3 drop-shadow-md tracking-wider leading-snug">
             Basecamp & <span className="text-amber-400">Directions</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             Located right on the banks of the Kali River in Ganeshgudi, Dandeli.
           </p>
         </motion.div>

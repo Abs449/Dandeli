@@ -1,34 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #052e26;      /* Deep Forest Slate */
-  --color-primary-dark: #021915; /* Midnight River Obsidian */
-  --color-secondary: #8ab4c8;    /* Muted Sky Pastel */
-  --color-secondary-dark: #5a8fa8;/* Deep Sky Pastel */
-  --color-accent: #f5c97a;       /* Dusty Amber Cream */
+  --color-primary: #052e26;
+  /* Deep Forest Slate */
+  --color-primary-dark: #021915;
+  /* Midnight River Obsidian */
+  --color-secondary: #8ab4c8;
+  /* Muted Sky Pastel */
+  --color-secondary-dark: #5a8fa8;
+  /* Deep Sky Pastel */
+  --color-accent: #f5c97a;
+  /* Dusty Amber Cream */
   --color-accent-light: #fae4b0;
-  --color-coral: #e8715a;        /* Warm Coral — CTA & highlights */
+  --color-coral: #e8715a;
+  /* Warm Coral — CTA & highlights */
   --color-coral-light: #f09b89;
-  --color-sage: #7fb5a0;         /* Sage Mist — secondary accents */
+  --color-sage: #7fb5a0;
+  /* Sage Mist — secondary accents */
   --color-sage-light: #a8d0c4;
-  --color-background: #021915;   /* Midnight Forest Obsidian */
-  --color-river: #8ab4c8;        /* Muted Sky (replaces electric teal) */
+  --color-background: #021915;
+  /* Midnight Forest Obsidian */
+  --color-river: #8ab4c8;
+  /* Muted Sky (replaces electric teal) */
   --color-river-light: #b8d4e2;
   --color-river-dark: #5a8fa8;
   --color-foam: #08332a;
 
-  --font-display: "Montserrat", "Plus Jakarta Sans", sans-serif;
-  --font-heading: "Outfit", "Poppins", sans-serif;
+  --font-display: "Bebas Neue", "Montserrat", sans-serif;
+  --font-heading: "Bebas Neue", "Montserrat", sans-serif;
   --font-impact: "Bebas Neue", "Montserrat", sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 }
 
 /* Custom font utilities */
-.font-display {
-  font-family: var(--font-display);
-}
+.font-display,
+.font-heading,
 .font-impact {
-  font-family: var(--font-impact);
+  font-family: "Bebas Neue", "Montserrat", sans-serif;
 }
 
 /* Smooth scroll handled via custom RAF animation in Navbar/Home — not CSS */
@@ -37,25 +45,69 @@ html {
 }
 
 /* Custom Utilities using theme variables */
-.bg-primary { background-color: var(--color-primary); }
-.bg-primary-dark { background-color: var(--color-primary-dark); }
-.bg-secondary { background-color: var(--color-secondary); }
-.bg-accent { background-color: var(--color-accent); }
-.bg-beige { background-color: var(--color-background); }
-.bg-coral { background-color: var(--color-coral); }
-.bg-sage { background-color: var(--color-sage); }
-.text-primary { color: var(--color-primary); }
-.text-secondary { color: var(--color-secondary); }
-.text-accent { color: var(--color-accent); }
-.text-coral { color: var(--color-coral); }
-.text-sage { color: var(--color-sage); }
-.text-river { color: var(--color-river); }
-.bg-river { background-color: var(--color-river); }
-.bg-river-light { background-color: var(--color-river-light); }
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-primary-dark {
+  background-color: var(--color-primary-dark);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-beige {
+  background-color: var(--color-background);
+}
+
+.bg-coral {
+  background-color: var(--color-coral);
+}
+
+.bg-sage {
+  background-color: var(--color-sage);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-coral {
+  color: var(--color-coral);
+}
+
+.text-sage {
+  color: var(--color-sage);
+}
+
+.text-river {
+  color: var(--color-river);
+}
+
+.bg-river {
+  background-color: var(--color-river);
+}
+
+.bg-river-light {
+  background-color: var(--color-river-light);
+}
 
 /* Adventure-themed background pattern */
 .pattern-bg {
-  background-image: 
+  background-image:
     radial-gradient(circle at 100% 150%, var(--color-river-light) 24%, white 24%, white 28%, var(--color-river-light) 28%, var(--color-river-light) 36%, white 36%, white 40%, transparent 40%),
     radial-gradient(circle at 0% 150%, var(--color-river-light) 24%, white 24%, white 28%, var(--color-river-light) 28%, var(--color-river-light) 36%, white 36%, white 40%, transparent 40%);
   background-size: 60px 36px;
@@ -68,32 +120,51 @@ html {
     transform: scale(0.95);
     opacity: 0.8;
   }
+
   50% {
     transform: scale(1.3);
     opacity: 0.4;
   }
+
   100% {
     transform: scale(1.6);
     opacity: 0;
   }
 }
+
 .ripple-effect {
   animation: ripple-pulse 2s infinite ease-out;
 }
 
 /* Floating animation for elements/bubbles */
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(2deg); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
 }
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
 @keyframes float-delayed {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(8px) rotate(-2deg); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(8px) rotate(-2deg);
+  }
 }
+
 .animate-float-delayed {
   animation: float-delayed 8s ease-in-out infinite;
 }
@@ -104,9 +175,11 @@ html {
     transform: translateY(100px) scale(0.8);
     opacity: 0;
   }
+
   50% {
     opacity: 0.6;
   }
+
   100% {
     transform: translateY(-800px) scale(1.2);
     opacity: 0;
@@ -163,30 +236,53 @@ html {
   html {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
-    scroll-behavior: auto; /* JS RAF handles smooth scrolling */
+    scroll-behavior: auto;
+    /* JS RAF handles smooth scrolling */
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Bebas Neue", "Montserrat", sans-serif;
+    letter-spacing: 0.02em;
   }
 }
 
-/* Drifting water wave for the Hero */
-@keyframes wave-drift {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+/* ── Hero background left↔right ambient pan ── */
+@keyframes hero-bg-pan {
+  0%   { background-position-x: 15%; }
+  50%  { background-position-x: 85%; }
+  100% { background-position-x: 15%; }
+}
+
+.hero-bg-pan {
+  animation: hero-bg-pan 12s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-pan {
+    animation: none;
+    background-position-x: 50%;
+  }
 }
 
 /* Custom Scrollbar for Adventure Theme */
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: #021915;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #08332a;
   border-radius: 5px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #06b6d4;
 }
@@ -195,6 +291,7 @@ html {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -206,6 +303,7 @@ html {
     transform: scale(1.15) translateY(-15px);
     opacity: 0.3;
   }
+
   100% {
     transform: scale(1) translateY(0);
     opacity: 1;
@@ -217,8 +315,13 @@ html {
 }
 
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-spin-slow {
@@ -226,7 +329,8 @@ html {
 }
 
 /* Prevent horizontal scroll jumps during slide animations */
-body, #root {
+body,
+#root {
   overflow-x: hidden;
   max-width: 100vw;
 }

@@ -4,7 +4,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Star } from "lucide-react";
 import { useReviews } from "../lib/data";
-import bgReviews from "../assets/Backgroundimg/DJI_0763.JPG";
+import bgReviews from "../assets/Backgroundimg/reviews-bg.webp";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -26,7 +26,7 @@ const ReviewCarousel = () => {
     <section
       ref={sectionRef}
       id="reviews"
-      className="py-24 sm:py-32 md:py-40 relative overflow-hidden bg-[#021915] text-white min-h-[85vh] flex flex-col justify-center"
+      className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
     >
       {/* Scroll-Driven Background Image Layer (DJI_0763.JPG) */}
       <motion.div
@@ -47,15 +47,15 @@ const ReviewCarousel = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-14 sm:mb-16"
+          className="text-center mb-8 sm:mb-10"
         >
           <span className="inline-block text-cyan-400 text-xs font-bold uppercase tracking-widest mb-3 bg-cyan-950/60 px-5 py-1.5 rounded-full border border-cyan-500/30 shadow-md">
             Guest Experiences
           </span>
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-white mb-5 drop-shadow-md italic tracking-tighter leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black uppercase text-white mb-3 drop-shadow-md tracking-wider leading-snug">
             What Our <span className="text-amber-400">Guests Say</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             Read about the experiences of our adventurers and campers on the Kali River.
           </p>
         </motion.div>
@@ -101,7 +101,12 @@ const ReviewCarousel = () => {
 
               return (
                 <SwiperSlide key={review.id} className="!h-auto flex flex-col pb-4">
-                  <div className="bg-slate-900/90 backdrop-blur-xl rounded-3xl p-7 sm:p-9 shadow-2xl hover:shadow-3xl transition-all duration-300 w-full flex-1 flex flex-col justify-between border border-white/15 relative group card-adventure text-white min-h-[300px]">
+                  <a
+                    href={review.platformUrl || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-slate-900/90 backdrop-blur-xl rounded-3xl p-7 sm:p-9 shadow-2xl hover:shadow-3xl hover:border-cyan-400/50 hover:bg-slate-900/95 transition-all duration-300 w-full flex-1 flex flex-col justify-between border border-white/15 relative group card-adventure text-white min-h-[300px] cursor-pointer block"
+                  >
                     <div>
                       {/* Rating Stars & Platform Pill */}
                       <div className="flex items-center justify-between mb-5">
@@ -118,14 +123,9 @@ const ReviewCarousel = () => {
                             />
                           ))}
                         </div>
-                        <a
-                          href={review.platformUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[11px] font-heading font-black uppercase tracking-wider text-cyan-300 bg-cyan-950/80 hover:bg-cyan-900 px-3.5 py-1.5 rounded-full transition-colors border border-cyan-500/30 cursor-pointer shrink-0"
-                        >
+                        <span className="text-[11px] font-heading font-black uppercase tracking-wider text-cyan-300 bg-cyan-950/80 group-hover:bg-cyan-900 px-3.5 py-1.5 rounded-full transition-colors border border-cyan-500/30 shrink-0">
                           {review.platform}
-                        </a>
+                        </span>
                       </div>
 
                       {/* Review Text */}
@@ -140,7 +140,7 @@ const ReviewCarousel = () => {
                         {initials}
                       </div>
                       <div>
-                        <h4 className="font-heading font-black text-white text-base leading-tight">
+                        <h4 className="font-heading font-black text-white group-hover:text-cyan-300 transition-colors text-base leading-tight">
                           {review.name}
                         </h4>
                         <span className="text-xs text-cyan-400/80 font-body">
@@ -148,7 +148,7 @@ const ReviewCarousel = () => {
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </a>
                 </SwiperSlide>
               );
             })}

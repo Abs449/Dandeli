@@ -157,22 +157,22 @@ const Booking = () => {
   }
 
   return (
-    <div className="bg-[#021915] pt-32 sm:pt-40 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8 min-h-screen relative overflow-hidden text-white">
+    <div className="bg-[#021915] pt-24 sm:pt-28 pb-14 sm:pb-18 px-4 sm:px-6 lg:px-8 min-h-screen relative overflow-hidden text-white">
       <div className="absolute top-20 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-20 right-0 w-96 h-96 bg-amber-400/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-3xl mx-auto relative z-10">
-        <div className="text-center mb-12">
-          <span className="inline-block text-cyan-400 uppercase tracking-[0.3em] text-xs sm:text-sm font-bold mb-3 bg-cyan-950/60 border border-cyan-500/30 px-4 py-1.5 rounded-full backdrop-blur-md">
+        <div className="text-center mb-8 sm:mb-10">
+          <span className="inline-block text-cyan-400 uppercase tracking-[0.3em] text-xs font-bold mb-3 bg-cyan-950/60 border border-cyan-500/30 px-4 py-1.5 rounded-full backdrop-blur-md">
             Plan your trip
           </span>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black text-white mb-4 tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-heading font-black uppercase text-white mb-3 tracking-wider leading-snug">
             Book Your{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200 pr-1">
               Adventure
             </span>
           </h1>
-          <p className="text-lg text-gray-300 font-body">
+          <p className="text-sm sm:text-base text-gray-300 font-body">
             Fill out the form and we'll get back to you within 24 hours to
             confirm your trip.
           </p>

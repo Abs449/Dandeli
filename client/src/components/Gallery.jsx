@@ -2,12 +2,12 @@
 
 
 import { motion } from "framer-motion";
-import imgDji from "../assets/Backgroundimg/dji_fly_20260103_124946_0149_1774087624546_photo.jpg.jpeg";
-import imgDSC1225 from "../assets/Backgroundimg/DSC_1225.JPG.jpeg";
-import imgDSC1226 from "../assets/Backgroundimg/DSC_1226.JPG.jpeg";
-import imgKayaking from "../assets/Backgroundimg/kayakinwater.jpg.jpeg";
-import imgJungle from "../assets/Backgroundimg/IMG20250524114921.jpg.jpeg";
-import imgRiver from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
+import imgDji from "../assets/Backgroundimg/gallery-drone.webp";
+import imgDSC1225 from "../assets/Backgroundimg/gallery-raft1.webp";
+import imgDSC1226 from "../assets/Backgroundimg/gallery-raft2.webp";
+import imgKayaking from "../assets/Backgroundimg/kayak-bg.webp";
+import imgJungle from "../assets/Backgroundimg/gallery-jungle.webp";
+import imgRiver from "../assets/Backgroundimg/river-scenery.webp";
 
 const items = [
   {
@@ -50,16 +50,16 @@ const items = [
 
 const Gallery = () => {
   return (
-    <section id="gallery" className="py-24 bg-transparent border-b border-[#D9E5DD]">
+    <section id="gallery" className="py-16 sm:py-20 bg-transparent border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <span className="section-subtitle inline-block mb-3">
+        <div className="text-center mb-8 sm:mb-10">
+          <span className="inline-block text-cyan-400 text-xs font-bold uppercase tracking-widest mb-2.5 bg-cyan-950/60 px-4 py-1 rounded-full border border-cyan-500/30 shadow-md">
             Visual Journey
           </span>
-          <h2 className="section-heading mb-6">
-            Capturing the Adventure
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black uppercase text-white mb-3 drop-shadow-md tracking-wider leading-snug">
+            Capturing the <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200 pr-1">Adventure</span>
           </h2>
-          <p className="body-text text-[#486581] max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             Browse through real snapshots of our guests conquering the Class III rapids of the Kali River and resting under the canopy of Ganeshgudi.
           </p>
         </div>

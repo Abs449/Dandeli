@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Waves } from "lucide-react";
-import backgroundImage from "../assets/Backgroundimg/background.jpeg";
-import raftCutout from "../assets/Backgroundimg/Empty_inflatable_white-water_raft_202608102025-removebg-preview.png";
-import personCutout from "../assets/Backgroundimg/person-removebg-preview.png";
+import backgroundImage from "../assets/Backgroundimg/hero-bg.webp";
+import raftCutout from "../assets/Backgroundimg/raft-cutout.webp";
+import personCutout from "../assets/Backgroundimg/person-cutout.webp";
 
 const Hero = () => {
   const heroRef = useRef(null);
-  const [shouldLoadBackground, setShouldLoadBackground] = useState(false);
+  const [shouldLoadBackground, setShouldLoadBackground] = useState(true);
   const [isDesktop, setIsDesktop] = useState(false);
   const [damStatus, setDamStatus] = useState({
     loading: true,
@@ -52,9 +52,12 @@ const Hero = () => {
   }, []);
 
   const loadDamStatus = async () => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || "";
-      const response = await fetch(`${apiUrl}/api/dam-status`);
+      const response = await fetch(`${apiUrl}/api/dam-status`, { signal: controller.signal });
+      clearTimeout(timeoutId);
       const data = await response.json();
       if (response.ok && data.success) {
         setDamStatus({
@@ -78,6 +81,7 @@ const Hero = () => {
         });
       }
     } catch (error) {
+      clearTimeout(timeoutId);
       console.error("Unable to load dam status", error);
       setDamStatus({
         loading: false,
@@ -112,16 +116,15 @@ const Hero = () => {
       ref={heroRef}
       className="relative min-h-[100svh] flex flex-col overflow-hidden"
     >
-      {/* ── LAYER 1 (z=0): Background photo — crisp, clear, full resolution ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none bg-cover"
+      {/* ── LAYER 1 (z=0): Background photo with left-right ambient pan ── */}
+      <div
+        className="hero-bg-pan absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: bgUrl,
-          backgroundPosition: isDesktop ? "45% 55%" : "50% 38%",
-          backgroundSize: "cover",
+          backgroundSize: "130%",
           backgroundRepeat: "no-repeat",
           backgroundColor: "#021915",
-          scale: heroBgScale,
+          backgroundPositionY: isDesktop ? "55%" : "38%",
           zIndex: 0,
         }}
       />
@@ -136,10 +139,10 @@ const Hero = () => {
         }}
       />
 
-      {/* ── FULL-SCREEN UI SHELL (z=40) ── */}
+      {/* ── FULL-SCREEN UI SHELL (z=10) ── */}
       <div
         className="relative flex flex-col w-full pointer-events-auto min-h-[100svh]"
-        style={{ zIndex: 40 }}
+        style={{ zIndex: 10 }}
       >
 
         {/* ── TOP: Compact info row — location + live status in one line ── */}
@@ -149,9 +152,10 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/25 bg-slate-950/65 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.16em] shadow-lg"
-            style={{ marginTop: isDesktop ? "2vh" : "1rem",
+            style={{
+              marginTop: isDesktop ? "2vh" : "1rem",
               marginBottom: isDesktop ? "1vh" : "2rem",
-             }}
+            }}
           >
             <Waves className="w-3 h-3 text-[#52b788] shrink-0" />
             <span>Ganeshgudi · Dandeli Kali River</span>
@@ -170,7 +174,7 @@ const Hero = () => {
                     : "Status Offline"}
             </span>
             {damStatus.supaValue !== null && (
-              <span className="text-[#f5c97a] font-bold font-mono text-[8px] sm:text-[9px] border-l border-white/25 pl-1.5 whitespace-nowrap hidden sm:inline">
+              <span className="text-[#f5c97a] font-bold font-mono text-[8px] sm:text-[9px] border-l border-white/25 pl-1.5 whitespace-nowrap inline">
                 SUPA {damStatus.supaValue} MW
               </span>
             )}
@@ -222,12 +226,12 @@ const Hero = () => {
                 RAP
               </motion.span>
 
-              {/* CENTRE: Raft + People — the hero visual (z=50 above the text) */}
+              {/* CENTRE: Raft + People — the hero visual (z=10 above the text) */}
               {shouldLoadBackground && (
                 <div
                   className="relative flex items-center justify-center shrink-0 pointer-events-none"
                   style={{
-                    zIndex: 50,
+                    zIndex: 10,
                     width: "clamp(380px, 45vw, 860px)",
                     marginLeft: "-2vw",
                     marginRight: "-2vw",
@@ -322,7 +326,7 @@ const Hero = () => {
                 <div
                   className="relative flex items-center justify-center shrink-0"
                   style={{
-                    zIndex: 50,
+                    zIndex: 10,
                     width: "clamp(260px, 88vw, 480px)",
                   }}
                 >

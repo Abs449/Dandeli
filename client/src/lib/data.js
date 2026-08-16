@@ -2,33 +2,67 @@ import { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import { seedServices, seedPackages, seedReviews } from "../data/seedData";
 
-// Tiny in-memory cache so navigating between sections doesn't refetch.
+// In-memory cache + localStorage fallback for low-bandwidth resilience
 const cache = {
   services: null,
   packages: null,
   reviews: null,
 };
 
-async function fetchOrFallback(table, fallback) {
-  if (cache[table]) return { data: cache[table], source: "cache" };
-  if (!supabase) {
-    cache[table] = fallback;
-    return { data: fallback, source: "seed" };
-  }
+function getLocalCache(table) {
   try {
-    const { data, error } = await supabase
+    const raw = localStorage.getItem(`dandeli_cache_${table}`);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function setLocalCache(table, data) {
+  try {
+    localStorage.setItem(`dandeli_cache_${table}`, JSON.stringify(data));
+  } catch {
+    // ignore storage quota errors
+  }
+}
+
+async function fetchOrFallback(table, fallback) {
+  const cached = cache[table] || getLocalCache(table);
+  if (cached) cache[table] = cached;
+
+  if (!supabase) {
+    const data = cached || fallback;
+    cache[table] = data;
+    return { data, source: cached ? "cache" : "seed" };
+  }
+
+  try {
+    // 3.5-second network timeout for slow 2G/3G connections
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Network timeout")), 3500)
+    );
+
+    const supabasePromise = supabase
       .from(table)
       .select("*")
       .order("display_order", { ascending: true });
+
+    const result = await Promise.race([supabasePromise, timeoutPromise]);
+    const { data, error } = result || {};
+
     if (error || !data || data.length === 0) {
-      cache[table] = fallback;
-      return { data: fallback, source: "seed", error: error?.message };
+      const dataToUse = cached || fallback;
+      cache[table] = dataToUse;
+      return { data: dataToUse, source: cached ? "cache" : "seed", error: error?.message };
     }
+
     cache[table] = data;
+    setLocalCache(table, data);
     return { data, source: "supabase" };
   } catch (err) {
-    cache[table] = fallback;
-    return { data: fallback, source: "seed", error: err?.message };
+    const dataToUse = cached || fallback;
+    cache[table] = dataToUse;
+    return { data: dataToUse, source: cached ? "cache" : "seed", error: err?.message };
   }
 }
 
@@ -103,7 +137,7 @@ export async function submitBooking(payload) {
       // Simulate a small network delay for a realistic loading spinner experience
       await new Promise(resolve => setTimeout(resolve, 1000));
       return { ok: true, source: "mock-storage" };
-    } catch (e) {
+    } catch {
       return { ok: true, source: "mock-memory" }; // Always succeed in fallback
     }
   }

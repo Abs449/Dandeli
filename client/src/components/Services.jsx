@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Clock, Tag, Shield, Compass, Waves } from "lucide-react";
 import { useServices } from "../lib/data";
-import bckgroundimg from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
+import bckgroundimg from "../assets/Backgroundimg/river-scenery.webp";
 
 const categories = [
   { id: "all", label: "All Activities", Icon: Compass },
@@ -49,10 +49,13 @@ const Services = () => {
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
     const apiUrl = import.meta.env.VITE_API_URL || "";
-    fetch(`${apiUrl}/api/dam-status`)
+    fetch(`${apiUrl}/api/dam-status`, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
+        clearTimeout(timeoutId);
         if (active && data.success) {
           setDamStatus({
             loading: false,
@@ -61,10 +64,13 @@ const Services = () => {
         }
       })
       .catch(() => {
+        clearTimeout(timeoutId);
         if (active) setDamStatus({ loading: false, isOpen: false });
       });
     return () => {
       active = false;
+      clearTimeout(timeoutId);
+      controller.abort();
     };
   }, []);
 
@@ -82,7 +88,7 @@ const Services = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="py-28 sm:py-36 md:py-44 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
+      className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
     >
       {/* Background Image Layer with Parallax */}
       <motion.div
@@ -104,31 +110,30 @@ const Services = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16 sm:mb-20"
+          className="text-center mb-8 sm:mb-12"
         >
           <span className="inline-block text-cyan-400 text-xs font-bold uppercase tracking-widest mb-3 bg-cyan-950/60 px-5 py-1.5 rounded-full border border-cyan-500/30 shadow-md">
             Experiences
           </span>
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-white mb-5 drop-shadow-md italic tracking-tighter leading-tight">
-            Our Adventure <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200">Activities</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black uppercase text-white mb-3 drop-shadow-md tracking-wider leading-snug">
+            Our Adventure <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-200 pr-1">Activities</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             From Class III white-water rapids to soothing natural river jacuzzis, explore all Kali River adventures.
           </p>
 
           {/* Reference Category Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-2.5 sm:gap-3 mt-10">
+          <div className="flex overflow-x-auto no-scrollbar md:flex-wrap justify-start md:justify-center gap-2.5 sm:gap-3 mt-10 -mx-4 px-4 sm:mx-0 sm:px-0 pb-1">
             {categories.map(({ id, label, Icon }) => {
               const isActive = activeTab === id;
               return (
                 <button
                   key={id}
                   onClick={() => setActiveTab(id)}
-                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? "bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/25 scale-105"
-                      : "bg-slate-950/80 border border-white/15 text-gray-300 hover:border-cyan-400/40 hover:text-white"
-                  }`}
+                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 ${isActive
+                    ? "bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/25 scale-105"
+                    : "bg-slate-950/80 border border-white/15 text-gray-300 hover:border-cyan-400/40 hover:text-white"
+                    }`}
                 >
                   <Icon size={14} className={isActive ? "text-slate-950" : "text-cyan-400"} />
                   <span>{label}</span>
@@ -139,18 +144,18 @@ const Services = () => {
         </motion.div>
 
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex md:grid overflow-x-auto md:overflow-x-visible gap-6 sm:gap-8 pb-6 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 no-scrollbar md:grid-cols-2 lg:grid-cols-3">
             {[0, 1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className="rounded-3xl bg-slate-900/60 animate-pulse h-96 border border-white/10"
+                className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink rounded-3xl bg-slate-900/60 animate-pulse h-96 border border-white/10"
               />
             ))}
           </div>
         )}
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Services Container: Horizontal scroll on mobile (< md), Grid on desktop (>= md) */}
+        <div className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x md:snap-none snap-mandatory grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pb-6 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 no-scrollbar">
           {filteredServices.map((service, index) => {
             const isRafting = service.name.toLowerCase().includes("rafting");
 
@@ -161,7 +166,7 @@ const Services = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
               >
                 <div>
                   {/* Card Media Header */}
@@ -177,16 +182,14 @@ const Services = () => {
                     {isRafting && !damStatus.loading && (
                       <div className="absolute top-4 left-4 z-10">
                         <span
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${
-                            damStatus.isOpen
-                              ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
-                              : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
-                          }`}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${damStatus.isOpen
+                            ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
+                            : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
+                            }`}
                         >
                           <span
-                            className={`w-2 h-2 rounded-full ${
-                              damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
-                            }`}
+                            className={`w-2 h-2 rounded-full ${damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
+                              }`}
                           />
                           {damStatus.isOpen ? "Rafting Active" : "Calm Water"}
                         </span>
@@ -242,6 +245,11 @@ const Services = () => {
               </motion.article>
             );
           })}
+        </div>
+
+        {/* Mobile Swipe Hint */}
+        <div className="flex md:hidden items-center justify-center gap-2 text-cyan-400/70 text-xs font-heading font-semibold mt-4">
+          <span className="animate-pulse">← Swipe horizontally to view all activities →</span>
         </div>
       </div>
     </section>

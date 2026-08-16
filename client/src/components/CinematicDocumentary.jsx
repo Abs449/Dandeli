@@ -14,13 +14,13 @@ import Location from "./Location";
 const ReviewCarousel = lazy(() => import("./ReviewCarousel"));
 
 // Import background assets from src/assets/Backgroundimg
-import imgHero from "../assets/Backgroundimg/DSC_1226.JPG.jpeg";
-import imgAbout from "../assets/Backgroundimg/Aboutus.webp";
-import imgServices from "../assets/Backgroundimg/IMG20250524114921.jpg.jpeg";
-import imgActivities from "../assets/Backgroundimg/dji_fly_20260103_124946_0149_1774087624546_photo.jpg.jpeg";
-import imgGallery from "../assets/Backgroundimg/kayakinwater.jpg.jpeg";
-import imgPackages from "../assets/Backgroundimg/DSC_1225.JPG.jpeg";
-import imgLocation from "../assets/Backgroundimg/IMG20250524115322.jpg.jpeg";
+import imgHero from "../assets/Backgroundimg/gallery-raft2.webp";
+import imgAbout from "../assets/Backgroundimg/aboutus-bg.webp";
+import imgServices from "../assets/Backgroundimg/gallery-jungle.webp";
+import imgActivities from "../assets/Backgroundimg/gallery-drone.webp";
+import imgGallery from "../assets/Backgroundimg/kayak-bg.webp";
+import imgPackages from "../assets/Backgroundimg/gallery-raft1.webp";
+import imgLocation from "../assets/Backgroundimg/river-scenery.webp";
 
 const ReviewFallback = () => (
   <div className="w-full py-8 text-center text-slate-400">Loading Reviews...</div>

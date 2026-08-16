@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Check, Flame } from "lucide-react";
 import { usePackages } from "../lib/data";
-import bgAdventure from "../assets/Backgroundimg/kayakinwater.webp";
+import bgAdventure from "../assets/Backgroundimg/kayak-bg.webp";
 
 const PackageCard = ({ pkg, index, navigate }) => {
   const recommended = pkg.recommended;
@@ -14,11 +14,10 @@ const PackageCard = ({ pkg, index, navigate }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`snap-center shrink-0 w-[85vw] sm:w-[340px] md:w-auto relative rounded-3xl overflow-hidden transition-all duration-300 ease-out border flex flex-col justify-between group cursor-pointer min-h-[580px] sm:min-h-[620px] transform-gpu hover:-translate-y-3 hover:scale-[1.02] ${
-        recommended
+      className={`snap-center shrink-0 w-[85vw] sm:w-[340px] md:w-auto relative rounded-3xl overflow-hidden transition-all duration-300 ease-out border flex flex-col justify-between group cursor-pointer min-h-[580px] sm:min-h-[620px] transform-gpu hover:-translate-y-3 hover:scale-[1.02] ${recommended
           ? "bg-slate-950/90 text-white shadow-2xl border-cyan-400/60 ring-4 ring-cyan-400/30 md:scale-[1.03] z-10 hover:border-amber-400/80 hover:shadow-cyan-500/20"
           : "bg-slate-900/90 text-white border-white/15 hover:border-cyan-400/50 shadow-xl hover:shadow-2xl hover:shadow-cyan-950/50"
-      }`}
+        }`}
     >
       {/* Glassmorphic Most Popular Tag */}
       {recommended && (
@@ -37,7 +36,7 @@ const PackageCard = ({ pkg, index, navigate }) => {
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 transform-gpu"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-          
+
           <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between z-10">
             <div>
               <span className="inline-block text-[10px] font-heading font-bold uppercase tracking-wider text-cyan-300 bg-cyan-950/80 px-3 py-1 rounded-full border border-cyan-500/30 backdrop-blur-md mb-2">
@@ -76,11 +75,10 @@ const PackageCard = ({ pkg, index, navigate }) => {
       <div className="p-7 sm:p-8 pt-0 mt-auto">
         <button
           onClick={() => navigate(`/booking?package=${encodeURIComponent(pkg.name)}`)}
-          className={`w-full py-4 rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-md cursor-pointer flex items-center justify-center gap-2 ${
-            recommended
+          className={`w-full py-4 rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-md cursor-pointer flex items-center justify-center gap-2 ${recommended
               ? "bg-amber-400 hover:bg-yellow-300 text-slate-950 shadow-amber-400/25 hover:shadow-lg"
               : "bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400"
-          }`}
+            }`}
         >
           <span>Book This Package</span>
         </button>
@@ -107,7 +105,7 @@ const Packages = () => {
     <section
       ref={sectionRef}
       id="packages"
-      className="py-28 sm:py-36 md:py-44 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
+      className="py-16 sm:py-20 md:py-24 relative overflow-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
     >
       {/* Background Image Layer with Parallax */}
       <motion.div
@@ -129,15 +127,15 @@ const Packages = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16 sm:mb-20"
+          className="text-center mb-8 sm:mb-12"
         >
           <span className="inline-block text-cyan-400 text-xs font-bold uppercase tracking-widest mb-2.5 bg-cyan-950/60 px-4 py-1 rounded-full border border-cyan-500/30 shadow-md">
             Handcrafted Deals
           </span>
-          <h2 className="text-5xl sm:text-6xl lg:text-7xl font-display font-black text-white mb-4 drop-shadow-md italic tracking-tighter leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-black uppercase text-white mb-3 drop-shadow-md tracking-wider leading-snug">
             Popular <span className="text-amber-400">Adventure Packages</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             All-inclusive multi-activity bundles designed for families, couples, and thrill-seeking groups.
           </p>
         </motion.div>
