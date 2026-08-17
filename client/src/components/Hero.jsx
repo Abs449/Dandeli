@@ -233,7 +233,7 @@ const Hero = () => {
                 className="font-impact uppercase leading-none shrink-0"
                 style={{
                   fontSize: "clamp(56px, 12vw, 220px)",
-                  color: "#52b788",
+                  color: "#D97757",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.55,
@@ -305,7 +305,7 @@ const Hero = () => {
                 className="font-impact uppercase leading-none shrink-0"
                 style={{
                   fontSize: "clamp(56px, 12vw, 220px)",
-                  color: "#52b788",
+                  color: "#D97757",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.55,
@@ -326,7 +326,7 @@ const Hero = () => {
                 className="font-impact uppercase leading-none w-full text-center"
                 style={{
                   fontSize: "clamp(56px, 20vw, 130px)",
-                  color: "#52b788",
+                  color: "#D97757",
                   letterSpacing: "0.14em",
                   paddingLeft: "0.14em",
                   lineHeight: 0.85,
