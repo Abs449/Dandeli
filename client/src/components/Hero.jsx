@@ -116,18 +116,35 @@ const Hero = () => {
       ref={heroRef}
       className="relative min-h-[100svh] flex flex-col overflow-hidden"
     >
-      {/* ── LAYER 1 (z=0): Background photo with left-right ambient pan ── */}
-      <div
-        className="hero-bg-pan absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: bgUrl,
-          backgroundSize: "130%",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: "#021915",
-          backgroundPositionY: isDesktop ? "55%" : "38%",
-          zIndex: 0,
-        }}
-      />
+      {/* ── LAYER 1 (z=0): Normal → mirrored → normal background loop ── */}
+      <div className="hero-bg-pan absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <div className="hero-bg-layers">
+          <div
+            className="hero-bg-layer hero-bg-layer-1"
+            style={{
+              backgroundImage: bgUrl,
+              backgroundColor: "#021915",
+              backgroundPosition: isDesktop ? "center 55%" : "center 38%",
+            }}
+          />
+          <div
+            className="hero-bg-layer hero-bg-layer-2"
+            style={{
+              backgroundImage: bgUrl,
+              backgroundColor: "#021915",
+              backgroundPosition: isDesktop ? "center 55%" : "center 38%",
+            }}
+          />
+          <div
+            className="hero-bg-layer hero-bg-layer-3"
+            style={{
+              backgroundImage: bgUrl,
+              backgroundColor: "#021915",
+              backgroundPosition: isDesktop ? "center 55%" : "center 38%",
+            }}
+          />
+        </div>
+      </div>
 
       {/* ── LAYER 2 (z=10): Clean, subtle vignette gradient for text contrast ── */}
       <div

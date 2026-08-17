@@ -1,4 +1,4 @@
-const CACHE_NAME = "dandeli-v1";
+const CACHE_NAME = "dandeli-v2";
 const ASSETS_TO_CACHE = [
   "/",
   "/favicon.svg",
@@ -35,6 +35,22 @@ self.addEventListener("fetch", (event) => {
     url.hostname.includes("supabase") ||
     url.hostname.includes("script.google.com")
   ) {
+    return;
+  }
+
+  // Always prefer fresh HTML for navigation requests to avoid stale app shells.
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
     return;
   }
 

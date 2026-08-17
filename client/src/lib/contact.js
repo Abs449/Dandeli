@@ -5,9 +5,9 @@ export const CONTACT = {
   phone: "+91 99020 14064",
   phoneRaw: "+919902014064",
   whatsapp: "9902014064",
-  email: "dandelikaliriverrafting@gmail.com",
+  email: "dandelikaliriverraftings@gmail.com",
   address:
-    "Dandeli Kali River Rafting Ganeshgudi, Ganeshgudi, Ilava, Dandeli, Ambeli, Karnataka 581365",
+    "Dandeli Kali River Rafting , Ganeshgudi, Ilava, Dandeli, Ambeli, Karnataka 581365",
   hours: "Open Daily · 7:00 AM – 8:00 PM",
   mapsUrl: "https://maps.app.goo.gl/NsshXPKLpgvYYTJk6",
   directionsUrl: "https://maps.app.goo.gl/NsshXPKLpgvYYTJk6",

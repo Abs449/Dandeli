@@ -251,21 +251,65 @@ html {
   }
 }
 
-/* ── Hero background left↔right ambient pan ── */
-@keyframes hero-bg-pan {
-  0%   { background-position-x: 15%; }
-  50%  { background-position-x: 85%; }
-  100% { background-position-x: 15%; }
+/* ── Hero background: continuous rightward track, no fade and no blank frames ── */
+@keyframes hero-bg-track-right {
+  0% {
+    transform: translate3d(-66.6667%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
 }
 
 .hero-bg-pan {
-  animation: hero-bg-pan 12s ease-in-out infinite;
+  overflow: hidden;
+  background-color: #021915;
+}
+
+.hero-bg-layers {
+  position: absolute;
+  inset: 0;
+  width: 300%;
+  display: flex;
+  animation: hero-bg-track-right 28s linear infinite;
+  will-change: transform;
+}
+
+.hero-bg-layer {
+  position: relative;
+  inset: auto;
+  flex: 0 0 33.3333%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-bg-layer-1 {
+  transform: scaleX(1);
+}
+
+.hero-bg-layer-2 {
+  transform: scaleX(-1);
+}
+
+.hero-bg-layer-3 {
+  transform: scaleX(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-bg-pan {
+  .hero-bg-layers {
     animation: none;
-    background-position-x: 50%;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .hero-bg-layer {
+    transform: scaleX(1);
+  }
+
+  .hero-bg-layer-2,
+  .hero-bg-layer-3 {
+    display: none;
   }
 }
 
