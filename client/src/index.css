@@ -271,7 +271,7 @@ html {
   inset: 0;
   width: 300%;
   display: flex;
-  animation: hero-bg-track-right 28s linear infinite;
+  animation: hero-bg-track-right 38s linear infinite;
   will-change: transform;
 }
 
