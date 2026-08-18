@@ -100,6 +100,47 @@ const Hero = () => {
   }, []);
 
   const isOpen = damStatus.status === "open";
+  const locationLabel = "Ganeshgudi · Dandeli Kali River";
+  const statusLabel = damStatus.loading
+    ? "Checking…"
+    : isOpen
+      ? "Strong Flow · Rafting Active"
+      : damStatus.status === "closed"
+        ? "Calm Flow · Rafting Suspended"
+        : "Status Offline";
+  const mobileStatusLabel = damStatus.loading
+    ? "Checking…"
+    : isOpen
+      ? "Strong Flow"
+      : damStatus.status === "closed"
+        ? "Calm Flow"
+        : "Status Offline";
+  const isClosed = damStatus.status === "closed";
+  const mobileStatusLine = mobileStatusLabel;
+  const mobileStatusDetail = damStatus.loading
+    ? ""
+    : isOpen
+      ? "Rafting Active"
+      : isClosed
+        ? "Rafting Suspended"
+        : "";
+
+  const hasPowerData = damStatus.supaValue !== null || damStatus.unit1 !== null || damStatus.unit2 !== null;
+  const powerSummary = [
+    damStatus.supaValue !== null ? `SUPA ${damStatus.supaValue} MW` : null,
+    damStatus.unit1 !== null ? `U1 ${damStatus.unit1} MW` : null,
+    damStatus.unit2 !== null ? `U2 ${damStatus.unit2} MW` : null,
+  ]
+    .filter(Boolean)
+    .join(" | ");
+  const powerSummaryCompact = [
+    damStatus.supaValue !== null ? `S ${damStatus.supaValue}` : null,
+    damStatus.unit1 !== null ? `U1 ${damStatus.unit1}` : null,
+    damStatus.unit2 !== null ? `U2 ${damStatus.unit2}` : null,
+  ]
+    .filter(Boolean)
+    .join(" | ");
+
   const statusColor = damStatus.loading
     ? "bg-amber-300"
     : isOpen
@@ -107,6 +148,13 @@ const Hero = () => {
       : damStatus.status === "closed"
         ? "bg-rose-400"
         : "bg-slate-400";
+  const statusDotGlow = damStatus.loading
+    ? "shadow-[0_0_8px_rgba(252,211,77,0.95)]"
+    : isOpen
+      ? "shadow-[0_0_10px_rgba(52,211,153,0.95)]"
+      : damStatus.status === "closed"
+        ? "shadow-[0_0_10px_rgba(251,113,133,0.95)]"
+        : "shadow-[0_0_8px_rgba(148,163,184,0.8)]";
 
   const bgUrl = shouldLoadBackground ? `url(${backgroundImage})` : "none";
 
@@ -163,37 +211,61 @@ const Hero = () => {
       >
 
         {/* ── TOP: Compact info row — location + live status in one line ── */}
-        <div className="flex items-center justify-center gap-2 pt-20 sm:pt-24 px-3">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 pt-20 sm:pt-24 px-3 w-full max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/25 bg-slate-950/65 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.16em] shadow-lg"
+           className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.04em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] shrink-0"
             style={{
               marginTop: isDesktop ? "2vh" : "1rem",
-              marginBottom: isDesktop ? "1vh" : "2rem",
+              marginBottom: isDesktop ? "1vh" : "0.5rem",
             }}
           >
             <Waves className="w-3 h-3 text-[#52b788] shrink-0" />
-            <span>Ganeshgudi · Dandeli Kali River</span>
-            <span className="w-px h-3 bg-white/25 mx-0.5" />
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusColor}`} />
-              <span className={`relative inline-flex rounded-full h-2 w-2 ${statusColor}`} />
-            </span>
-            <span className="font-semibold whitespace-nowrap">
-              {damStatus.loading
-                ? "Checking…"
-                : isOpen
-                  ? "Rafting Active"
-                  : damStatus.status === "closed"
-                    ? "Rafting Suspended"
-                    : "Status Offline"}
-            </span>
-            {damStatus.supaValue !== null && (
-              <span className="text-[#f5c97a] font-bold font-mono text-[8px] sm:text-[9px] border-l border-white/25 pl-1.5 whitespace-nowrap inline">
-                SUPA {damStatus.supaValue} MW
-              </span>
+            <span className="text-center leading-tight whitespace-normal sm:whitespace-nowrap">{locationLabel}</span>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.14 }}
+            className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-x-2 px-1.5 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
+            style={{
+              marginTop: isDesktop ? "2vh" : "0.5rem",
+              marginBottom: isDesktop ? "1vh" : "0",
+            }}
+          >
+            {isDesktop ? (
+              <>
+                <span className="w-full sm:w-auto inline-flex items-center gap-1.5 font-semibold leading-tight sm:whitespace-nowrap">
+                  <span className="relative flex h-2.5 w-2.5 shrink-0">
+                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-90 ${statusColor}`} />
+                    <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusColor} ${statusDotGlow}`} />
+                  </span>
+                  {statusLabel}
+                </span>
+                {hasPowerData && (
+                  <span className="w-full sm:w-auto text-[#f5c97a] font-bold font-mono text-[8px] sm:text-[9px] pt-0.5 sm:pt-0 border-t sm:border-t-0 border-white/25 sm:border-l sm:border-white/25 sm:pl-1.5 leading-tight break-words sm:whitespace-nowrap">
+                    {powerSummary}
+                  </span>
+                )}
+              </>
+            ) : (
+              <div className="flex min-w-0 flex-row flex-wrap items-center justify-center gap-x-2 gap-y-0.5 leading-tight text-center">
+                <span className="inline-flex items-center justify-center gap-1.5 font-semibold whitespace-nowrap">                  <span className="relative flex h-2.5 w-2.5 shrink-0">
+                    <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-90 ${statusColor}`} />
+                    <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusColor} ${statusDotGlow}`} />
+                  </span>
+                  {mobileStatusLine}
+                </span>
+                {mobileStatusDetail && <span className="font-semibold whitespace-nowrap">{mobileStatusDetail}</span>}
+                {hasPowerData && (<span className="text-[#f5c97a] font-bold font-mono text-[7px] border-l border-white/25 pl-1.5 whitespace-nowrap">
+                  
+                    {powerSummaryCompact}
+                  </span>
+                )}
+              </div>
             )}
           </motion.div>
         </div>
@@ -230,14 +302,13 @@ const Hero = () => {
                 initial={{ opacity: 0, x: -40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="font-impact uppercase leading-none shrink-0"
+                className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#FF5A1F] via-[#FF7A2F] to-[#FFB347] bg-clip-text text-transparent"
                 style={{
                   fontSize: "clamp(56px, 12vw, 220px)",
-                  color: "#D97757",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
-                  opacity: 0.55,
-                  textShadow: "0 2px 20px rgba(0,0,0,0.7)",
+                  opacity: 0.95,
+                  textShadow: "0 2px 10px rgba(0,0,0,0.35)",
                 }}
               >
                 RAP
@@ -302,14 +373,13 @@ const Hero = () => {
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="font-impact uppercase leading-none shrink-0"
+                className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#FF5A1F] via-[#FF7A2F] to-[#FFB347] bg-clip-text text-transparent"
                 style={{
                   fontSize: "clamp(56px, 12vw, 220px)",
-                  color: "#D97757",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
-                  opacity: 0.55,
-                  textShadow: "0 2px 20px rgba(0,0,0,0.7)",
+                  opacity: 0.95,
+                  textShadow: "0 2px 10px rgba(0,0,0,0.35)",
                 }}
               >
                 DS
@@ -323,15 +393,14 @@ const Hero = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="font-impact uppercase leading-none w-full text-center"
+                className="font-impact uppercase leading-none w-full text-center bg-gradient-to-r from-[#B83B24] via-[#FF6B4A] to-[#FFB15C] bg-clip-text text-transparent"
                 style={{
                   fontSize: "clamp(56px, 20vw, 130px)",
-                  color: "#D97757",
                   letterSpacing: "0.14em",
                   paddingLeft: "0.14em",
                   lineHeight: 0.85,
-                  opacity: 0.6,
-                  textShadow: "0 2px 18px rgba(0,0,0,0.8)",
+                  opacity: 1,
+                  textShadow: "0 2px 18px rgba(255,107,74,0.25)",
                   marginBottom: "clamp(8px, 1.5vh, 18px)",
                 }}
               >
@@ -433,8 +502,8 @@ const Hero = () => {
                 to="/booking"
                 className="block w-full sm:w-auto px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-full font-bold text-xs sm:text-base transition-all duration-200 hover:-translate-y-0.5 text-center uppercase tracking-wider font-display text-white shadow-xl hover:brightness-110"
                 style={{
-                  backgroundColor: "#52b788",
-                  boxShadow: "0 8px 30px rgba(82,183,136,0.45)",
+                  backgroundColor: "#FF6B4A",
+                  boxShadow: '0 6px 24px rgba(255,90,31,0.35)',
                 }}
               >
                 Book Adventure Now

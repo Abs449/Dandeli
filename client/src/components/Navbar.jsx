@@ -197,9 +197,9 @@ const Navbar = () => {
                   onClick={goToBooking}
                   className="block w-full text-center px-6 py-4 rounded-2xl font-heading font-bold uppercase tracking-wider shadow-lg hover:opacity-90 active:scale-95 transition-all text-base cursor-pointer"
                   style={{
-                    backgroundColor: '#52b788',
+                    backgroundColor: '#FF6B4A',
                     color: '#fff',
-                    boxShadow: '0 6px 24px rgba(82,183,136,0.35)',
+                    boxShadow: '0 6px 24px rgba(255,90,31,0.35)',
                   }}
                 >
                   Book Adventure Now
