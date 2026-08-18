@@ -145,12 +145,12 @@ const Navbar = () => {
                 onClick={goToBooking}
                 className="px-6 py-2 rounded-full font-heading font-bold transition-all duration-150 active:scale-95 text-xs uppercase tracking-wider shadow-md cursor-pointer"
                 style={{
-                  backgroundColor: '#52b788',
+                  backgroundColor: '#FF6B4A',
                   color: '#fff',
                   boxShadow: '0 4px 18px rgba(82,183,136,0.35)',
                 }}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = '#62c496'}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#52b788'}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = '#FF6B4A'}
               >
                 Book Now
               </button>
