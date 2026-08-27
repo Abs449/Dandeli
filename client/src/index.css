@@ -268,7 +268,9 @@ html {
 
 .hero-bg-layers {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
   width: 300%;
   display: flex;
   animation: hero-bg-track-right 38s linear infinite;
@@ -297,7 +299,7 @@ html {
   transform: scaleX(1);
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* @media (prefers-reduced-motion: reduce) {
   .hero-bg-layers {
     animation: none;
     transform: translate3d(0, 0, 0);
@@ -311,7 +313,7 @@ html {
   .hero-bg-layer-3 {
     display: none;
   }
-}
+} */
 
 /* Custom Scrollbar for Adventure Theme */
 ::-webkit-scrollbar {

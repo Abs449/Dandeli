@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Waves } from "lucide-react";
 import backgroundImage from "../assets/Backgroundimg/hero-bg.webp";
@@ -10,6 +10,7 @@ const Hero = () => {
   const heroRef = useRef(null);
   const [shouldLoadBackground, setShouldLoadBackground] = useState(true);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [showStatusDetails, setShowStatusDetails] = useState(false);
   const [damStatus, setDamStatus] = useState({
     loading: true,
     status: "loading",
@@ -50,6 +51,17 @@ const Hero = () => {
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
+  useEffect(() => {
+  if (showStatusDetails) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "";
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [showStatusDetails]);
 
   const loadDamStatus = async () => {
     const controller = new AbortController();
@@ -226,11 +238,13 @@ const Hero = () => {
             <span className="text-center leading-tight whitespace-normal sm:whitespace-nowrap">{locationLabel}</span>
           </motion.div>
 
-          <motion.div
+          <motion.button
+            type="button"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.14 }}
-            className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-x-2 px-1.5 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
+            onClick={() => setShowStatusDetails(true)}
+          className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-x-2 px-1.5 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] cursor-pointer hover:bg-white/15 transition-colors"
             style={{
               marginTop: isDesktop ? "2vh" : "0.5rem",
               marginBottom: isDesktop ? "1vh" : "0",
@@ -267,8 +281,9 @@ const Hero = () => {
                 )}
               </div>
             )}
-          </motion.div>
+          </motion.button>
         </div>
+        
 
         {/* ── COMPOSITE STAGE: CONQUER THE + RAP[RAFT]DS + OF DANDELI ── */}
         <div className="relative flex-1 w-full overflow-hidden flex flex-col items-center justify-center">
@@ -302,13 +317,13 @@ const Hero = () => {
                 initial={{ opacity: 0, x: -40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#FF5A1F] via-[#FF7A2F] to-[#FFB347] bg-clip-text text-transparent"
+                className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
                 style={{
                   fontSize: "clamp(56px, 12vw, 220px)",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.95,
-                  textShadow: "0 2px 10px rgba(0,0,0,0.35)",
+                  filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.35))",
                 }}
               >
                 RAP
@@ -373,13 +388,13 @@ const Hero = () => {
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#FF5A1F] via-[#FF7A2F] to-[#FFB347] bg-clip-text text-transparent"
+                className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
                 style={{
                   fontSize: "clamp(56px, 12vw, 220px)",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.95,
-                  textShadow: "0 2px 10px rgba(0,0,0,0.35)",
+                  filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.35))",
                 }}
               >
                 DS
@@ -393,14 +408,14 @@ const Hero = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="font-impact uppercase leading-none w-full text-center bg-gradient-to-r from-[#B83B24] via-[#FF6B4A] to-[#FFB15C] bg-clip-text text-transparent"
+                className="font-impact uppercase leading-none w-full text-center bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
                 style={{
                   fontSize: "clamp(56px, 20vw, 130px)",
                   letterSpacing: "0.14em",
                   paddingLeft: "0.14em",
                   lineHeight: 0.85,
                   opacity: 1,
-                  textShadow: "0 2px 18px rgba(255,107,74,0.25)",
+                  textShadow: "0 2px 18px rgba(249, 111, 80, 0)",
                   marginBottom: "clamp(8px, 1.5vh, 18px)",
                 }}
               >
@@ -524,6 +539,108 @@ const Hero = () => {
           </motion.div>
         </div>
       </div>
+      <AnimatePresence>
+          {showStatusDetails && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4"
+              onClick={() => setShowStatusDetails(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                transition={{ duration: 0.25 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl bg-[#021915] border border-[#f5c97a]/50 shadow-2xl p-6 sm:p-8 text-white"
+              >
+                {/* Close */}
+                <button
+                  type="button"
+                  onClick={() => setShowStatusDetails(false)}
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xl"
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+
+                <div className="pr-10">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[#f5c97a] font-bold mb-2">
+                    Live River Status
+                  </p>
+
+                  <h2 className="font-heading text-3xl sm:text-4xl font-black uppercase">
+                    {statusLabel}
+                  </h2>
+
+                  <p className="mt-4 text-gray-300 leading-relaxed">
+                    {damStatus.message}
+                  </p>
+                </div>
+
+                {/* Status information */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                  <div className="rounded-2xl bg-white/5 border border-white/10 p-5">
+                    <p className="text-xs uppercase tracking-wider text-gray-400">
+                      River Flow
+                    </p>
+                    <p className="mt-2 text-xl font-bold">
+                      {isOpen
+                        ? "Strong Flow"
+                        : isClosed
+                          ? "Calm Flow"
+                          : "Unavailable"}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl bg-white/5 border border-white/10 p-5">
+                    <p className="text-xs uppercase tracking-wider text-gray-400">
+                      Rafting Status
+                    </p>
+                    <p className="mt-2 text-xl font-bold">
+                      {isOpen
+                        ? "Active"
+                        : isClosed
+                          ? "Suspended"
+                          : "Unavailable"}
+                    </p>
+                  </div>
+                </div>
+
+                {hasPowerData && (
+                  <div className="mt-4 rounded-2xl bg-white/5 border border-white/10 p-5">
+                    <p className="text-xs uppercase tracking-wider text-[#f5c97a] font-bold">
+                      Power Data
+                    </p>
+
+                    <div className="mt-3 flex flex-wrap gap-4 font-mono text-sm">
+                      {damStatus.supaValue !== null && (
+                        <span>SUPA {damStatus.supaValue} MW</span>
+                      )}
+
+                      {damStatus.unit1 !== null && (
+                        <span>U1 {damStatus.unit1} MW</span>
+                      )}
+
+                      {damStatus.unit2 !== null && (
+                        <span>U2 {damStatus.unit2} MW</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {damStatus.fetchedAt && (
+                  <p className="mt-5 text-xs text-gray-500">
+                    Last updated:{" "}
+                    {new Date(damStatus.fetchedAt).toLocaleString()}
+                  </p>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
     </div>
   );
 };

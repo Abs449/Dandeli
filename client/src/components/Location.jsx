@@ -8,12 +8,7 @@ const items = [
   {
     Icon: MapPinned,
     title: "Address",
-    body: CONTACT.address.split(",").map((line, i) => (
-      <span key={i} className="block">
-        {line.trim()}
-        {i < CONTACT.address.split(",").length - 1 ? "," : ""}
-      </span>
-    )),
+    body: CONTACT.address
   },
   {
     Icon: Phone,

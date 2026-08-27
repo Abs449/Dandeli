@@ -48,6 +48,16 @@ const stats = [
 const About = () => {
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const sectionRef = useRef(null);
+  useEffect(() => {
+  if (!isStoryModalOpen) return;
+
+  const originalOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+
+  return () => {
+    document.body.style.overflow = originalOverflow;
+  };
+}, [isStoryModalOpen]);
 
   // Lightweight hardware-accelerated scroll transform (no spring loop overhead)
   const { scrollYProgress } = useScroll({
@@ -186,7 +196,7 @@ const About = () => {
       {/* Story Popup Modal */}
       <AnimatePresence>
         {isStoryModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <div className="fixed top-[80px] left-0 right-0 bottom-0 z-50 flex items-center justify-center p-4 sm:p-6">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -202,49 +212,76 @@ const About = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 0 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="relative w-full max-w-xl bg-slate-950 border border-cyan-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl z-10 text-white overflow-hidden"
+              className="relative w-full max-w-2xl max-h-[calc(100vh-120px)] rounded-3xl p-[1px] bg-gradient-to-r from-cyan-400 via-teal-300 to-amber-400 shadow-2xl z-10 overflow-hidden"
             >
-              {/* Top Accent Line */}
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-cyan-500 via-teal-300 to-amber-400" />
+              <div className="relative w-full h-full max-h-[calc(100vh-122px)] bg-slate-950 rounded-[23px] px-6 py-5 sm:px-10 sm:py-6 text-white overflow-hidden">
 
-              <button
-                onClick={() => setIsStoryModalOpen(false)}
-                className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-colors cursor-pointer"
-                aria-label="Close story"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-slate-900 flex items-center justify-center">
-                  <img src={photo} alt="Guide Avatar" className="w-full h-full object-cover" />
-                </div>
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-heading font-black text-white">
-                    My Dandeli Journey
-                  </h3>
-                  <span className="text-xs text-cyan-400 font-semibold flex items-center gap-1 mt-0.5">
-                    <Heart className="w-3.5 h-3.5 fill-current text-cyan-400" /> Certified Kali River Instructor
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-4 text-gray-200 font-body text-sm sm:text-base leading-relaxed border-t border-white/10 pt-5">
-                <p>
-                  Born and raised along the banks of the Kali River, my connection to Dandeli’s lush wilderness began in childhood. Over 8 years ago, I turned my love for white-water navigation into a passion for sharing these untamed rapids with travelers from around the world.
-                </p>
-                <p>
-                  For me, rafting isn’t just an adrenaline rush — it’s about absolute safety, genuine hospitality, and creating unforgettable memories in nature. Whether you're conquering Class III rapids or sitting around a forest campfire, my mission is simple: <strong>Every traveler who books with me leaves as a lifelong friend.</strong>
-                </p>
-              </div>
-
-              <div className="mt-8 flex justify-end">
+                {/* Close Button */}
                 <button
                   onClick={() => setIsStoryModalOpen(false)}
-                  className="px-6 py-2.5 bg-amber-400 hover:bg-yellow-300 text-slate-950 rounded-full font-heading font-bold text-xs uppercase tracking-wider transition-all cursor-pointer"
+                  className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white transition-colors cursor-pointer"
+                  aria-label="Close story"
                 >
-                  Close Story
+                  <X className="w-5 h-5" />
                 </button>
+
+                {/* Header */}
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-slate-900 flex items-center justify-center">
+                    <img
+                      src={photo}
+                      alt="Guide Avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-heading font-black text-white">
+                      Mr. Karthik , Your Adventure Guide
+                    </h3>
+
+                    <span className="text-xs text-cyan-400 font-semibold flex items-center gap-1 mt-0.5">
+                      <Heart className="w-3.5 h-3.5 fill-current text-cyan-400" />
+                      Certified Kali River Rafting Instructor
+                    </span>
+                  </div>
+                </div>
+
+                {/* Story */}
+                <div className="space-y-6 text-gray-200 font-body text-sm sm:text-base leading-relaxed border-t border-white/10 pt-6 pr-4 max-h-[calc(100vh-260px)] overflow-y-auto">
+                  <p>
+                    I was born and raised in the heart of Ganeshgudi, Dandeli. Growing up
+                    along the roaring Kali River and surrounded by the dense forests of
+                    the Western Ghats, this wild landscape was my playground. Exploring
+                    these rugged terrains from an early age gave me a deep, instinctive
+                    understanding of the river's currents and the hidden wonders of the
+                    jungle.
+                  </p>
+
+                  <p>
+                    For me, <strong>the Kali River isn't just a workplace. It's home.</strong>
+                  </p>
+
+                  <p>
+                    With over 12 years of experience on the river, I have turned my
+                    lifelong connection to this landscape into a passion for sharing its
+                    adventure with travelers from around the world. My deep-rooted local
+                    knowledge, combined with years of hands-on expertise, allows me to
+                    create safe, authentic, and unforgettable experiences for every guest.
+                  </p>
+
+                  <p>
+                    Many travelers don't realize that rafting happens in Ganeshgudi, not
+                    Dandeli. After seeing visitors struggle with confusing bookings and
+                    limited support, I started this business to provide honest guidance,
+                    transparent pricing, and hands-on assistance from booking to adventure.
+                    Whether you're conquering the rapids of the Kali River or relaxing by
+                    a riverside camp, my mission is simple: to help every guest experience
+                    the very best of Ganeshgudi with confidence, comfort, and genuine local
+                    hospitality.
+                  </p>
+                </div>
+
               </div>
             </motion.div>
           </div>

@@ -10,22 +10,22 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="space-y-4">
             <h3 className="text-2xl font-heading font-black text-white tracking-tight">
-              Dandeli<span className="text-cyan-400 font-extrabold">Adventure</span>
+              Dandeli<span className="text-cyan-400 font-extrabold">         Adventure</span>
             </h3>
-            <p className="text-gray-300 text-sm leading-relaxed font-body">
+            <p className="text-gray-300 text-sm md:text-base leading-relaxed font-body">
               Experience nature with our adventure tourism packages. We provide
               safe, unforgettable white-water rafting and forest experiences.
             </p>
           </div>
 
           <div>
-            <h4 className="text-lg font-heading font-bold mb-6 text-white uppercase tracking-wider text-xs">Quick Links</h4>
+            <h4 className="text-lg font-heading font-bold mb-6 text-white uppercase tracking-wider text-s">Quick Links</h4>
             <ul className="space-y-3">
               {['Home', 'About', 'Services', 'Packages', 'Reviews'].map((item) => (
                 <li key={item}>
                   <a
-                    href={`/#${item.toLowerCase()}`}
-                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm font-body"
+                    href={item == 'Home' ? '/' : `/#${item.toLowerCase()}`}
+                    className="text-gray-300 text-sm md:text-base leading-relaxed font-body"
                   >
                     {item}
                   </a>
@@ -40,8 +40,8 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-lg font-heading font-bold mb-6 text-white uppercase tracking-wider text-xs">Contact Us</h4>
-            <ul className="space-y-4 text-sm font-body">
+            <h4 className="text-lg font-heading font-bold mb-6 text-white uppercase tracking-wider text-s">Contact Us</h4>
+            <ul className="space-y-4 text-sm md:text-base font-body">
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-cyan-400 mt-0.5 shrink-0" />
                 <span className="text-gray-300 leading-relaxed">{CONTACT.address}</span>
@@ -62,7 +62,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="text-lg font-heading font-bold mb-6 text-white uppercase tracking-wider text-xs">Follow Us</h4>
+            <h4 className="text-lg font-heading font-bold mb-6 text-white uppercase tracking-wider text-s">Follow Us</h4>
             <div className="flex space-x-3">
               {[
                 { href: CONTACT.socials.instagram, Icon: FaInstagram },

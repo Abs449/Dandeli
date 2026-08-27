@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Clock, Tag, Shield, Compass, Waves } from "lucide-react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { Clock, Tag, Shield, Compass, Waves, ChevronLeft, ChevronRight } from "lucide-react";
 import { useServices } from "../lib/data";
 import bckgroundimg from "../assets/Backgroundimg/river-scenery.webp";
+import { CONTACT } from "../lib/contact";
 
 const categories = [
   { id: "all", label: "All Activities", Icon: Compass },
-  { id: "rafting", label: "River Rafting", Icon: Waves },
-  { id: "water", label: "Water Sports", Icon: Waves },
-  { id: "fun", label: "Sky & Fun", Icon: Tag },
+  { id: "rafting", label: "White Water Rafting", Icon: Waves },
+  { id: "water", label: "Water & Adventure Sports", Icon: Waves },
+  { id: "adventure", label: "Adventure Activities", Icon: Tag },
+  { id: "wildlife", label: "Wildlife & Nature", Icon: Compass },
+  { id: "camping", label: "Camping & Stay", Icon: Clock },
 ];
 
 const getDifficultyColor = (difficulty) => {
@@ -31,6 +34,8 @@ const getDifficultyColor = (difficulty) => {
 const Services = () => {
   const { data: services, loading } = useServices();
   const [activeTab, setActiveTab] = useState("all");
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
   const [damStatus, setDamStatus] = useState({
     loading: true,
     isOpen: false,
@@ -46,6 +51,18 @@ const Services = () => {
 
   const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.08, 1.02]);
   const bgOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.6, 0.95, 0.95, 0.6]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [activeTab]);
 
   useEffect(() => {
     let active = true;
@@ -76,13 +93,22 @@ const Services = () => {
 
   const filteredServices = (services || []).filter((item) => {
     if (activeTab === "all") return true;
-    if (activeTab === "rafting") return item.name.toLowerCase().includes("rafting");
-    if (activeTab === "water")
-      return item.name.toLowerCase().includes("kayak") || item.name.toLowerCase().includes("jacuzzi") || item.name.toLowerCase().includes("water");
-    if (activeTab === "fun")
-      return item.name.toLowerCase().includes("zipline") || item.name.toLowerCase().includes("camping") || item.name.toLowerCase().includes("sky");
-    return true;
+    return item.category === activeTab;
   });
+
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
+  const paginatedServices = isDesktop
+    ? filteredServices.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+    : filteredServices;
+
+  const handlePrev = () => {
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0));
+  };
 
   return (
     <section
@@ -154,97 +180,155 @@ const Services = () => {
           </div>
         )}
 
-        {/* Services Container: Horizontal scroll on mobile (< md), Grid on desktop (>= md) */}
-        <div className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x md:snap-none snap-mandatory grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pb-6 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 no-scrollbar">
-          {filteredServices.map((service, index) => {
-            const isRafting = service.name.toLowerCase().includes("rafting");
+        {/* Services Container: Horizontal scroll on mobile (< md), Paginated 3x3 Grid on desktop (>= md) */}
+        <div className="relative">
+          {/* Desktop Navigation Arrows */}
+          {isDesktop && totalPages > 1 && (
+            <>
+              {currentPage > 0 && (
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="absolute -left-12 lg:-left-16 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-950/80 border border-white/20 text-white flex items-center justify-center hover:bg-amber-400 hover:text-slate-950 transition-all duration-200 shadow-xl cursor-pointer hover:scale-105"
+                  aria-label="Previous page"
+                >
+                  <ChevronLeft size={24} />
+                </button>
+              )}
+              {currentPage < totalPages - 1 && (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="absolute -right-12 lg:-right-16 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-slate-950/80 border border-white/20 text-white flex items-center justify-center hover:bg-amber-400 hover:text-slate-950 transition-all duration-200 shadow-xl cursor-pointer hover:scale-105"
+                  aria-label="Next page"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              )}
+            </>
+          )}
 
-            return (
-              <motion.article
-                key={service.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+          <div className="overflow-hidden w-full">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage + "_" + activeTab}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.35 }}
+                className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x md:snap-none snap-mandatory grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 pb-6 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 no-scrollbar"
               >
-                <div>
-                  {/* Card Media Header */}
-                  <div className="h-52 overflow-hidden relative">
-                    <img
-                      src={service.image}
-                      alt={service.name}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                {paginatedServices.map((service, index) => {
+                  const isRafting = service.name.toLowerCase().includes("rafting");
 
-                    {/* Dam Availability Badge */}
-                    {isRafting && !damStatus.loading && (
-                      <div className="absolute top-4 left-4 z-10">
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${damStatus.isOpen
-                            ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
-                            : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
-                            }`}
-                        >
-                          <span
-                            className={`w-2 h-2 rounded-full ${damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
-                              }`}
+                  return (
+                    <motion.article
+                      key={service.id}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: (index % 3) * 0.05 }}
+                      className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                      onClick={() => {
+                        const message = `Hey Karthik , I want to know further details about ${service.name}`;
+                        const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
+                        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+                      }}
+                    >
+                      <div>
+                        {/* Card Media Header */}
+                        <div className="h-52 overflow-hidden relative">
+                          <img
+                            src={service.image}
+                            alt={service.name}
+                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                           />
-                          {damStatus.isOpen ? "Rafting Active" : "Calm Water"}
-                        </span>
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+
+                          {/* Dam Availability Badge */}
+                          {isRafting && !damStatus.loading && (
+                            <div className="absolute top-4 left-4 z-10">
+                              <span
+                                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${damStatus.isOpen
+                                  ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
+                                  : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
+                                  }`}
+                              >
+                                <span
+                                  className={`w-2 h-2 rounded-full ${damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
+                                    }`}
+                                />
+                                {damStatus.isOpen ? "Rafting Active" : "Calm Water"}
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Difficulty Badge */}
+                          <div className="absolute top-4 right-4 z-10">
+                            <span
+                              className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(
+                                service.difficulty,
+                              )}`}
+                            >
+                              <Shield size={10} />
+                              {service.difficulty}
+                            </span>
+                          </div>
+
+                          <div className="absolute bottom-4 left-6 right-6 z-10">
+                            <h3 className="text-xl sm:text-2xl font-heading font-black text-white leading-tight tracking-tight">
+                              {service.name}
+                            </h3>
+                          </div>
+                        </div>
+
+                        {/* Card Content Body */}
+                        <div className="p-6 sm:p-7 space-y-4">
+                          <p className="text-gray-300 font-body text-sm sm:text-base leading-relaxed line-clamp-3">
+                            {service.shortDescription || service.fullDescription}
+                          </p>
+
+                          <div className="flex items-center justify-between border-t border-white/10 pt-4 text-xs font-body text-gray-300">
+                            <div className="flex items-center gap-1.5 text-cyan-300">
+                              <Clock size={14} />
+                              <span>{service.duration}</span>
+                            </div>
+                            <span className="text-2xl font-heading font-black text-amber-400">
+                              {service.price}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    )}
 
-                    {/* Difficulty Badge */}
-                    <div className="absolute top-4 right-4 z-10">
-                      <span
-                        className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(
-                          service.difficulty,
-                        )}`}
-                      >
-                        <Shield size={10} />
-                        {service.difficulty}
-                      </span>
-                    </div>
-
-                    <div className="absolute bottom-4 left-6 right-6 z-10">
-                      <h3 className="text-xl sm:text-2xl font-heading font-black text-white leading-tight tracking-tight">
-                        {service.name}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Card Content Body */}
-                  <div className="p-6 sm:p-7 space-y-4">
-                    <p className="text-gray-300 font-body text-sm sm:text-base leading-relaxed line-clamp-3">
-                      {service.shortDescription || service.fullDescription}
-                    </p>
-
-                    <div className="flex items-center justify-between border-t border-white/10 pt-4 text-xs font-body text-gray-300">
-                      <div className="flex items-center gap-1.5 text-cyan-300">
-                        <Clock size={14} />
-                        <span>{service.duration}</span>
+                      {/* Card Action Button */}
+                      <div className="p-6 sm:p-7 pt-0">
+                        <div
+                          className="block w-full text-center py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer"
+                        >
+                          Inquire Activity
+                        </div>
                       </div>
-                      <span className="text-2xl font-heading font-black text-amber-400">
-                        {service.price}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                    </motion.article>
+                  );
+                })}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-                {/* Card Action Button */}
-                <div className="p-6 sm:p-7 pt-0">
-                  <Link
-                    to={`/booking?package=${encodeURIComponent(service.name)}`}
-                    className="block w-full text-center py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer"
-                  >
-                    Inquire Activity
-                  </Link>
-                </div>
-              </motion.article>
-            );
-          })}
+          {/* Desktop Page Indicators */}
+          {isDesktop && totalPages > 1 && (
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-350 cursor-pointer ${
+                    currentPage === i ? "bg-cyan-450 w-6" : "bg-white/20 hover:bg-white/45"
+                  }`}
+                  aria-label={`Go to page ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Mobile Swipe Hint */}
