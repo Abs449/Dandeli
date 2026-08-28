@@ -9,7 +9,7 @@
   /* Muted Sky Pastel */
   --color-secondary-dark: #5a8fa8;
   /* Deep Sky Pastel */
-  --color-accent: #f5c97a;
+  --color-accent: #FF6B4A;
   /* Dusty Amber Cream */
   --color-accent-light: #fae4b0;
   --color-coral: #e8715a;
@@ -167,6 +167,18 @@ html {
 
 .animate-float-delayed {
   animation: float-delayed 8s ease-in-out infinite;
+}
+
+@media (max-width: 767px) {
+  #packages-carousel {
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+
+  #packages-carousel > article {
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
 }
 
 /* Bubbles rising effect */

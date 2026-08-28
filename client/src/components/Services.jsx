@@ -1,18 +1,33 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { Clock, Tag, Shield, Compass, Waves, ChevronLeft, ChevronRight } from "lucide-react";
-import { useServices } from "../lib/data";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+  useMotionValue,
+  animate,
+} from "framer-motion";
+import {
+  Clock,
+  Tag,
+  Shield,
+  Compass,
+  Waves,
+  FolderOpen,
+  Tent,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";import { useServices } from "../lib/data";
 import bckgroundimg from "../assets/Backgroundimg/river-scenery.webp";
 import { CONTACT } from "../lib/contact";
 
 const categories = [
-  { id: "all", label: "All Activities", Icon: Compass },
   { id: "rafting", label: "White Water Rafting", Icon: Waves },
   { id: "water", label: "Water & Adventure Sports", Icon: Waves },
   { id: "adventure", label: "Adventure Activities", Icon: Tag },
   { id: "wildlife", label: "Wildlife & Nature", Icon: Compass },
-  { id: "camping", label: "Camping & Stay", Icon: Clock },
+  { id: "camping", label: "Camping & Stay", Icon: Tent },
 ];
 
 const getDifficultyColor = (difficulty) => {
@@ -33,7 +48,7 @@ const getDifficultyColor = (difficulty) => {
 
 const Services = () => {
   const { data: services, loading } = useServices();
-  const [activeTab, setActiveTab] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [isDesktop, setIsDesktop] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [damStatus, setDamStatus] = useState({
@@ -42,6 +57,13 @@ const Services = () => {
   });
 
   const sectionRef = useRef(null);
+const mobileTrackRef = useRef(null);
+const mobileViewportRef = useRef(null);
+
+const mobileX = useMotionValue(0);
+
+const MOBILE_SWIPE_DISTANCE = 80;
+const MOBILE_SCROLL_SPEED = 0.65;
 
   // Lightweight scroll transform
   const { scrollYProgress } = useScroll({
@@ -61,8 +83,8 @@ const Services = () => {
   }, []);
 
   useEffect(() => {
-    setCurrentPage(0);
-  }, [activeTab]);
+  mobileX.set(0);
+}, [selectedCategory, currentPage]);
 
   useEffect(() => {
     let active = true;
@@ -92,9 +114,9 @@ const Services = () => {
   }, []);
 
   const filteredServices = (services || []).filter((item) => {
-    if (activeTab === "all") return true;
-    return item.category === activeTab;
-  });
+  if (!selectedCategory) return false;
+  return item.category === selectedCategory;
+});
 
   const itemsPerPage = 6;
   const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
@@ -147,29 +169,53 @@ const Services = () => {
           <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             From Class III white-water rapids to soothing natural river jacuzzis, explore all Kali River adventures.
           </p>
+          </motion.div>
 
-          {/* Reference Category Filter Buttons */}
-          <div className="flex overflow-x-auto no-scrollbar md:flex-wrap justify-start md:justify-center gap-2.5 sm:gap-3 mt-10 -mx-4 px-4 sm:mx-0 sm:px-0 pb-1">
-            {categories.map(({ id, label, Icon }) => {
-              const isActive = activeTab === id;
-              return (
-                <button
-                  key={id}
-                  onClick={() => setActiveTab(id)}
-                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-heading font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer shrink-0 ${isActive
-                    ? "bg-amber-400 text-slate-950 shadow-lg shadow-amber-400/25 scale-105"
-                    : "bg-slate-950/80 border border-white/15 text-gray-300 hover:border-cyan-400/40 hover:text-white"
-                    }`}
-                >
-                  <Icon size={14} className={isActive ? "text-slate-950" : "text-cyan-400"} />
-                  <span>{label}</span>
-                </button>
-              );
-            })}
+          {/* Category Tiles */}
+{!selectedCategory && (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-10"
+  >
+    {categories.map(({ id, label, Icon }) => {
+      const count = (services || []).filter(
+        (service) => service.category === id
+      ).length;
+
+      return (
+        <motion.button
+          key={id}
+          type="button"
+          onClick={() => setSelectedCategory(id)}
+          whileHover={{ y: -5, scale: 1.01 }}
+          whileTap={{ scale: 0.98 }}
+          className="group relative min-h-[170px] sm:min-h-[190px] rounded-3xl bg-slate-950/80 border border-white/15 hover:border-amber-400/60 backdrop-blur-xl shadow-xl hover:shadow-amber-400/10 transition-all duration-300 p-5 sm:p-7 flex flex-col items-center justify-center text-center cursor-pointer overflow-hidden"
+        >
+          {/* Subtle background glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-amber-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+          {/* Category Icon */}
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 group-hover:bg-amber-400/10 group-hover:border-amber-400/50 group-hover:text-amber-400 transition-all duration-300 mb-4">
+            <Icon size={34} strokeWidth={1.7} />
           </div>
-        </motion.div>
 
-        {loading && (
+          {/* Category Name */}
+          <h3 className="relative text-sm sm:text-lg font-heading font-black uppercase tracking-wide text-white group-hover:text-amber-300 transition-colors duration-200">
+            {label}
+          </h3>
+
+          {/* Activity Count */}
+          <span className="relative mt-2 text-[10px] sm:text-xs text-gray-400 font-body">
+            {count} {count === 1 ? "Activity" : "Activities"}
+          </span>
+        </motion.button>
+      );
+    })}
+  </motion.div>
+)}
+
+        {selectedCategory && loading && (
           <div className="flex md:grid overflow-x-auto md:overflow-x-visible gap-6 sm:gap-8 pb-6 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 no-scrollbar md:grid-cols-2 lg:grid-cols-3">
             {[0, 1, 2, 3, 4, 5].map((i) => (
               <div
@@ -181,7 +227,28 @@ const Services = () => {
         )}
 
         {/* Services Container: Horizontal scroll on mobile (< md), Paginated 3x3 Grid on desktop (>= md) */}
-        <div className="relative">
+        {selectedCategory && (
+  <div className="relative">
+
+    <button
+      type="button"
+      onClick={() => {
+        setSelectedCategory(null);
+        setCurrentPage(0);
+      }}
+      className="mb-6 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-950/80 border border-white/15 text-gray-300 hover:text-white hover:border-amber-400/60 transition-all duration-200 font-heading font-bold text-xs uppercase tracking-wider"
+    >
+      <ChevronLeft size={16} />
+      Back to Activities
+    </button>
+        <div className="text-center mb-8">
+      <h3 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-black uppercase text-white">
+        {categories.find(
+          (category) => category.id === selectedCategory
+        )?.label}
+      </h3>
+    </div>
+    
           {/* Desktop Navigation Arrows */}
           {isDesktop && totalPages > 1 && (
             <>
@@ -208,16 +275,92 @@ const Services = () => {
             </>
           )}
 
-          <div className="overflow-visible w-full">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentPage + "_" + activeTab}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.35 }}
-                className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x md:snap-none snap-mandatory grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 pb-6 md:pb-0 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 no-scrollbar"
-              >
+          <div
+  ref={mobileViewportRef}
+  className="overflow-hidden w-full"
+>
+  <AnimatePresence mode="wait">
+    <motion.div
+      ref={mobileTrackRef}
+      key={currentPage + "_" + selectedCategory}
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -20 }}
+      transition={{ duration: 0.35 }}
+      drag={isDesktop ? false : "x"}
+      dragConstraints={false}
+      dragElastic={0.08}
+      dragMomentum={false}
+      dragDirectionLock
+      style={{ x: mobileX }}
+      onDragEnd={(event, info) => {
+        if (isDesktop) return;
+
+        const offset = info.offset.x;
+        const velocity = info.velocity.x;
+
+        if (
+          Math.abs(offset) < MOBILE_SWIPE_DISTANCE &&
+          Math.abs(velocity) < 300
+        ) {
+          return;
+        }
+
+        const cards = Array.from(
+          mobileTrackRef.current?.children || []
+        );
+
+        if (!cards.length || !mobileViewportRef.current) return;
+
+        const direction =
+          offset < 0 || velocity < 0 ? 1 : -1;
+
+        const currentX = mobileX.get();
+
+        const viewportCenter =
+          mobileViewportRef.current.clientWidth / 2;
+
+        let currentIndex = 0;
+        let closestDistance = Infinity;
+
+        cards.forEach((card, index) => {
+          const cardCenter =
+            card.offsetLeft +
+            card.offsetWidth / 2 +
+            currentX;
+
+          const distanceFromCenter =
+            Math.abs(cardCenter - viewportCenter);
+
+          if (distanceFromCenter < closestDistance) {
+            closestDistance = distanceFromCenter;
+            currentIndex = index;
+          }
+        });
+
+        const nextIndex = Math.max(
+          0,
+          Math.min(
+            cards.length - 1,
+            currentIndex + direction
+          )
+        );
+
+        const targetCard = cards[nextIndex];
+
+        const targetX =
+          viewportCenter -
+          (targetCard.offsetLeft +
+            targetCard.offsetWidth / 2);
+
+        animate(mobileX, targetX, {
+          type: "tween",
+          duration: 0.45 / MOBILE_SCROLL_SPEED,
+          ease: [0.22, 1, 0.36, 1],
+        });
+      }}
+      className="flex md:grid md:grid-cols-2 lg:grid-cols-3 md:transform-none gap-6 sm:gap-8 pb-6 md:pb-0"
+    >
                 {paginatedServices.map((service, index) => {
                   const isRafting = service.name.toLowerCase().includes("rafting");
 
@@ -330,6 +473,7 @@ const Services = () => {
             </div>
           )}
         </div>
+                )}
 
         {/* Mobile Swipe Hint */}
         <div className="flex md:hidden items-center justify-center gap-2 text-cyan-400/70 text-xs font-heading font-semibold mt-4">

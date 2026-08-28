@@ -43,12 +43,20 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Darken navbar background slightly after user scrolls down
+  // Transparent navbar background slightly after user scrolls down
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const onScroll = () => {
+    const hero = document.getElementById('hero');
+    if (!hero) return;
+    setScrolled(window.scrollY > hero.offsetHeight - 80);
+  };
+
+  onScroll();
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  return () => window.removeEventListener('scroll', onScroll);
+}, []);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -89,11 +97,12 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { name: 'Home',     to: '/',          targetId: null },
+    { name: 'Home',     to: '/',          targetId: 'hero' },
     { name: 'About',    to: '/#about',    targetId: 'about' },
     { name: 'Services', to: '/#services', targetId: 'services' },
     { name: 'Packages', to: '/#packages', targetId: 'packages' },
     { name: 'Reviews',  to: '/#reviews',  targetId: 'reviews' },
+    { name: 'Contact',  to: '/#contact',  targetId: 'contact' }
   ];
 
   return (
@@ -103,7 +112,7 @@ const Navbar = () => {
           className="max-w-7xl mx-auto rounded-full px-6 py-3 border backdrop-blur-2xl shadow-2xl pointer-events-auto transition-all duration-300"
           style={{
             background: scrolled
-              ? 'rgba(2, 25, 21, 0.88)'
+              ? 'rgba(2, 25, 21, 0.25)'
               : 'rgba(2, 25, 21, 0.65)',
             borderColor: 'rgba(255,255,255,0.12)',
           }}

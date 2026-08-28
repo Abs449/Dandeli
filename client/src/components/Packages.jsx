@@ -1,6 +1,7 @@
 import { useRef , useState , useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform ,useMotionValue,
+animate,} from "framer-motion";
 import { Check, Flame } from "lucide-react";
 import { usePackages } from "../lib/data";
 import bgAdventure from "../assets/Backgroundimg/kayak-bg.webp";
@@ -105,7 +106,64 @@ const Packages = () => {
   const { data: packages, loading } = usePackages();
   const navigate = useNavigate();
   const sectionRef = useRef(null);
+  const mobileTrackRef = useRef(null);
+const mobileViewportRef = useRef(null);
+
+const mobileX = useMotionValue(0);
+
+const MOBILE_SWIPE_DISTANCE = 80;
+const MOBILE_SCROLL_SPEED = 0.55;
+const [mobileDragConstraints, setMobileDragConstraints] = useState({
+  left: 0,
+  right: 0,
+});
+
   const [selectedPackage, setSelectedPackage] = useState(null);
+const [mobilePackageIndex, setMobilePackageIndex] = useState(0);
+
+useEffect(() => {
+  if (!packages || window.innerWidth >= 768) return;
+
+  const calculateConstraints = () => {
+    const track = mobileTrackRef.current;
+    const viewport = mobileViewportRef.current;
+
+    if (!track || !viewport || !track.children.length) return;
+
+    const cards = Array.from(track.children);
+    const viewportCenter = viewport.clientWidth / 2;
+
+    const firstCard = cards[0];
+    const lastCard = cards[cards.length - 1];
+
+    const firstX =
+      viewportCenter -
+      (firstCard.offsetLeft + firstCard.offsetWidth / 2);
+
+    const lastX =
+      viewportCenter -
+      (lastCard.offsetLeft + lastCard.offsetWidth / 2);
+
+    setMobileDragConstraints({
+      left: Math.min(firstX, lastX),
+      right: Math.max(firstX, lastX),
+    });
+  };
+
+  // Wait until cards have been rendered
+  requestAnimationFrame(calculateConstraints);
+
+  window.addEventListener("resize", calculateConstraints);
+
+  return () => {
+    window.removeEventListener("resize", calculateConstraints);
+  };
+}, [packages]);
+
+  useEffect(() => {
+  mobileX.set(0);
+  setMobilePackageIndex(0);
+}, [packages]);
   useEffect(() => {
   document.body.style.overflow = selectedPackage ? "hidden" : "";
 
@@ -175,46 +233,157 @@ const Packages = () => {
 
         {/* Layout: In-page 3-Column Grid on Desktop / Smooth Horizontal Touch Carousel on Mobile */}
         {packages && (
-          <div id="packages-carousel" className="flex md:grid md:grid-cols-3 gap-6 sm:gap-8 overflow-x-auto md:overflow-x-visible no-scrollbar snap-x snap-mandatory pb-4 md:pb-0 px-2 md:px-0">
-            {packages.map((pkg, index) => (
-              <PackageCard key={pkg.id} pkg={pkg} index={index} navigate={navigate} onExpand={setSelectedPackage}/>
-            ))}
-          </div>
-        )}
+  <div
+    ref={mobileViewportRef}
+    className="overflow-hidden w-full"
+  >
+    <motion.div
+  ref={mobileTrackRef}
+  id="packages-carousel"
+  drag={window.innerWidth < 768 ? "x" : false}
+  dragConstraints={mobileDragConstraints}
+dragElastic={0}
+  dragMomentum={false}
+  dragDirectionLock
+  style={{ x: mobileX }}
+      onDragEnd={(event, info) => {
+        if (window.innerWidth >= 768) return;
+
+        const offset = info.offset.x;
+        const velocity = info.velocity.x;
+
+        // Small movement = don't change package
+        if (
+          Math.abs(offset) < MOBILE_SWIPE_DISTANCE &&
+          Math.abs(velocity) < 300
+        ) {
+          return;
+        }
+
+        const cards = Array.from(
+          mobileTrackRef.current?.children || []
+        );
+
+        const viewport = mobileViewportRef.current;
+
+        if (!cards.length || !viewport) return;
+
+        const direction =
+          offset < 0 || velocity < 0 ? 1 : -1;
+
+        const currentX = mobileX.get();
+
+        const viewportCenter =
+          viewport.clientWidth / 2;
+
+        let currentIndex = 0;
+        let closestDistance = Infinity;
+
+        cards.forEach((card, index) => {
+          const cardCenter =
+            card.offsetLeft +
+            card.offsetWidth / 2 +
+            currentX;
+
+          const distance =
+            Math.abs(cardCenter - viewportCenter);
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            currentIndex = index;
+          }
+        });
+
+        const nextIndex = Math.max(
+          0,
+          Math.min(
+            cards.length - 1,
+            currentIndex + direction
+          )
+        );
+        setMobilePackageIndex(nextIndex);
+
+        const targetCard = cards[nextIndex];
+
+        const targetX =
+          viewportCenter -
+          (targetCard.offsetLeft +
+            targetCard.offsetWidth / 2);
+
+animate(mobileX, targetX, {
+  type: "tween",
+  duration: 0.8,
+  ease: [0.22, 1, 0.36, 1],
+});
+      }}
+      className="flex md:grid md:grid-cols-3 gap-6 sm:gap-8 pb-4 md:pb-0"
+    >
+      {packages.map((pkg, index) => (
+        <PackageCard
+          key={pkg.id}
+          pkg={pkg}
+          index={index}
+          navigate={navigate}
+          onExpand={setSelectedPackage}
+        />
+      ))}
+    </motion.div>
+  </div>
+)}
         
         {/* Mobile Package Navigation */}
         <div className="md:hidden flex items-center justify-center gap-5 mt-4 mb-2">
           <button
-            type="button"
-            onClick={() => {
-              document.getElementById("packages-carousel")?.scrollBy({
-                left: -300,
-                behavior: "smooth",
-              });
-            }}
-            className="w-9 h-9 rounded-full border border-amber-400/60 bg-[#021915]/90 text-amber-400 flex items-center justify-center text-lg font-bold shadow-lg active:scale-90 transition-transform"
-            aria-label="Previous package"
-          >
-            ←
-          </button>
+  type="button"
+  onClick={() => {
+    if (mobilePackageIndex === 0) return;
+
+    const nextIndex = mobilePackageIndex - 1;
+    setMobilePackageIndex(nextIndex);
+
+    animate(mobileX, mobileX.get() + 350, {
+      type: "tween",
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    });
+  }}
+  className={`w-9 h-9 rounded-full border flex items-center justify-center text-lg font-bold shadow-lg transition-all ${
+    mobilePackageIndex === 0
+      ? "border-white/10 bg-white/5 text-white/20 cursor-not-allowed opacity-40"
+      : "border-amber-400/60 bg-[#021915]/90 text-amber-400 active:scale-90"
+  }`}
+  aria-label="Previous package"
+>
+  ←
+</button>
 
           <span className="text-xs text-amber-400 font-heading font-bold uppercase tracking-wider">
             Swipe to explore
           </span>
 
           <button
-            type="button"
-            onClick={() => {
-              document.getElementById("packages-carousel")?.scrollBy({
-                left: 300,
-                behavior: "smooth",
-              });
-            }}
-            className="w-9 h-9 rounded-full border border-amber-400/60 bg-[#021915]/90 text-amber-400 flex items-center justify-center text-lg font-bold shadow-lg active:scale-90 transition-transform"
-            aria-label="Next package"
-          >
-            →
-          </button>
+  type="button"
+  onClick={() => {
+    if (!packages || mobilePackageIndex >= packages.length - 1) return;
+
+    const nextIndex = mobilePackageIndex + 1;
+    setMobilePackageIndex(nextIndex);
+
+    animate(mobileX, mobileX.get() - 350, {
+      type: "tween",
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    });
+  }}
+  className={`w-9 h-9 rounded-full border flex items-center justify-center text-lg font-bold shadow-lg transition-all ${
+    packages && mobilePackageIndex >= packages.length - 1
+      ? "border-white/10 bg-white/5 text-white/20 cursor-not-allowed opacity-40"
+      : "border-amber-400/60 bg-[#021915]/90 text-amber-400 active:scale-90"
+  }`}
+  aria-label="Next package"
+>
+  →
+</button>
         </div>
         
       </div>
