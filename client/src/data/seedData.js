@@ -400,51 +400,145 @@ export const seedPackages = [
     id: 1,
     name: "Day Thrill Package",
     price: "₹1,599",
-    duration: "1 Day (8 AM – 5 PM)",
-    activities: [
-      "Short Run White-Water Rafting (1.5 km)",
-      "Kayaking or Paddle Boarding",
-      "Zipline River Crossing",
-      "Buffet Lunch & Evening Tea",
+    duration: "1 Day",
+    checkIn: null,
+    checkOut: null,
+
+    description:
+      "Get ready for the ultimate adventure day-out by the Kali River. Perfect for families, friends, and corporate groups.",
+
+    meals: [
+      "Breakfast",
+      "Buffet Lunch",
     ],
+
+    riverActivities: [
+      "Short Rafting (1km)",
+      "River Kayaking",
+      "River Boating",
+      "River Swimming",
+      "Zorbing",
+      "Zip-line",
+    ],
+
+    resortFun: [
+      "Swimming Pool",
+      "Rain Dance",
+    ],
+
+    stayOptions: [],
+
+    sightseeing: [],
+
     recommended: false,
     image: imgShortRafting,
     displayOrder: 1,
   },
+
   {
     id: 2,
-    name: "🏠 STAY PACKAGE",
+    name: "Stay Package",
     price: "₹2,699",
     duration: "2 Days / 1 Night",
-    activities: [
-      "Long Run White-Water Rafting (9.5 km)",
-      "Kayaking & Ziplining",
-      "Jungle Tent Stay + Campfire",
-      "All Meals (Lunch, Dinner, Breakfast)",
-      "Guided Morning Nature Trek",
+    checkIn: "12:00 PM",
+    checkOut: "11:00 AM",
+
+    description:
+      "Get ready for the ultimate getaway by the Kali River. An all-inclusive stay package perfect for families, friends, and corporate groups.",
+
+    stayOptions: [
+      "Cozy Rooms",
+      "Commando Tents",
     ],
+
+    meals: [
+      "Breakfast",
+      "Buffet Lunch (Veg & Non-Veg)",
+      "Dinner (Veg & Non-Veg)",
+      "Evening Tea/Coffee",
+    ],
+
+    riverActivities: [
+      "Short Rafting (1km)",
+      "River Kayaking",
+      "River Boating",
+      "River Swimming",
+      "Water Zorbing",
+      "Thrilling Zip-line",
+    ],
+
+    resortFun: [
+      "Swimming Pool",
+      "Rain Dance",
+      "Cycling",
+      "Night Campfire",
+      "Forest Trekking",
+      "Archery",
+      "Carrom & Indoor Games",
+    ],
+
+    sightseeing: [
+      "Honey Park",
+      "Supa Dam Backwaters",
+    ],
+
     recommended: true,
     image: imgLongRafting,
     displayOrder: 2,
   },
+
   {
     id: 3,
-    name: "Family Explorer Package",
-    price: "₹1,899",
+    name: "Premium River Side Stay Package",
+    price: "₹4,599",
     duration: "2 Days / 1 Night",
-    activities: [
-      "Short Run Rafting or Jungle Boat Safari",
-      "River Jacuzzi Experience",
-      "Resort / Cottage Stay",
-      "All Meals Included",
-      "Swimming Pool Access",
+    checkIn: "12:00 PM",
+    checkOut: "11:00 AM",
+
+    description:
+      "Get ready for the ultimate premium getaway by the Kali River. An all-inclusive riverside stay package perfect for families, friends, and corporate groups.",
+
+    stayOptions: [
+      "River Side Rooms",
+      "Commando Tents",
     ],
+
+    meals: [
+      "Breakfast",
+      "Buffet Lunch (Veg & Non-Veg)",
+      "Dinner (Veg & Non-Veg)",
+      "Evening Tea/Coffee",
+    ],
+
+    riverActivities: [
+      "Short Rafting (1km)",
+      "River Kayaking",
+      "River Boating",
+      "River Swimming",
+      "Water Zorbing",
+      "Thrilling Zip-line",
+    ],
+
+    resortFun: [
+      "Swimming Pool",
+      "Rain Dance",
+      "Cycling",
+      "Night Campfire",
+      "Forest Trekking",
+      "Archery",
+      "Carrom & Indoor Games",
+    ],
+
+    sightseeing: [
+      "Honey Park",
+      "Supa Dam Backwaters",
+    ],
+
     recommended: false,
     image: imgJungle,
     displayOrder: 3,
   },
 ];
-
 export const seedReviews = [
   {
     id: 1,

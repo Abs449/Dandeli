@@ -208,7 +208,7 @@ const Services = () => {
             </>
           )}
 
-          <div className="overflow-hidden w-full">
+          <div className="overflow-visible w-full">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentPage + "_" + activeTab}
@@ -227,7 +227,7 @@ const Services = () => {
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: (index % 3) * 0.05 }}
-                      className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                      className="w-[80vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
                       onClick={() => {
                         const message = `Hey Karthik , I want to know further details about ${service.name}`;
                         const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
