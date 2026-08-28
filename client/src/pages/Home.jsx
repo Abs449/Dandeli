@@ -24,36 +24,55 @@ const Home = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const targetId = location.state?.scrollTo || location.hash?.replace('#', '');
-    if (!targetId) return;
+  const targetId =
+    location.state?.scrollTo ||
+    location.hash?.replace('#', '');
 
-    // Wait for page to fully render, then animate
-    const timer = setTimeout(() => {
-      const el = document.getElementById(targetId);
-      if (!el) return;
+  if (!targetId) return;
 
-      const navbarHeight = 80;
-      const targetTop = el.getBoundingClientRect().top + window.scrollY - navbarHeight;
-      const start = window.scrollY;
-      const distance = Math.abs(targetTop - start);
-      const duration = Math.min(1100 + distance * 0.18, 1800);
-      const startTime = performance.now();
+  const timer = setTimeout(() => {
+    const el = document.getElementById(targetId);
 
-      const easeInOutCubic = (t) =>
-        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    if (!el) return;
 
-      const step = (now) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        window.scrollTo(0, start + (targetTop - start) * easeInOutCubic(progress));
-        if (progress < 1) requestAnimationFrame(step);
-      };
+    const navbarHeight = 80;
 
-      requestAnimationFrame(step);
-    }, 200);
+    const targetTop =
+      el.getBoundingClientRect().top +
+      window.scrollY -
+      navbarHeight;
 
-    return () => clearTimeout(timer);
-  }, [location]);
+    const start = window.scrollY;
+    const distance = targetTop - start;
+    const duration = 1200;
+    const startTime = performance.now();
+
+    const easeInOutCubic = (t) =>
+      t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const step = (now) => {
+      const progress = Math.min(
+        (now - startTime) / duration,
+        1
+      );
+
+      window.scrollTo(
+        0,
+        start + distance * easeInOutCubic(progress)
+      );
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    requestAnimationFrame(step);
+  }, 300);
+
+  return () => clearTimeout(timer);
+}, [location]);
 
   return (
     <>

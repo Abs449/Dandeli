@@ -85,18 +85,15 @@ const PackageCard = ({ pkg, index, navigate ,onExpand}) => {
 
       {/* Card Action CTA Button */}
       <div className="p-7 sm:p-8 pt-0 mt-auto">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(`/booking?package=${encodeURIComponent(pkg.name)}`);
-          }}
+        <div
+          
           className={`w-full py-4 rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-md cursor-pointer flex items-center justify-center gap-2 ${recommended
               ? "bg-amber-400 hover:bg-yellow-300 text-slate-950 shadow-amber-400/25 hover:shadow-lg"
               : "bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400"
             }`}
         >
-          <span>Book This Package</span>
-        </button>
+          <span>Click to know more</span>
+        </div>
       </div>
     </motion.article>
   );

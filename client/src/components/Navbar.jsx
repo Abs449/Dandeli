@@ -8,33 +8,58 @@ import { Menu, X } from 'lucide-react';
  * Duration scales with scroll distance so you always see intermediate sections.
  * The browser's built-in smooth scroll rushes past content — this doesn't.
  */
-const smoothScrollTo = (targetTop, baseDuration = 1100) => {
+let scrollAnimationFrame = null;
+
+const smoothScrollTo = (targetTop, duration = 1800) => {
+  if (scrollAnimationFrame) {
+    cancelAnimationFrame(scrollAnimationFrame);
+  }
+
   const start = window.scrollY;
-  const distance = Math.abs(targetTop - start);
-  // Scale duration with distance: further = a bit longer, capped at 1800ms
-  const duration = Math.min(baseDuration + distance * 0.18, 1800);
+  const distance = targetTop - start;
   const startTime = performance.now();
 
-  const easeInOutCubic = (t) =>
-    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const ease = (t) =>
+    t < 0.5
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
   const step = (now) => {
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    window.scrollTo(0, start + (targetTop - start) * easeInOutCubic(progress));
-    if (progress < 1) requestAnimationFrame(step);
+    const progress = Math.min(
+      (now - startTime) / duration,
+      1
+    );
+
+    window.scrollTo(
+      0,
+      start + distance * ease(progress)
+    );
+
+    if (progress < 1) {
+      scrollAnimationFrame = requestAnimationFrame(step);
+    } else {
+      scrollAnimationFrame = null;
+    }
   };
 
-  requestAnimationFrame(step);
+  scrollAnimationFrame = requestAnimationFrame(step);
 };
 
 const handleSmoothScroll = (targetId) => {
   if (typeof window === 'undefined') return;
+
   const target = document.getElementById(targetId);
+
   if (!target) return;
+
   const navbarHeight = 80;
-  const targetTop = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
-  smoothScrollTo(targetTop);
+
+  const targetTop =
+    target.getBoundingClientRect().top +
+    window.scrollY -
+    navbarHeight;
+
+  smoothScrollTo(targetTop, 1200);
 };
 
 const Navbar = () => {
@@ -74,13 +99,13 @@ const Navbar = () => {
     setIsOpen(false);
 
     if (!link.targetId) {
-      if (location.pathname !== '/') {
-        navigate('/');
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      return;
-    }
+  if (location.pathname !== '/') {
+    navigate('/');
+  } else {
+    smoothScrollTo(0, 1000);
+  }
+  return;
+}
 
     if (location.pathname !== '/') {
       // Navigate home first, then scroll — Home.jsx reads location.state.scrollTo
@@ -97,7 +122,7 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { name: 'Home',     to: '/',          targetId: 'hero' },
+    { name: 'Home',     to: '/',          targetId: null },
     { name: 'About',    to: '/#about',    targetId: 'about' },
     { name: 'Services', to: '/#services', targetId: 'services' },
     { name: 'Packages', to: '/#packages', targetId: 'packages' },
