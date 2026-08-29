@@ -179,9 +179,11 @@ const MOBILE_SCROLL_SPEED = 0.65;
     className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-10"
   >
     {categories.map(({ id, label, Icon }) => {
-      const count = (services || []).filter(
+      const categoryServices = (services || []).filter(
         (service) => service.category === id
-      ).length;
+      );
+
+      const count = categoryServices.length;
 
       return (
         <motion.button
@@ -190,25 +192,73 @@ const MOBILE_SCROLL_SPEED = 0.65;
           onClick={() => setSelectedCategory(id)}
           whileHover={{ y: -5, scale: 1.01 }}
           whileTap={{ scale: 0.98 }}
-          className="group relative min-h-[170px] sm:min-h-[190px] rounded-3xl bg-slate-950/80 border border-white/15 hover:border-amber-400/60 backdrop-blur-xl shadow-xl hover:shadow-amber-400/10 transition-all duration-300 p-5 sm:p-7 flex flex-col items-center justify-center text-center cursor-pointer overflow-hidden"
+          className="group relative min-h-[170px] sm:min-h-[190px] rounded-3xl overflow-hidden border border-white/20 shadow-xl cursor-pointer"
         >
-          {/* Subtle background glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-amber-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-          {/* Category Icon */}
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 group-hover:bg-amber-400/10 group-hover:border-amber-400/50 group-hover:text-amber-400 transition-all duration-300 mb-4">
-            <Icon size={34} strokeWidth={1.7} />
+          {/* 2x2 Activity Preview */}
+          <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
+            {categoryServices.slice(0, 4).map((service) => (
+              <div
+                key={service.id}
+                className="relative overflow-hidden"
+              >
+                <img
+                  src={service.image}
+                  alt=""
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+            ))}
+
+            {/* Fill missing preview slots */}
+            {Array.from({
+              length: Math.max(
+                0,
+                4 - categoryServices.slice(0, 4).length
+              )
+            }).map((_, index) => (
+              <div
+                key={`empty-${index}`}
+                className="bg-[#021915]/40"
+              />
+            ))}
           </div>
 
-          {/* Category Name */}
-          <h3 className="relative text-sm sm:text-lg font-heading font-black uppercase tracking-wide text-white group-hover:text-amber-300 transition-colors duration-200">
-            {label}
-          </h3>
+          {/* Transparent Glass Overlay */}
+          <div className="absolute inset-0 bg-[#021915]/50 backdrop-blur-[2px] transition-all duration-300 group-hover:bg-[#021915]/20" />
 
-          {/* Activity Count */}
-          <span className="relative mt-2 text-[10px] sm:text-xs text-gray-400 font-body">
-            {count} {count === 1 ? "Activity" : "Activities"}
-          </span>
+          {/* Subtle glass gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-cyan-400/10" />
+
+          {/* Content */}
+          <div className="relative z-10 min-h-[170px] sm:min-h-[190px] flex flex-col items-center justify-center text-center p-4 sm:p-6">
+
+            {/* Icon */}
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#021915]/35 backdrop-blur-md border border-cyan-400/40 flex items-center justify-center text-cyan-300 group-hover:text-amber-300 group-hover:border-amber-400/60 transition-all duration-300 mb-4 shadow-lg">
+              <Icon
+                size={30}
+                strokeWidth={1.7}
+              />
+            </div>
+
+            {/* Category Name */}
+            <h3 className="text-s sm:text-base font-heading font-black uppercase tracking-wide text-white drop-shadow-lg group-hover:text-amber-300 transition-colors duration-200">
+              {label}
+            </h3>
+
+            {/* Count */}
+            <span className="mt-2 text-[10px] sm:text-xs text-white/75 font-body drop-shadow-md">
+              {count} {count === 1 ? "Activity" : "Activities"}
+            </span>
+
+          </div>
+
+          {/* Glass Border */}
+          <div className="absolute inset-0 rounded-3xl border-2 border-white/20 pointer-events-none group-hover:border-cyan-400/50 transition-colors duration-300" />
+
+          {/* Top glass shine */}
+          <div className="absolute inset-x-0 top-0 h-px bg-white/40 opacity-60" />
+
         </motion.button>
       );
     })}
@@ -370,7 +420,7 @@ const MOBILE_SCROLL_SPEED = 0.65;
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: (index % 3) * 0.05 }}
-                      className="w-[80vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                      className="w-[70vw] max-w-[340px] sm:w-[360px] md:w-auto shrink-0 md:shrink snap-center md:snap-align-none bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
                       onClick={() => {
                         const message = `Hey Karthik , I want to know further details about ${service.name}`;
                         const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
@@ -454,6 +504,10 @@ const MOBILE_SCROLL_SPEED = 0.65;
                   );
                 })}
               </motion.div>
+              {/* Mobile Swipe Hint */}
+        <div className="flex md:hidden items-center justify-center gap-2 text-cyan-400/70 text-xs font-heading font-semibold mt-4">
+          <span className="animate-pulse">← Swipe horizontally to view all activities →</span>
+        </div>
             </AnimatePresence>
           </div>
 
@@ -475,10 +529,7 @@ const MOBILE_SCROLL_SPEED = 0.65;
         </div>
                 )}
 
-        {/* Mobile Swipe Hint */}
-        <div className="flex md:hidden items-center justify-center gap-2 text-cyan-400/70 text-xs font-heading font-semibold mt-4">
-          <span className="animate-pulse">← Swipe horizontally to view all activities →</span>
-        </div>
+        
       </div>
     </section>
   );

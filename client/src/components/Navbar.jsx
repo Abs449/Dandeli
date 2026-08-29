@@ -132,16 +132,16 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-[100] py-3 md:py-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
-        <div
-          className="max-w-7xl mx-auto rounded-full px-6 py-3 border backdrop-blur-2xl shadow-2xl pointer-events-auto transition-all duration-300"
-          style={{
-            background: scrolled
-              ? 'rgba(2, 25, 21, 0.25)'
-              : 'rgba(2, 25, 21, 0.65)',
-            borderColor: 'rgba(255,255,255,0.12)',
-          }}
-        >
+<nav className="fixed top-3 md:top-4 left-0 right-0 z-[100] px-4 sm:px-6 lg:px-8 pointer-events-none">
+    <div
+  className="max-w-7xl mx-auto rounded-full px-6 py-3 border backdrop-blur-2xl shadow-2xl pointer-events-auto transition-[background-color,border-color] duration-300"
+  style={{
+    background: scrolled
+      ? 'rgba(2, 25, 21, 0.05)'
+      : 'rgba(2, 25, 21, 0.65)',
+    borderColor: 'rgba(255,255,255,0.12)',
+  }}
+>
           <div className="flex justify-between items-center h-10">
             {/* Logo */}
             <Link
