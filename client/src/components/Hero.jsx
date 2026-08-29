@@ -174,7 +174,7 @@ const Hero = () => {
     <div
       id="hero"
       ref={heroRef}
-      className="relative min-h-[100svh] flex flex-col overflow-hidden"
+      className="relative min-h-[92svh] h-[92svh] flex flex-col overflow-hidden"
     >
       {/* ── LAYER 1 (z=0): Normal → mirrored → normal background loop ── */}
       <div className="hero-bg-pan absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
@@ -218,7 +218,7 @@ const Hero = () => {
 
       {/* ── FULL-SCREEN UI SHELL (z=10) ── */}
       <div
-        className="relative flex flex-col w-full pointer-events-auto min-h-[100svh]"
+        className="relative flex flex-col w-full pointer-events-auto flex-1 min-h-0"
         style={{ zIndex: 10 }}
       >
 
@@ -298,9 +298,9 @@ const Hero = () => {
               fontSize: "clamp(11px, 7vw, 42px)",
               letterSpacing: "0.28em",
               paddingLeft: "0.28em",
-              paddingTop: isDesktop ? "clamp(16px, 3vh, 36px)" : "clamp(12px, 2vh, 24px)",
+              paddingTop: isDesktop ? "clamp(10px, 1.5vh, 20px)" : "clamp(12px, 2vh, 24px)",
               textShadow: "0 2px 12px rgba(0,0,0,0.9)",
-              marginBottom: isDesktop ? "-4vh" : "2rem",
+              marginBottom: isDesktop ? "-3vh" : "2rem",
             }}
           >
             Conquer The
@@ -319,7 +319,7 @@ const Hero = () => {
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
                 style={{
-                  fontSize: "clamp(56px, 12vw, 220px)",
+                  fontSize: "clamp(50px, 9vw, 160px)",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.95,
@@ -335,7 +335,7 @@ const Hero = () => {
                   className="relative flex items-center justify-center shrink-0 pointer-events-none"
                   style={{
                     zIndex: 10,
-                    width: "clamp(340px, 40vw, 760px)",
+                    width: "clamp(300px, 34vw, 600px)",
                     marginLeft: "-2vw",
                     marginRight: "-2vw",
                   }}
@@ -372,7 +372,7 @@ const Hero = () => {
                       bottom: "16%",
                       left: "6%",
                       transform: "translateX(-50%)",
-                      width: "92%",
+                      width: "88%",
                       height: "auto",
                       objectFit: "contain",
                       filter: "drop-shadow(0 4px 20px rgba(0,0,0,0.6)) brightness(1.04)",
@@ -390,7 +390,7 @@ const Hero = () => {
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
                 style={{
-                  fontSize: "clamp(56px, 12vw, 220px)",
+                  fontSize: "clamp(50px, 9vw, 160px)",
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.95,
@@ -485,7 +485,7 @@ const Hero = () => {
               letterSpacing: "0.28em",
               paddingLeft: "0.28em",
               textShadow: "0 2px 12px rgba(0,0,0,0.9)",
-              marginTop: isDesktop ? "-4.5vh" : "0.5rem",
+              marginTop: isDesktop ? "-3vh" : "0.5rem",
             }}
           >
             Of Dandeli
@@ -494,7 +494,7 @@ const Hero = () => {
 
         {/* ── BOTTOM: Subtitle + CTAs ── */}
         <div
-          className="relative w-full flex flex-col items-center gap-3 px-4 sm:px-6 pb-6 sm:pb-8 pt-2"
+          className="relative w-full flex flex-col items-center gap-2 px-4 sm:px-6 pb-4 sm:pb-6 pt-1"
           style={{ zIndex: 50 }}
         >
           <motion.p
