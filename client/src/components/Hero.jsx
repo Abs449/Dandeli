@@ -335,7 +335,7 @@ const Hero = () => {
                   className="relative flex items-center justify-center shrink-0 pointer-events-none"
                   style={{
                     zIndex: 10,
-                    width: "clamp(380px, 45vw, 860px)",
+                    width: "clamp(340px, 40vw, 760px)",
                     marginLeft: "-2vw",
                     marginRight: "-2vw",
                   }}
