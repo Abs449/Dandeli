@@ -38,6 +38,18 @@ const SIZE_TABLE = {
   md:  { topPad: 90,  headline: 15, rapids: 56, raftW: 260, raftMaxH: 320, ctaPad: 30, headGap: 14, midGap: 18 },
   // small tablets / large phones in landscape
   mdl: { topPad: 95,  headline: 17, rapids: 68, raftW: 300, raftMaxH: 360, ctaPad: 32, headGap: 16, midGap: 20 },
+  
+  laptopShort: {
+    topPad: 65,
+    headline: 22,
+    rapDs: 70,
+    raftW: 350,
+    raftMaxH: 350,
+    ctaPad: 18,
+    headGap: 6,
+    midGap: 0
+  },
+  
   // tablets landscape / small laptops — switches to the RAP-raft-DS row layout
   lg:  { topPad: 96,  headline: 20, rapDs: 64,  raftW: 320, raftMaxH: 380, ctaPad: 34, headGap: 8,  midGap: 0 },
   // laptops / small desktop monitors
@@ -49,7 +61,11 @@ const SIZE_TABLE = {
 // Width-only breakpoint boundaries (px). Deliberately NOT based on height,
 // so an address-bar-driven height change can never move a device between
 // buckets.
-function getBreakpointKey(width) {
+function getBreakpointKey(width, height) {
+  // Short laptop screens need a more compact Hero layout.
+  // This does NOT affect phones or tablets.
+  if (width >= 1024 && height <= 800) return "laptopShort";
+
   if (width <= 380) return "xs";
   if (width <= 430) return "sm";
   if (width <= 599) return "md";
@@ -65,8 +81,10 @@ const Hero = () => {
   const heroRef = useRef(null);
   const [shouldLoadBackground, setShouldLoadBackground] = useState(true);
   const [bp, setBp] = useState(() =>
-    typeof window !== "undefined" ? getBreakpointKey(window.innerWidth) : "lg",
-  );
+  typeof window !== "undefined"
+    ? getBreakpointKey(window.innerWidth, window.innerHeight)
+    : "lg"
+);
   // ── LOCKED VIEWPORT HEIGHT ─────────────────────────────────────────
   // Chrome (and Safari) fire a `resize` event and change
   // `window.innerHeight` purely because the address bar / bottom toolbar
@@ -126,19 +144,31 @@ const Hero = () => {
     let frame = null;
     let lastWidth = typeof window !== "undefined" ? window.innerWidth : 0;
     const handleResize = () => {
-      if (frame !== null) return;
-      frame = requestAnimationFrame(() => {
-        frame = null;
-        const width = window.innerWidth;
-        if (width === lastWidth) return; // height-only change (toolbar) — ignore
-        lastWidth = width;
-        setBp((prev) => {
-          const key = getBreakpointKey(width);
-          return prev === key ? prev : key;
-        });
-        setViewportHeight(window.innerHeight);
-      });
-    };
+  if (frame !== null) return;
+
+  frame = requestAnimationFrame(() => {
+    frame = null;
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    const isDesktop = width >= 1024;
+
+    // On mobile, ignore height-only changes caused by browser UI.
+    if (!isDesktop && width === lastWidth) return;
+
+    lastWidth = width;
+
+    setBp((prev) => {
+      const key = getBreakpointKey(width, height);
+      return prev === key ? prev : key;
+    });
+
+    if (isDesktop) {
+      setViewportHeight(height);
+    }
+  });
+};
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
