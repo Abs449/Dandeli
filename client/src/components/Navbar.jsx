@@ -2,65 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-
-/**
- * Custom smooth-scroll with RAF + ease-in-out-cubic easing.
- * Duration scales with scroll distance so you always see intermediate sections.
- * The browser's built-in smooth scroll rushes past content — this doesn't.
- */
-let scrollAnimationFrame = null;
-
-const smoothScrollTo = (targetTop, duration = 1800) => {
-  if (scrollAnimationFrame) {
-    cancelAnimationFrame(scrollAnimationFrame);
-  }
-
-  const start = window.scrollY;
-  const distance = targetTop - start;
-  const startTime = performance.now();
-
-  const ease = (t) =>
-    t < 0.5
-      ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-  const step = (now) => {
-    const progress = Math.min(
-      (now - startTime) / duration,
-      1
-    );
-
-    window.scrollTo(
-      0,
-      start + distance * ease(progress)
-    );
-
-    if (progress < 1) {
-      scrollAnimationFrame = requestAnimationFrame(step);
-    } else {
-      scrollAnimationFrame = null;
-    }
-  };
-
-  scrollAnimationFrame = requestAnimationFrame(step);
-};
-
-const handleSmoothScroll = (targetId) => {
-  if (typeof window === 'undefined') return;
-
-  const target = document.getElementById(targetId);
-
-  if (!target) return;
-
-  const navbarHeight = 80;
-
-  const targetTop =
-    target.getBoundingClientRect().top +
-    window.scrollY -
-    navbarHeight;
-
-  smoothScrollTo(targetTop, 1200);
-};
+import { smoothScrollTo, scrollToElement } from '../utils/Smoothscroll';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -68,25 +10,39 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Transparent navbar background slightly after user scrolls down
+  // Transparent navbar background once user scrolls past the hero.
+  // Uses IntersectionObserver instead of a scroll listener that reads
+  // hero.offsetHeight — that read forces a synchronous layout reflow on
+  // every scroll event, and during the RAF scroll animation that's dozens
+  // of forced reflows competing with the animation for the main thread,
+  // which is what causes visible stutter/jumps.
   useEffect(() => {
-  const onScroll = () => {
     const hero = document.getElementById('hero');
     if (!hero) return;
-    setScrolled(window.scrollY > hero.offsetHeight - 80);
-  };
 
-  onScroll();
+    const observer = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { rootMargin: '-80px 0px 0px 0px', threshold: 0 }
+    );
 
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  return () => window.removeEventListener('scroll', onScroll);
-}, []);
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, [location.pathname]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
+
+    // Pause decorative CSS animations (hero pan, bubbles, floats, ripples,
+    // spin) while the drawer is open. They run continuously and on
+    // lower-end mobile GPUs they compete with the drawer's own transform
+    // animation for compositor time — that contention is what shows up as
+    // a laggy, dropped-frame hamburger menu even though its own animation
+    // is only 220ms.
+    document.body.classList.toggle('menu-open', isOpen);
+
     return () => {
       document.body.style.overflow = '';
+      document.body.classList.remove('menu-open');
     };
   }, [isOpen]);
 
@@ -99,19 +55,19 @@ const Navbar = () => {
     setIsOpen(false);
 
     if (!link.targetId) {
-  if (location.pathname !== '/') {
-    navigate('/');
-  } else {
-    smoothScrollTo(0, 1000);
-  }
-  return;
-}
+      if (location.pathname !== '/') {
+        navigate('/');
+      } else {
+        smoothScrollTo(0, 1000);
+      }
+      return;
+    }
 
     if (location.pathname !== '/') {
       // Navigate home first, then scroll — Home.jsx reads location.state.scrollTo
       navigate('/', { state: { scrollTo: link.targetId } });
     } else {
-      handleSmoothScroll(link.targetId);
+      scrollToElement(link.targetId);
     }
   };
 
@@ -132,17 +88,18 @@ const Navbar = () => {
 
   return (
     <>
-<nav className="fixed top-3 md:top-4 left-0 right-0 z-[100] px-4 sm:px-6 lg:px-8 pointer-events-none">
-    <div
-className="max-w-7xl mx-auto rounded-full px-6 py-3 border pointer-events-auto transition-all duration-300"  style={{
-  background: scrolled
-    ? 'transparent'
-    : 'rgba(2, 25, 21, 0.65)',
-  borderColor: scrolled
-    ? 'transparent'
-    : 'rgba(255,255,255,0.12)',
-}}
->
+      <nav className="fixed top-3 md:top-4 left-0 right-0 z-[100] px-4 sm:px-6 lg:px-8 pointer-events-none">
+        <div
+          className="max-w-7xl mx-auto rounded-full px-6 py-3 border pointer-events-auto transition-all duration-300"
+          style={{
+            background: scrolled
+              ? 'transparent'
+              : 'rgba(2, 25, 21, 0.65)',
+            borderColor: scrolled
+              ? 'transparent'
+              : 'rgba(255,255,255,0.12)',
+          }}
+        >
           <div className="flex justify-between items-center h-10">
             {/* Logo */}
             <Link
@@ -213,6 +170,7 @@ className="max-w-7xl mx-auto rounded-full px-6 py-3 border pointer-events-auto t
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
+            style={{ willChange: 'transform, opacity' }}
             className="fixed inset-0 z-[90] flex flex-col bg-[#021915] text-white shadow-2xl md:hidden pt-24"
           >
             <div className="px-6 pt-4 pb-8 space-y-3 flex-1 overflow-y-auto">

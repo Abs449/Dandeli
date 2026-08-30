@@ -16,7 +16,6 @@ import {
   User,
   MessageSquare,
 } from "lucide-react";
-import { submitBooking } from "../lib/data";
 import { submitBookingToSheets } from "../lib/sheets";
 import { usePackages } from "../lib/data";
 
@@ -101,23 +100,20 @@ const Booking = () => {
       special_requests: data.special_requests?.trim() || null,
     };
 
-    // Supabase is the source of truth.
-    const dbResult = await submitBooking(payload);
-    if (!dbResult.ok) {
-      setSubmitState({
-        status: "error",
-        error:
-          dbResult.reason === "not-configured"
-            ? "Submissions are temporarily unavailable. Please call us directly."
-            : "Could not save your booking. Please try again or call us.",
-      });
-      return;
-    }
+    const sheetsResult = await submitBookingToSheets(payload);
 
-    // Sheets is best-effort — never blocks the success screen.
-    submitBookingToSheets(payload).catch(() => {});
+if (!sheetsResult.ok) {
+  setSubmitState({
+    status: "error",
+    error: "Could not submit your booking. Please try again or call us.",
+  });
 
-    setSubmitState({ status: "success", error: null });
+  return;
+}
+
+setSubmitState({ status: "success", error: null });
+
+window.scrollTo({ top: 0, behavior: "smooth" });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
