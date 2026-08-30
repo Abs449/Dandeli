@@ -58,6 +58,15 @@ const Services = () => {
   const sectionRef = useRef(null);
 const servicesScrollRef = useRef(null);
 
+useEffect(() => {
+  if (servicesScrollRef.current) {
+    servicesScrollRef.current.scrollTo({
+      left: 0,
+      behavior: "auto",
+    });
+  }
+}, [selectedCategory]);
+
   // Lightweight scroll transform
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -262,9 +271,7 @@ const servicesScrollRef = useRef(null);
 
             <div
   ref={servicesScrollRef}
-  className="overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth snap-x snap-proximity px-12"
->
-  <div
+className="overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth snap-x snap-mandatory scroll-px-[calc((100vw-300px)/2)] px-[calc((100vw-300px)/2)] sm:px-12">  <div
     className="
       grid
       grid-rows-2
@@ -281,13 +288,9 @@ const servicesScrollRef = useRef(null);
     .includes("rafting");
 
   return (
-                          <motion.article
+                          <article
                             key={service.id}
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-40px" }}
-                            transition={{ duration: 0.4, delay: (index % 4) * 0.05 }}
-                            className="w-[300px] h-[420px] sm:h-[460px] snap-start bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                            className="w-[300px] h-[420px] sm:h-[460px] snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
                             onClick={() => {
                               const message = `Hey Karthik , I want to know further details about ${service.name}`;
                               const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
@@ -363,9 +366,9 @@ const servicesScrollRef = useRef(null);
                                 Inquire Activity
                               </div>
                             </div>
-                                          </motion.article>
+                                          </article>
               );
-            })}
+            })} 
               </div>
             </div>
           </div>
