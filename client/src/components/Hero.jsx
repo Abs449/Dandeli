@@ -186,7 +186,9 @@ const Hero = () => {
   // has, on ANY screen size or aspect ratio — not just the ones we've
   // manually tested.
 
-  const RAFT_MAX_WIDTH = 11000; // px cap for the raft+people group on desktop
+  const RAFT_MAX_WIDTH = 900; // absolute ceiling for the raft+people group on
+                               // very large desktop monitors. This is NOT the
+                               // day-to-day size control — see note below.
   const RAFT_MAX_WIDTH_MOBILE = 620; // raised — was capping the raft too small
                                       // on narrower phones where vw alone left
                                       // room to grow.
@@ -211,7 +213,14 @@ const Hero = () => {
   // Desktop raft container: was `clamp(320px, 34vw, 700px)` — same vw-only
   // problem, made worse because it also drives the raft's aspect-ratio
   // height (width: 100%, height: auto).
-  const raftContainerWidth = `clamp(260px, min(34vw, 42vh), ${RAFT_MAX_WIDTH}px)`;
+  // THE ACTUAL RAFT-SIZE CONTROL: raise/lower the "46" (vw rate) and "56"
+  // (vh rate) below to make the raft bigger or smaller. It will keep
+  // growing with the viewport up to whichever of those two limits is
+  // tighter, then stop at RAFT_MAX_WIDTH on huge screens. Raising
+  // RAFT_MAX_WIDTH alone (as was tried) does nothing if 46vw/56vh already
+  // produces a value below that ceiling — clamp() picks the middle value,
+  // not the max, unless the middle value would exceed it.
+  const raftContainerWidth = `clamp(260px, min(46vw, 56vh), ${RAFT_MAX_WIDTH}px)`;
   const rapidsFontSizeMobile = "clamp(40px, min(12vw, 7vh), 100px)";
   const raftContainerWidthMobile = `clamp(240px, min(88vw, 48vh), ${RAFT_MAX_WIDTH_MOBILE}px)`;
 
@@ -404,7 +413,7 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
                   style={{
                     zIndex: 10,
                     width: raftContainerWidth,
-                    maxHeight: "48vh",
+                    maxHeight: "62vh",
                     marginLeft: "0vw",
                     marginRight: "0vw",
                   }}
@@ -419,7 +428,7 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
                     transition={{ duration: 1.2, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     style={{
                       width: "100%",
-                      maxHeight: "48vh",
+                      maxHeight: "62vh",
                       height: "auto",
                       display: "block",
                       objectFit: "contain",
