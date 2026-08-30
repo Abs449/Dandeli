@@ -67,6 +67,22 @@ const Hero = () => {
   const [bp, setBp] = useState(() =>
     typeof window !== "undefined" ? getBreakpointKey(window.innerWidth) : "lg",
   );
+  // ── LOCKED VIEWPORT HEIGHT ─────────────────────────────────────────
+  // Chrome (and Safari) fire a `resize` event and change
+  // `window.innerHeight` purely because the address bar / bottom toolbar
+  // is showing or hiding — no actual device resize happened. CSS units
+  // like `100vh`/`100svh` can still visibly animate through this
+  // transition on some browser versions, which is the "resizing while the
+  // bar shows/hides" you're seeing.
+  //
+  // The fix: capture the height in JS once, and only ever update it when
+  // the WIDTH has changed (a real resize or orientation change). A resize
+  // event caused purely by the toolbar toggling has the same width as
+  // before, so it's ignored entirely — the hero's pixel height never
+  // moves because of it.
+  const [viewportHeight, setViewportHeight] = useState(() =>
+    typeof window !== "undefined" ? window.innerHeight : 800,
+  );
   const [showStatusDetails, setShowStatusDetails] = useState(false);
   const [damStatus, setDamStatus] = useState({
     loading: true,
@@ -101,20 +117,28 @@ const Hero = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Width-only resize watcher. Only calls setBp when the bucket actually
-  // changes — a resize event fired purely by mobile-browser-chrome height
-  // changes will compute the same key and trigger no re-render at all.
+  // Width-only resize watcher. Updates the breakpoint AND the locked
+  // viewport height together, but only when the width bucket has actually
+  // changed — a resize event fired purely by mobile-browser-chrome height
+  // changes computes the same width and updates nothing, so nothing
+  // re-renders and nothing visibly resizes.
   useEffect(() => {
     let frame = null;
+    let lastWidth = typeof window !== "undefined" ? window.innerWidth : 0;
     const handleResize = () => {
       if (frame !== null) return;
       frame = requestAnimationFrame(() => {
         frame = null;
-        const key = getBreakpointKey(window.innerWidth);
-        setBp((prev) => (prev === key ? prev : key));
+        const width = window.innerWidth;
+        if (width === lastWidth) return; // height-only change (toolbar) — ignore
+        lastWidth = width;
+        setBp((prev) => {
+          const key = getBreakpointKey(width);
+          return prev === key ? prev : key;
+        });
+        setViewportHeight(window.innerHeight);
       });
     };
-    handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -258,7 +282,8 @@ const Hero = () => {
     <div
       id="hero"
       ref={heroRef}
-      className="relative min-h-[100svh] h-[100svh] flex flex-col overflow-hidden"
+      className="relative flex flex-col overflow-hidden"
+      style={{ height: `${viewportHeight}px`, minHeight: `${viewportHeight}px` }}
     >
       {/* ── LAYER 1 (z=0): Normal → mirrored → normal background loop ── */}
       <div className="hero-bg-pan absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>

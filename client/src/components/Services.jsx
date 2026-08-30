@@ -112,7 +112,7 @@ const Services = () => {
     <section
       ref={sectionRef}
       id="services"
-className="py-16 sm:py-20 md:py-24 relative overflow-x-hidden bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"    >
+className="py-16 sm:py-20 md:py-24 relative bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"    >
       {/* Background Image Layer with Parallax */}
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
@@ -198,16 +198,14 @@ className="py-16 sm:py-20 md:py-24 relative overflow-x-hidden bg-[#021915] text-
         <div className="hidden md:block md:mb-2" />
 
         {/* ── SERVICES GRID ─────────────────────────────────────────────
-            Mobile (< md): a fixed 2-ROW grid that scrolls HORIZONTALLY
-            (grid-flow-col + grid-rows-2 + auto-cols sizing each card to a
-            fraction of the viewport + overflow-x-auto + snap). That's a
-            different shape from a normal wrapping grid — it's what
-            produces "2 rows tall, scroll sideways to see more" like the
-            reference.
-            Desktop (md+): switches to an ordinary WRAPPING multi-column
-            grid (grid-rows-none, grid-flow-row, auto-cols-auto,
-            overflow-visible) — no horizontal scroll needed since there's
-            enough width to lay cards out normally. */}
+            Mobile (< md): a fixed 2-ROW grid that scrolls HORIZONTALLY.
+            The scroll container carries its own edge padding via
+            `px-4 sm:px-6` (not viewport-unit hacks) and `scroll-px-*`
+            so the first/last card don't snap flush against the screen
+            edge. The wrapping div's negative margin makes the row
+            full-bleed inside the section's max-w-7xl container.
+            Desktop (md+): ordinary WRAPPING multi-column grid — no
+            horizontal scroll, no snap. */}
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-8">
             {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -218,101 +216,113 @@ className="py-16 sm:py-20 md:py-24 relative overflow-x-hidden bg-[#021915] text-
             ))}
           </div>
         ) : (
-          <div
-            
-className="grid grid-rows-2 grid-flow-col auto-cols-[68vw] xs:auto-cols-[62vw] sm:auto-cols-[46vw] md:grid-rows-none md:grid-flow-row md:auto-cols-auto md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-8 overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory md:snap-none overscroll-x-contain -mx-4 px-[16vw] sm:-mx-6 sm:px-[27vw] md:mx-0 md:px-0 pb-2 md:pb-0">  {filteredServices.map((service, index) => {
-              const isRafting = service.name.toLowerCase().includes("rafting");
+          <div className="-mx-4 sm:-mx-6 md:mx-0 mt-8">
+            <div
+              className="grid grid-rows-2 grid-flow-col md:grid-flow-row md:grid-rows-none
+                         auto-cols-[75%] xs:auto-cols-[62%] sm:auto-cols-[42%] md:auto-cols-auto
+                         md:grid-cols-3 lg:grid-cols-4
+                         gap-4 sm:gap-6
+                         overflow-x-auto md:overflow-visible
+                         overflow-y-hidden md:overflow-y-visible
+                         no-scrollbar snap-x snap-mandatory md:snap-none
+                         scroll-px-4 sm:scroll-px-6
+                         px-4 sm:px-6 md:px-0
+                         pb-2 md:pb-0"
+            >
+              {filteredServices.map((service, index) => {
+                const isRafting = service.name.toLowerCase().includes("rafting");
 
-              return (
-                <motion.article
-                  key={service.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.4, delay: (index % 4) * 0.05 }}
-                  className="snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
-                  onClick={() => {
-                    const message = `Hey Karthik , I want to know further details about ${service.name}`;
-                    const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
-                    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-                  }}
-                >
-                  <div>
-                    {/* Card Media Header */}
-                    <div className="h-40 sm:h-48 overflow-hidden relative">
-                      <img
-                        src={service.image}
-                        alt={service.name}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                return (
+                  <motion.article
+                    key={service.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.4, delay: (index % 4) * 0.05 }}
+                    className="snap-start bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                    onClick={() => {
+                      const message = `Hey Karthik , I want to know further details about ${service.name}`;
+                      const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
+                      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+                    }}
+                  >
+                    <div>
+                      {/* Card Media Header */}
+                      <div className="h-40 sm:h-48 overflow-hidden relative">
+                        <img
+                          src={service.image}
+                          alt={service.name}
+                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
-                      {/* Difficulty Badge */}
-                      <div className="absolute top-3 left-3 z-10">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(
-                            service.difficulty,
-                          )}`}
-                        >
-                          <Shield size={9} />
-                          {service.difficulty}
-                        </span>
-                      </div>
-
-                      {/* Dam Availability Badge */}
-                      {isRafting && !damStatus.loading && (
-                        <div className="absolute top-3 right-3 z-10">
+                        {/* Difficulty Badge */}
+                        <div className="absolute top-3 left-3 z-10">
                           <span
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${
-                              damStatus.isOpen
-                                ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
-                                : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
-                            }`}
+                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(
+                              service.difficulty,
+                            )}`}
                           >
-                            <span
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
-                              }`}
-                            />
-                            {damStatus.isOpen ? "Active" : "Calm"}
+                            <Shield size={9} />
+                            {service.difficulty}
                           </span>
                         </div>
-                      )}
 
-                      <div className="absolute bottom-3 left-4 right-4 z-10">
-                        <h3 className="text-base sm:text-xl font-heading font-black text-white leading-tight tracking-tight">
-                          {service.name}
-                        </h3>
-                      </div>
-                    </div>
+                        {/* Dam Availability Badge */}
+                        {isRafting && !damStatus.loading && (
+                          <div className="absolute top-3 right-3 z-10">
+                            <span
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${
+                                damStatus.isOpen
+                                  ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
+                                  : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
+                              }`}
+                            >
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
+                                }`}
+                              />
+                              {damStatus.isOpen ? "Active" : "Calm"}
+                            </span>
+                          </div>
+                        )}
 
-                    {/* Card Content Body */}
-                    <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                      <p className="text-gray-300 font-body text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3">
-                        {service.shortDescription || service.fullDescription}
-                      </p>
-
-                      <div className="flex items-center justify-between border-t border-white/10 pt-3 sm:pt-4 text-xs font-body text-gray-300">
-                        <div className="flex items-center gap-1.5 text-cyan-300">
-                          <Clock size={13} />
-                          <span>{service.duration}</span>
+                        <div className="absolute bottom-3 left-4 right-4 z-10">
+                          <h3 className="text-base sm:text-xl font-heading font-black text-white leading-tight tracking-tight">
+                            {service.name}
+                          </h3>
                         </div>
-                        <span className="text-lg sm:text-2xl font-heading font-black text-amber-400">
-                          {service.price}
-                        </span>
+                      </div>
+
+                      {/* Card Content Body */}
+                      <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                        <p className="text-gray-300 font-body text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3">
+                          {service.shortDescription || service.fullDescription}
+                        </p>
+
+                        <div className="flex items-center justify-between border-t border-white/10 pt-3 sm:pt-4 text-xs font-body text-gray-300">
+                          <div className="flex items-center gap-1.5 text-cyan-300">
+                            <Clock size={13} />
+                            <span>{service.duration}</span>
+                          </div>
+                          <span className="text-lg sm:text-2xl font-heading font-black text-amber-400">
+                            {service.price}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Card Action Button */}
-                  <div className="p-4 sm:p-6 pt-0">
-                    <div className="block w-full text-center py-2.5 sm:py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer">
-                      Inquire Activity
+                    {/* Card Action Button */}
+                    <div className="p-4 sm:p-6 pt-0">
+                      <div className="block w-full text-center py-2.5 sm:py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer">
+                        Inquire Activity
+                      </div>
                     </div>
-                  </div>
-                </motion.article>
-              );
-            })}
+                  </motion.article>
+                );
+              })}
+            </div>
           </div>
         )}
 
@@ -320,7 +330,7 @@ className="grid grid-rows-2 grid-flow-col auto-cols-[68vw] xs:auto-cols-[62vw] s
           <p className="text-center text-gray-400 mt-10 font-body">
             No activities found in this category yet.
           </p>
-        )}  
+        )}
       </div>
     </section>
   );
