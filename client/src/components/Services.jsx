@@ -109,6 +109,21 @@ const servicesScrollRef = useRef(null);
     return counts;
   }, [services]);
 
+  // Row-major fill: row 1 fills left-to-right first, and only once it has
+  // at least 4 cards does the next item drop to row 2. CSS Grid's default
+  // `grid-auto-flow: row` fills row-major, but it only wraps to a new row
+  // once it runs out of *explicit* columns — so the column count has to be
+  // computed from the data (at least 4, otherwise enough columns to hold
+  // half the items) rather than left to `grid-flow-col`, which instead
+  // fills straight down each column first.
+  const columnsCount = Math.max(4, Math.ceil(filteredServices.length / 2));
+
+  // Arrow buttons only render at md+ (sm:gap-6 = 24px), so the scroll step
+  // is exactly one card width plus that gap — this keeps every click
+  // landing flush on a card edge instead of stopping mid-card, which is
+  // what made the native smooth-scroll feel jerky.
+  const CARD_SCROLL_STEP = 300 + 24;
+
   return (
     <section
   ref={sectionRef}
@@ -199,14 +214,13 @@ const servicesScrollRef = useRef(null);
         <div className="hidden md:block md:mb-2" />
 
         {/* ── SERVICES GRID ─────────────────────────────────────────────
-            Mobile (< md): a fixed 2-ROW grid that scrolls HORIZONTALLY.
-            The scroll container carries its own edge padding via
-            `px-4 sm:px-6` (not viewport-unit hacks) and `scroll-px-*`
-            so the first/last card don't snap flush against the screen
-            edge. The wrapping div's negative margin makes the row
-            full-bleed inside the section's max-w-7xl container.
-            Desktop (md+): ordinary WRAPPING multi-column grid — no
-            horizontal scroll, no snap. */}
+            A fixed 2-ROW grid that scrolls HORIZONTALLY. Row 1 fills
+            left-to-right first (row-major, the grid default), and only
+            once row 1 has `columnsCount` cards does the next item drop
+            to row 2 — `columnsCount` is computed above as at least 4, or
+            enough columns to hold half the filtered list. Every card has
+            a fixed height (`h-[420px] sm:h-[460px]`) so both rows stay
+            evenly aligned regardless of description length or badges. */}
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-8">
             {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -222,7 +236,7 @@ const servicesScrollRef = useRef(null);
               type="button"
               onClick={() => {
                 servicesScrollRef.current?.scrollBy({
-                  left: -360,
+                  left: -CARD_SCROLL_STEP,
                   behavior: "smooth",
                 });
               }}
@@ -236,7 +250,7 @@ const servicesScrollRef = useRef(null);
               type="button"
               onClick={() => {
                 servicesScrollRef.current?.scrollBy({
-                  left: 360,
+                  left: CARD_SCROLL_STEP,
                   behavior: "smooth",
                 });
               }}
@@ -248,17 +262,18 @@ const servicesScrollRef = useRef(null);
 
             <div
   ref={servicesScrollRef}
-  className="overflow-x-auto overflow-y-hidden no-scrollbar px-12"
+  className="overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth snap-x snap-proximity px-12"
 >
   <div
     className="
       grid
-      grid-flow-col
       grid-rows-2
-      auto-cols-[300px]
+      auto-rows-[420px] sm:auto-rows-[460px]
       gap-4 sm:gap-6
       w-max
+      items-start
     "
+    style={{ gridTemplateColumns: `repeat(${columnsCount}, 300px)` }}
   >
     {filteredServices.map((service, index) => {
   const isRafting = service.name
@@ -272,7 +287,7 @@ const servicesScrollRef = useRef(null);
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ duration: 0.4, delay: (index % 4) * 0.05 }}
-                            className="w-[300px] bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                            className="w-[300px] h-[420px] sm:h-[460px] snap-start bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
                             onClick={() => {
                               const message = `Hey Karthik , I want to know further details about ${service.name}`;
                               const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
