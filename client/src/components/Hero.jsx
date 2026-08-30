@@ -6,10 +6,67 @@ import backgroundImage from "../assets/Backgroundimg/hero-bg.webp";
 import raftCutout from "../assets/Backgroundimg/raft-cutout.webp";
 import personCutout from "../assets/Backgroundimg/person-cutout.webp";
 
+// ── FIXED BREAKPOINT SIZE TABLE ─────────────────────────────────────────
+// Every number below is a plain pixel value — no vw, no vh, no clamp().
+// This is the deliberate fix for two separate bugs that were both caused
+// by the same root issue (fluid vw/vh sizing):
+//
+// 1. "Constant changing" on mobile — vh recalculates every time the
+//    browser's address bar shows/hides while scrolling. Any size driven
+//    by vh was visibly resizing itself during normal scrolling, which is
+//    what looked like the layout "jumping" or "changing" on its own.
+//
+// 2. The subtitle/CTA crossing "Of Dandeli" — because raft/text sizes and
+//    the CTA block were sized independently (one by vh, one by flex-1),
+//    there were viewport combinations where they disagreed about how much
+//    vertical space was left, and one drew on top of the other.
+//
+// The fix for both: pick a size ONCE per breakpoint, from a fixed table,
+// and never recompute it from viewport height. Sizes only change when the
+// viewport WIDTH crosses into a different bucket (e.g. rotating a phone,
+// or resizing a desktop browser window) — never from scrolling, never
+// from the address bar, never continuously.
+//
+// To adjust how big anything looks on a given class of device, change the
+// numbers in this table. Nothing else in the component needs to change.
+const SIZE_TABLE = {
+  // very small phones (iPhone SE, small Android)
+  xs:  { topPad: 78,  headline: 12, rapids: 34, raftW: 190, raftMaxH: 230, ctaPad: 22, headGap: 10, midGap: 14 },
+  // standard phones (iPhone 12-16, most Android)
+  sm:  { topPad: 84,  headline: 13, rapids: 44, raftW: 225, raftMaxH: 275, ctaPad: 26, headGap: 12, midGap: 16 },
+  // large phones (Pro Max / large Android)
+  md:  { topPad: 90,  headline: 15, rapids: 56, raftW: 260, raftMaxH: 320, ctaPad: 30, headGap: 14, midGap: 18 },
+  // small tablets / large phones in landscape
+  mdl: { topPad: 95,  headline: 17, rapids: 68, raftW: 300, raftMaxH: 360, ctaPad: 32, headGap: 16, midGap: 20 },
+  // tablets landscape / small laptops — switches to the RAP-raft-DS row layout
+  lg:  { topPad: 96,  headline: 20, rapDs: 64,  raftW: 320, raftMaxH: 380, ctaPad: 34, headGap: 8,  midGap: 0 },
+  // laptops / small desktop monitors
+  xl:  { topPad: 100, headline: 26, rapDs: 84,  raftW: 420, raftMaxH: 440, ctaPad: 38, headGap: 8,  midGap: 0 },
+  // large desktop monitors
+  xxl: { topPad: 106, headline: 32, rapDs: 110, raftW: 520, raftMaxH: 520, ctaPad: 46, headGap: 10, midGap: 0 },
+};
+
+// Width-only breakpoint boundaries (px). Deliberately NOT based on height,
+// so an address-bar-driven height change can never move a device between
+// buckets.
+function getBreakpointKey(width) {
+  if (width <= 380) return "xs";
+  if (width <= 430) return "sm";
+  if (width <= 599) return "md";
+  if (width <= 767) return "mdl";
+  if (width <= 1023) return "lg";
+  if (width <= 1365) return "xl";
+  return "xxl";
+}
+
+const DESKTOP_LAYOUT_KEYS = new Set(["lg", "xl", "xxl"]);
+
 const Hero = () => {
   const heroRef = useRef(null);
   const [shouldLoadBackground, setShouldLoadBackground] = useState(true);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [bp, setBp] = useState(() =>
+    typeof window !== "undefined" ? getBreakpointKey(window.innerWidth) : "lg",
+  );
   const [showStatusDetails, setShowStatusDetails] = useState(false);
   const [damStatus, setDamStatus] = useState({
     loading: true,
@@ -44,24 +101,38 @@ const Hero = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Width-only resize watcher. Only calls setBp when the bucket actually
+  // changes — a resize event fired purely by mobile-browser-chrome height
+  // changes will compute the same key and trigger no re-render at all.
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const update = () => setIsDesktop(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    let frame = null;
+    const handleResize = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        const key = getBreakpointKey(window.innerWidth);
+        setBp((prev) => (prev === key ? prev : key));
+      });
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, []);
-  useEffect(() => {
-  if (showStatusDetails) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "";
-  }
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [showStatusDetails]);
+  useEffect(() => {
+    if (showStatusDetails) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showStatusDetails]);
 
   const loadDamStatus = async () => {
     const controller = new AbortController();
@@ -110,6 +181,9 @@ const Hero = () => {
   useEffect(() => {
     loadDamStatus();
   }, []);
+
+  const isDesktop = DESKTOP_LAYOUT_KEYS.has(bp);
+  const size = SIZE_TABLE[bp];
 
   const isOpen = damStatus.status === "open";
   const locationLabel = "Ganeshgudi · Dandeli Kali River";
@@ -170,59 +244,15 @@ const Hero = () => {
 
   const bgUrl = shouldLoadBackground ? `url(${backgroundImage})` : "none";
 
-  // ── SIZE CONTROLS ─────────────────────────────────────────────────────
-  // EVERY dimension in the composite stage (headline text, RAP/DS text,
-  // raft container) is now bounded by BOTH vw AND vh via min(Xvw, Yvh).
-  // This is the actual fix for the "subtitle crosses OF DANDELI" bug:
-  // previously the desktop RAP/DS text and raft width scaled off vw only,
-  // so on a wide-but-short viewport (common on laptops in normal browser
-  // windows — not just phones) the composite stage grew taller than the
-  // available vh, and the flex-1 CTA/subtitle block below it got squeezed
-  // to near-zero height by flexbox, causing its text to render on top of
-  // "OF DANDELI" above it (text has no overflow clipping by default).
-  //
-  // Capping every growing dimension by vh as well means the composite
-  // stage can never claim more vertical space than the viewport actually
-  // has, on ANY screen size or aspect ratio — not just the ones we've
-  // manually tested.
-
-  const RAFT_MAX_WIDTH = 900; // absolute ceiling for the raft+people group on
-                               // very large desktop monitors. This is NOT the
-                               // day-to-day size control — see note below.
-  const RAFT_MAX_WIDTH_MOBILE = 620; // raised — was capping the raft too small
-                                      // on narrower phones where vw alone left
-                                      // room to grow.
-
-  // Mobile sizing uses min(Xvw, Yvh) — bounded by BOTH width and height —
-  // not vw alone. A narrow-but-tall phone (e.g. 402x874) has plenty of vw
-  // to grow into, but limited vh; without a height ceiling the RAPIDS text
-  // + raft image were free to grow tall enough to push the CTA below the
-  // fold, forcing a scroll. The vh term caps that growth on short/cramped
-  // screens while the vw term still governs on wide phones, so whichever
-  // dimension is tighter wins.
-  const conquerFontSize = isDesktop
-    ? "clamp(20px, min(3.6vw, 5.2vh), 40px)"
-    : "clamp(12px, min(6vw, 3.2vh), 26px)";
-  const ofDandeliFontSize = isDesktop
-    ? "clamp(20px, min(3.6vw, 5.2vh), 40px)"
-    : "clamp(12px, min(6vw, 3.2vh), 26px)";
-  // Desktop RAP/DS text: was `clamp(70px, 7.5vw, 150px)` — vw-only, so a
-  // wide-but-short window let this grow past the height the stage had to
-  // give it. Now bounded by vh too.
-  const rapDsFontSize = "clamp(52px, min(7.5vw, 13vh), 150px)";
-  // Desktop raft container: was `clamp(320px, 34vw, 700px)` — same vw-only
-  // problem, made worse because it also drives the raft's aspect-ratio
-  // height (width: 100%, height: auto).
-  // THE ACTUAL RAFT-SIZE CONTROL: raise/lower the "46" (vw rate) and "56"
-  // (vh rate) below to make the raft bigger or smaller. It will keep
-  // growing with the viewport up to whichever of those two limits is
-  // tighter, then stop at RAFT_MAX_WIDTH on huge screens. Raising
-  // RAFT_MAX_WIDTH alone (as was tried) does nothing if 46vw/56vh already
-  // produces a value below that ceiling — clamp() picks the middle value,
-  // not the max, unless the middle value would exceed it.
-  const raftContainerWidth = `clamp(260px, min(46vw, 56vh), ${RAFT_MAX_WIDTH}px)`;
-  const rapidsFontSizeMobile = "clamp(40px, min(12vw, 7vh), 100px)";
-  const raftContainerWidthMobile = `clamp(240px, min(88vw, 48vh), ${RAFT_MAX_WIDTH_MOBILE}px)`;
+  // All sizes below come straight from the fixed table — no math, no vw,
+  // no vh. This is what makes them stable across scroll/resize/orientation
+  // events that don't actually change which breakpoint bucket we're in.
+  const conquerFontSize = `${size.headline}px`;
+  const ofDandeliFontSize = `${size.headline}px`;
+  const rapDsFontSize = size.rapDs ? `${size.rapDs}px` : undefined;
+  const rapidsFontSizeMobile = size.rapids ? `${size.rapids}px` : undefined;
+  const raftContainerWidth = `${size.raftW}px`;
+  const raftMaxHeight = `${size.raftMaxH}px`;
 
   return (
     <div
@@ -271,12 +301,12 @@ const Hero = () => {
       />
 
       {/* ── FULL-SCREEN UI SHELL (z=10) ── */}
-      {/* Anchored to the TOP (no justify-center) — every section below is
-          in NORMAL FLOW (nothing is position:absolute anymore). Elements
-          in normal flow physically stack and can never overlap each
-          other UNLESS one of them is forced to shrink past its content's
-          natural size (which is exactly what was happening to the CTA
-          block before — see the fix on that block below). */}
+      {/* Everything below is in NORMAL FLOW — nothing is position:absolute.
+          Combined with fixed, non-jittering sizes above, elements now
+          physically stack top-to-bottom and cannot overlap on ANY device:
+          there's no continuous resize fight between the composite stage
+          and the CTA block anymore, because neither one is being resized
+          by a live viewport-height number in the first place. */}
       <div
         className="relative flex flex-col w-full pointer-events-auto flex-1 min-h-0"
         style={{ zIndex: 10 }}
@@ -285,7 +315,7 @@ const Hero = () => {
         {/* ── TOP: Compact info row — location + live status in one line ── */}
         <div
           className="w-full flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 px-3 flex-shrink-0"
-          style={{ paddingTop: "clamp(85px, 19vh, 110px)" }}
+          style={{ paddingTop: `${size.topPad}px` }}
         >
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -294,7 +324,7 @@ const Hero = () => {
            className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.04em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] shrink-0"
             style={{
               marginTop: 0,
-              marginBottom: isDesktop ? "clamp(8px, 1.5vh, 16px)" : "clamp(6px, 1.2vh, 14px)",
+              marginBottom: isDesktop ? "12px" : "10px",
             }}
           >
             <Waves className="w-3 h-3 text-[#52b788] shrink-0" />
@@ -309,7 +339,7 @@ const Hero = () => {
             onClick={() => setShowStatusDetails(true)}
 className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] cursor-pointer hover:bg-white/15 transition-colors"            style={{
               marginTop: 0,
-              marginBottom: isDesktop ? "clamp(8px, 1.5vh, 16px)" : "clamp(6px, 1.2vh, 14px)",
+              marginBottom: isDesktop ? "12px" : "10px",
             }}
           >
             {isDesktop ? (
@@ -348,18 +378,16 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
         
 
         {/* ── COMPOSITE STAGE: CONQUER THE + RAP[RAFT]DS + OF DANDELI ── */}
-        {/* min-h-0 + overflow-hidden is a safety net: this block is the
-            one allowed to flex/shrink when space is tight (flex-1 below),
-            and if it's ever squeezed smaller than its content on some
-            extreme viewport, content gets clipped here instead of
-            overflowing onto the CTA block below it. With every dimension
-            inside now vh-capped (see SIZE CONTROLS above) this shouldn't
-            ever actually trigger — it's a backstop, not the primary fix. */}
+        {/* min-h-0 + overflow-hidden is a safety net only — if some device
+            we haven't put in the table yet is unusually short, content
+            clips cleanly here instead of ever overlapping the CTA below.
+            With fixed sizes now used everywhere, this should rarely if
+            ever actually trigger. */}
 <div
    className="relative w-full max-w-[1900px] mx-auto flex flex-col items-center justify-center flex-1 min-h-0 overflow-hidden"
    style={{
-    paddingTop: isDesktop ? "clamp(24px, 4vh, 50px)" : "clamp(20px, 5vh, 44px)",
-    paddingBottom: isDesktop ? "clamp(16px, 3vh, 30px)" : "clamp(16px, 4vh, 36px)",
+    paddingTop: isDesktop ? "30px" : "18px",
+    paddingBottom: isDesktop ? "20px" : "14px",
   }}
 >
           {/* CONQUER THE */}
@@ -373,7 +401,7 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
               letterSpacing: "0.28em",
               paddingLeft: "0.28em",
               textShadow: "0 2px 12px rgba(0,0,0,0.9)",
-              marginBottom: isDesktop ? "clamp(5px, 1vh, 10px)" : "clamp(16px, 3.5vh, 32px)",
+              marginBottom: `${size.headGap}px`,
             }}
           >
             Conquer The
@@ -413,9 +441,7 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
                   style={{
                     zIndex: 10,
                     width: raftContainerWidth,
-                    maxHeight: "62vh",
-                    marginLeft: "0vw",
-                    marginRight: "0vw",
+                    maxHeight: raftMaxHeight,
                   }}
                 >
                   {/* Raft — base layer */}
@@ -428,7 +454,7 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
                     transition={{ duration: 1.2, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     style={{
                       width: "100%",
-                      maxHeight: "62vh",
+                      maxHeight: raftMaxHeight,
                       height: "auto",
                       display: "block",
                       objectFit: "contain",
@@ -495,20 +521,20 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
                   lineHeight: 0.85,
                   opacity: 1,
                   textShadow: "0 2px 18px rgba(249, 111, 80, 0)",
-                  marginBottom: "clamp(16px, 3.5vh, 30px)",
+                  marginBottom: `${size.midGap}px`,
                 }}
               >
                 RAPIDS
               </motion.p>
 
-              {/* Raft + People — coupled on mobile, sized off RAFT_MAX_WIDTH_MOBILE */}
+              {/* Raft + People — coupled on mobile, fixed size per breakpoint */}
               {shouldLoadBackground && (
                 <div
                   className="relative flex items-center justify-center shrink-0"
                   style={{
                     zIndex: 10,
-                    width: raftContainerWidthMobile,
-                    maxHeight: "40vh",
+                    width: raftContainerWidth,
+                    maxHeight: raftMaxHeight,
                   }}
                 >
                   <motion.img
@@ -520,7 +546,7 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
                     transition={{ duration: 1.2, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     style={{
                       width: "100%",
-                      maxHeight: "40vh",
+                      maxHeight: raftMaxHeight,
                       height: "auto",
                       display: "block",
                       objectFit: "contain",
@@ -566,7 +592,7 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
               letterSpacing: "0.28em",
               paddingLeft: "0.28em",
               textShadow: "0 2px 12px rgba(0,0,0,0.9)",
-              marginTop: isDesktop ? "clamp(4px, 2vh, 14px)" : "clamp(18px, 3.5vh, 32px)",
+              marginTop: `${size.headGap}px`,
             }}
           >
             Of Dandeli
@@ -574,23 +600,17 @@ className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 item
         </div>
 
         {/* ── BOTTOM: Subtitle + CTA ── */}
-        {/* THE OTHER HALF OF THE FIX: this block used to be `flex-1
-            min-h-0`, which made it the block flexbox shrinks first when
-            total content exceeds the viewport — and since shrunk text
-            blocks don't clip by default, its content rendered on top of
-            "OF DANDELI" above it. It's now `flex-shrink-0 mt-auto`:
-            flexbox is no longer ALLOWED to compress it below its natural
-            content height, and `mt-auto` pushes it to the bottom of
-            whatever space the (now vh-capped, and itself shrinkable)
-            composite stage above leaves behind. This block will now
-            always render at full size — the composite stage is the one
-            that absorbs any squeeze, via its own min-h-0/overflow-hidden
-            safety net above. */}
+        {/* flex-shrink-0 + mt-auto: flexbox is not allowed to compress this
+            block below its natural content size, and it's pushed to the
+            bottom of whatever space the (fixed-size, self-clipping)
+            composite stage above leaves behind. This block always renders
+            at full, stable size — it never resizes with scroll or with the
+            composite stage above it. */}
         <div
           className="relative w-full flex-shrink-0 mt-auto flex flex-col items-center justify-end gap-2 px-4 sm:px-6"
           style={{
             zIndex: 50,
-            paddingBottom: isDesktop ? "clamp(24px, 6vh, 56px)" : "clamp(28px, 8vh, 64px)",
+            paddingBottom: `${size.ctaPad}px`,
           }}
         >
           <motion.p
