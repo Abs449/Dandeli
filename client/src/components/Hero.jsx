@@ -186,7 +186,7 @@ const Hero = () => {
   // has, on ANY screen size or aspect ratio — not just the ones we've
   // manually tested.
 
-  const RAFT_MAX_WIDTH = 700; // px cap for the raft+people group on desktop
+  const RAFT_MAX_WIDTH = 900; // px cap for the raft+people group on desktop
   const RAFT_MAX_WIDTH_MOBILE = 620; // raised — was capping the raft too small
                                       // on narrower phones where vw alone left
                                       // room to grow.
