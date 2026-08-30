@@ -178,7 +178,7 @@ const Hero = () => {
   // loose on the other. Desktop ("laptop") numbers are unchanged from
   // before — only the mobile branch and the CTA positioning were touched.
 
-  const RAFT_MAX_WIDTH = 900; // px cap for the raft+people group on desktop
+  const RAFT_MAX_WIDTH = 700; // px cap for the raft+people group on desktop
   const RAFT_MAX_WIDTH_MOBILE = 620; // raised — was capping the raft too small
                                       // on narrower phones where vw alone left
                                       // room to grow.
