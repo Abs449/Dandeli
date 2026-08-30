@@ -403,7 +403,7 @@ const Hero = () => {
                   initial={{ opacity: 0, x: -40 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
+                  className="font-impact uppercase leading-none shrink-0 bg-[#F97316] bg-clip-text text-transparent"
                   style={{
                     fontSize: "clamp(50px, 22cqh, 170px)",
                     letterSpacing: "0.05em",
@@ -495,7 +495,7 @@ const Hero = () => {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="font-impact uppercase leading-none w-full text-center bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
+                  className="font-impact uppercase leading-none w-full text-center bg-[#F97316] bg-clip-text text-transparent"
                   style={{
                     fontSize: "clamp(34px, 22cqh, 72px)",
                     letterSpacing: "0.14em",

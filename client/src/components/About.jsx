@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import { BookOpen, X, Sparkles, Heart } from "lucide-react";
 import photo from "../assets/Backgroundimg/guide-photo.webp";
-import imgJungle from "../assets/Backgroundimg/aboutus-bg.webp";
+import imgJungle from "../assets/Backgroundimg/river-scenery.webp";
 
 // Smooth Eased Number Counter Component
 const SmoothCountUp = ({ end, duration = 2.0, decimals = 0, suffix = "" }) => {
@@ -65,7 +65,7 @@ const About = () => {
     offset: ["start end", "end start"],
   });
 
-  const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.08, 1.02]);
+  const bgScale = 1;
   const bgOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.5, 0.85, 0.85, 0.5]);
 
   return (

@@ -3,425 +3,699 @@
 @import "tailwindcss";
 
 
+
 @theme {
+
   --color-primary: #052e26;
+
   /* Deep Forest Slate */
+
   --color-primary-dark: #021915;
+
   /* Midnight River Obsidian */
+
   --color-secondary: #8ab4c8;
+
   /* Muted Sky Pastel */
+
   --color-secondary-dark: #5a8fa8;
+
   /* Deep Sky Pastel */
+
   --color-accent: #FF6B4A;
+
   /* Dusty Amber Cream */
+
   --color-accent-light: #fae4b0;
+
   --color-coral: #e8715a;
+
   /* Warm Coral — CTA & highlights */
+
   --color-coral-light: #f09b89;
+
   --color-sage: #7fb5a0;
+
   /* Sage Mist — secondary accents */
+
   --color-sage-light: #a8d0c4;
+
   --color-background: #021915;
+
   /* Midnight Forest Obsidian */
+
   --color-river: #8ab4c8;
+
   /* Muted Sky (replaces electric teal) */
+
   --color-river-light: #b8d4e2;
+
   --color-river-dark: #5a8fa8;
+
   --color-foam: #08332a;
 
   --font-display: "Bebas Neue", "Montserrat", sans-serif;
+
   --font-heading: "Bebas Neue", "Montserrat", sans-serif;
+
   --font-impact: "Bebas Neue", "Montserrat", sans-serif;
+
   --font-body: "Inter", system-ui, sans-serif;
+
 }
 
 /* Custom font utilities */
+
 .font-display,
+
 .font-heading,
+
 .font-impact {
+
   font-family: "Bebas Neue", "Montserrat", sans-serif;
+
 }
 
 /* Smooth scroll handled via custom RAF animation in Navbar/Home — not CSS */
+
 html {
+
   scroll-behavior: auto;
+
 }
 
 /* Custom Utilities using theme variables */
+
 .bg-primary {
+
   background-color: var(--color-primary);
+
 }
 
 .bg-primary-dark {
+
   background-color: var(--color-primary-dark);
+
 }
 
 .bg-secondary {
+
   background-color: var(--color-secondary);
+
 }
 
 .bg-accent {
+
   background-color: var(--color-accent);
+
 }
 
 .bg-beige {
+
   background-color: var(--color-background);
+
 }
 
 .bg-coral {
+
   background-color: var(--color-coral);
+
 }
 
 .bg-sage {
+
   background-color: var(--color-sage);
+
 }
 
 .text-primary {
+
   color: var(--color-primary);
+
 }
 
 .text-secondary {
+
   color: var(--color-secondary);
+
 }
 
 .text-accent {
+
   color: var(--color-accent);
+
 }
 
 .text-coral {
+
   color: var(--color-coral);
+
 }
 
 .text-sage {
+
   color: var(--color-sage);
+
 }
 
 .text-river {
+
   color: var(--color-river);
+
 }
 
 .bg-river {
+
   background-color: var(--color-river);
+
 }
 
 .bg-river-light {
+
   background-color: var(--color-river-light);
+
 }
 
 /* Adventure-themed background pattern */
+
 .pattern-bg {
+
   background-image:
+
     radial-gradient(circle at 100% 150%, var(--color-river-light) 24%, white 24%, white 28%, var(--color-river-light) 28%, var(--color-river-light) 36%, white 36%, white 40%, transparent 40%),
+
     radial-gradient(circle at 0% 150%, var(--color-river-light) 24%, white 24%, white 28%, var(--color-river-light) 28%, var(--color-river-light) 36%, white 36%, white 40%, transparent 40%);
+
   background-size: 60px 36px;
+
   opacity: 0.05;
+
 }
 
 /* Ripple effect for Live Radar Status */
+
 @keyframes ripple-pulse {
+
   0% {
+
     transform: scale(0.95);
+
     opacity: 0.8;
+
   }
 
   50% {
+
     transform: scale(1.3);
+
     opacity: 0.4;
+
   }
 
   100% {
+
     transform: scale(1.6);
+
     opacity: 0;
+
   }
+
 }
 
 .ripple-effect {
+
   animation: ripple-pulse 2s infinite ease-out;
+
 }
 
 /* Floating animation for elements/bubbles */
+
 @keyframes float {
 
   0%,
+
   100% {
+
     transform: translateY(0px) rotate(0deg);
+
   }
 
   50% {
+
     transform: translateY(-10px) rotate(2deg);
+
   }
+
 }
 
 .animate-float {
+
   animation: float 6s ease-in-out infinite;
+
 }
 
 @keyframes float-delayed {
 
   0%,
+
   100% {
+
     transform: translateY(0px) rotate(0deg);
+
   }
 
   50% {
+
     transform: translateY(8px) rotate(-2deg);
+
   }
+
 }
 
 .animate-float-delayed {
+
   animation: float-delayed 8s ease-in-out infinite;
+
 }
 
 @media (max-width: 767px) {
+
   #packages-carousel {
+
     scroll-snap-type: x mandatory;
+
     overscroll-behavior-x: contain;
+
   }
 
   #packages-carousel > article {
+
     scroll-snap-align: center;
+
     scroll-snap-stop: always;
+
   }
+
 }
 
 /* Bubbles rising effect */
+
 @keyframes bubble-rise {
+
   0% {
+
     transform: translateY(100px) scale(0.8);
+
     opacity: 0;
+
   }
 
   50% {
+
     opacity: 0.6;
+
   }
 
   100% {
+
     transform: translateY(-800px) scale(1.2);
+
     opacity: 0;
+
   }
+
 }
 
 .bubble {
+
   position: absolute;
+
   bottom: -20px;
+
   background-color: rgba(56, 189, 248, 0.2);
+
   border-radius: 50%;
+
   pointer-events: none;
+
   animation: bubble-rise 15s infinite linear;
+
 }
 
 /* Premium Card hover effects */
+
 .card-adventure {
+
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
 }
 
 @media (hover: hover) and (min-width: 768px) {
+
   .card-adventure:hover {
+
     transform: translateY(-8px) scale(1.01);
+
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 8px 20px rgba(6, 182, 212, 0.15);
+
   }
+
 }
 
 /* River-themed wave dividers between sections */
+
 .wave-divider {
+
   display: block;
+
   width: 100%;
+
   height: 60px;
+
   background-repeat: no-repeat;
+
   background-size: cover;
+
 }
 
 .wave-divider-top {
+
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23021915' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+
 }
 
 .wave-divider-bottom {
+
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%23021915' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+
 }
 
 .wave-divider-river-top {
+
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%2306b6d4' d='M0,32 C240,72 480,0 720,24 C960,48 1200,8 1440,32 L1440,0 L0,0 Z'/></svg>");
+
 }
 
 .wave-divider-river-bottom {
+
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path fill='%2306b6d4' d='M0,28 C240,-12 480,60 720,36 C960,12 1200,52 1440,28 L1440,60 L0,60 Z'/></svg>");
+
 }
 
 @layer base {
+
   html {
+
     font-family: var(--font-body);
+
     -webkit-font-smoothing: antialiased;
+
     scroll-behavior: auto;
+
     /* JS RAF handles smooth scrolling */
+
   }
 
   h1,
+
 h2,
+
 h3,
+
 h4,
+
 h5,
+
 h6 {
+
   font-family: "Bebas Neue", sans-serif;
+
 }
+
 }
 
 /* ── Hero background: continuous rightward track, no fade and no blank frames ── */
+
 @keyframes hero-bg-track-right {
+
   0% {
+
     transform: translate3d(-66.6667%, 0, 0);
+
   }
+
   100% {
+
     transform: translate3d(0%, 0, 0);
+
   }
+
 }
 
 .hero-bg-pan {
+
   overflow: hidden;
+
   background-color: #021915;
+
 }
 
 .hero-bg-layers {
+
   position: absolute;
+
   top: 0;
+
   bottom: 0;
+
   left: 0;
+
   width: 300%;
+
   display: flex;
+
   animation: hero-bg-track-right 38s linear infinite;
+
   will-change: transform;
+
 }
 
 .hero-bg-layer {
+
   position: relative;
+
   inset: auto;
+
   flex: 0 0 33.3333%;
+
   height: 100%;
+
   background-repeat: no-repeat;
+
   background-size: cover;
+
   background-position: center;
+
 }
 
 .hero-bg-layer-1 {
+
   transform: scaleX(1);
+
 }
 
 .hero-bg-layer-2 {
+
   transform: scaleX(-1);
+
 }
 
 .hero-bg-layer-3 {
+
   transform: scaleX(1);
+
 }
 
 /* @media (prefers-reduced-motion: reduce) {
+
   .hero-bg-layers {
+
     animation: none;
+
     transform: translate3d(0, 0, 0);
+
   }
 
   .hero-bg-layer {
+
     transform: scaleX(1);
+
   }
 
   .hero-bg-layer-2,
+
   .hero-bg-layer-3 {
+
     display: none;
+
   }
+
 } */
 
 /* Custom Scrollbar for Adventure Theme */
+
 ::-webkit-scrollbar {
+
   width: 10px;
+
 }
 
 ::-webkit-scrollbar-track {
+
   background: #021915;
+
 }
 
 ::-webkit-scrollbar-thumb {
+
   background: #08332a;
+
   border-radius: 5px;
+
 }
 
 ::-webkit-scrollbar-thumb:hover {
+
   background: #06b6d4;
+
 }
 
 /* Hide scrollbars but keep scrolling functionality */
+
 .no-scrollbar::-webkit-scrollbar {
+
   display: none;
+
 }
 
 .no-scrollbar {
+
   -ms-overflow-style: none;
+
   scrollbar-width: none;
+
 }
 
 /* Background image slow slide & zoom animations */
+
 @keyframes bg-slide-in {
+
   0% {
+
     transform: scale(1.15) translateY(-15px);
+
     opacity: 0.3;
+
   }
 
   100% {
+
     transform: scale(1) translateY(0);
+
     opacity: 1;
+
   }
+
 }
 
 .animate-bg-slide {
+
   animation: bg-slide-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
 }
 
 @keyframes spin-slow {
+
   from {
+
     transform: rotate(0deg);
+
   }
 
   to {
+
     transform: rotate(360deg);
+
   }
+
 }
 
 .animate-spin-slow {
+
   animation: spin-slow 12s linear infinite;
+
 }
 
 /* Prevent horizontal scroll jumps during slide animations */
+
 body,
+
 #root {
+
   overflow-x: hidden;
+
   max-width: 100vw;
+
 }
 
 /* Swiper equal height cards and pagination styling */
+
 .swiper-wrapper {
+
   align-items: stretch !important;
+
 }
 
 .swiper-slide {
+
   height: auto !important;
+
   display: flex !important;
+
   flex-direction: column !important;
+
 }
 
 .swiper-pagination {
+
   position: relative !important;
+
   bottom: 0 !important;
+
   margin-top: 32px !important;
+
 }
 
 .swiper-pagination-bullet {
+
   background: #8ab4c8 !important;
+
   opacity: 0.3 !important;
+
   transition: all 0.3s ease !important;
+
   margin: 0 6px !important;
+
 }
 
 .swiper-pagination-bullet-active {
+
   background: #f5c97a !important;
+
   width: 28px !important;
+
   border-radius: 9999px !important;
+
   opacity: 1 !important;
+
 }

@@ -15,7 +15,7 @@ import {
   Tent,
 } from "lucide-react";
 import { useServices } from "../lib/data";
-import bckgroundimg from "../assets/Backgroundimg/river-scenery.webp";
+import bckgroundimg from "../assets/Backgroundimg/aboutus-bg.webp";
 import { CONTACT } from "../lib/contact";
 
 // "all" is a pseudo-category — not a real value on any service — that shows
@@ -56,6 +56,7 @@ const Services = () => {
   });
 
   const sectionRef = useRef(null);
+const servicesScrollRef = useRef(null);
 
   // Lightweight scroll transform
   const { scrollYProgress } = useScroll({
@@ -63,7 +64,7 @@ const Services = () => {
     offset: ["start end", "end start"],
   });
 
-  const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.08, 1.02]);
+  const bgScale = 1;
   const bgOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.6, 0.95, 0.95, 0.6]);
 
   useEffect(() => {
@@ -110,10 +111,10 @@ const Services = () => {
 
   return (
     <section
-      ref={sectionRef}
-      id="services"
-className="py-16 sm:py-20 md:py-24 relative bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"    >
-      {/* Background Image Layer with Parallax */}
+  ref={sectionRef}
+  id="services"
+  className="py-16 sm:py-20 md:py-24 relative overflow-x-clip bg-[#021915] text-white flex flex-col justify-center border-t border-white/10"
+>{/* Background Image Layer with Parallax */}
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
@@ -216,112 +217,141 @@ className="py-16 sm:py-20 md:py-24 relative bg-[#021915] text-white flex flex-co
             ))}
           </div>
         ) : (
-          <div className="-mx-4 sm:-mx-6 md:mx-0 mt-8">
-            <div
-              className="grid grid-rows-2 grid-flow-col md:grid-flow-row md:grid-rows-none
-                         auto-cols-[75%] xs:auto-cols-[62%] sm:auto-cols-[42%] md:auto-cols-auto
-                         md:grid-cols-3 lg:grid-cols-4
-                         gap-4 sm:gap-6
-                         overflow-x-auto md:overflow-visible
-                         overflow-y-hidden md:overflow-y-visible
-                         no-scrollbar snap-x snap-mandatory md:snap-none
-                         scroll-px-4 sm:scroll-px-6
-                         px-4 sm:px-6 md:px-0
-                         pb-2 md:pb-0"
+          <div className="-mx-4 sm:-mx-6 md:mx-0 mt-8 relative">
+            <button
+              type="button"
+              onClick={() => {
+                servicesScrollRef.current?.scrollBy({
+                  left: -360,
+                  behavior: "smooth",
+                });
+              }}
+              className="hidden md:flex absolute left-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center rounded-full bg-[#021915]/95 border border-amber-400/70 text-amber-400 shadow-lg hover:bg-amber-400 hover:text-slate-950 transition-all"
+              aria-label="Previous activities"
             >
-              {filteredServices.map((service, index) => {
-                const isRafting = service.name.toLowerCase().includes("rafting");
+              ←
+            </button>
 
-                return (
-                  <motion.article
-                    key={service.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.4, delay: (index % 4) * 0.05 }}
-                    className="snap-start bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
-                    onClick={() => {
-                      const message = `Hey Karthik , I want to know further details about ${service.name}`;
-                      const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
-                      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-                    }}
-                  >
-                    <div>
-                      {/* Card Media Header */}
-                      <div className="h-40 sm:h-48 overflow-hidden relative">
-                        <img
-                          src={service.image}
-                          alt={service.name}
-                          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+            <button
+              type="button"
+              onClick={() => {
+                servicesScrollRef.current?.scrollBy({
+                  left: 360,
+                  behavior: "smooth",
+                });
+              }}
+              className="hidden md:flex absolute right-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center rounded-full bg-[#021915]/95 border border-amber-400/70 text-amber-400 shadow-lg hover:bg-amber-400 hover:text-slate-950 transition-all"
+              aria-label="Next activities"
+            >
+              →
+            </button>
 
-                        {/* Difficulty Badge */}
-                        <div className="absolute top-3 left-3 z-10">
-                          <span
-                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(
-                              service.difficulty,
-                            )}`}
+            <div
+  ref={servicesScrollRef}
+  className="overflow-x-auto overflow-y-hidden no-scrollbar px-12"
+>
+  <div
+    className="
+      grid
+      grid-flow-col
+      grid-rows-2
+      auto-cols-[300px]
+      gap-4 sm:gap-6
+      w-max
+    "
+  >
+    {filteredServices.map((service, index) => {
+  const isRafting = service.name
+    .toLowerCase()
+    .includes("rafting");
+
+  return (
+                          <motion.article
+                            key={service.id}
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-40px" }}
+                            transition={{ duration: 0.4, delay: (index % 4) * 0.05 }}
+                            className="w-[300px] bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                            onClick={() => {
+                              const message = `Hey Karthik , I want to know further details about ${service.name}`;
+                              const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
+
+                              window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+                            }}
                           >
-                            <Shield size={9} />
-                            {service.difficulty}
-                          </span>
-                        </div>
+                            <div>
+                              <div className="h-40 sm:h-48 overflow-hidden relative">
+                                <img
+                                  src={service.image}
+                                  alt={service.name}
+                                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                                />
 
-                        {/* Dam Availability Badge */}
-                        {isRafting && !damStatus.loading && (
-                          <div className="absolute top-3 right-3 z-10">
-                            <span
-                              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${
-                                damStatus.isOpen
-                                  ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
-                                  : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
-                              }`}
-                            >
-                              <span
-                                className={`w-1.5 h-1.5 rounded-full ${
-                                  damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
-                                }`}
-                              />
-                              {damStatus.isOpen ? "Active" : "Calm"}
-                            </span>
-                          </div>
-                        )}
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
 
-                        <div className="absolute bottom-3 left-4 right-4 z-10">
-                          <h3 className="text-base sm:text-xl font-heading font-black text-white leading-tight tracking-tight">
-                            {service.name}
-                          </h3>
-                        </div>
-                      </div>
+                                <div className="absolute top-3 left-3 z-10">
+                                  <span
+                                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(service.difficulty)}`}
+                                  >
+                                    <Shield size={9} />
+                                    {service.difficulty}
+                                  </span>
+                                </div>
 
-                      {/* Card Content Body */}
-                      <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                        <p className="text-gray-300 font-body text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3">
-                          {service.shortDescription || service.fullDescription}
-                        </p>
+                                {isRafting && !damStatus.loading && (
+                                  <div className="absolute top-3 right-3 z-10">
+                                    <span
+                                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${
+                                        damStatus.isOpen
+                                          ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
+                                          : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
+                                      }`}
+                                    >
+                                      <span
+                                        className={`w-1.5 h-1.5 rounded-full ${
+                                          damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
+                                        }`}
+                                      />
+                                      {damStatus.isOpen ? "Active" : "Calm"}
+                                    </span>
+                                  </div>
+                                )}
 
-                        <div className="flex items-center justify-between border-t border-white/10 pt-3 sm:pt-4 text-xs font-body text-gray-300">
-                          <div className="flex items-center gap-1.5 text-cyan-300">
-                            <Clock size={13} />
-                            <span>{service.duration}</span>
-                          </div>
-                          <span className="text-lg sm:text-2xl font-heading font-black text-amber-400">
-                            {service.price}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                                <div className="absolute bottom-3 left-4 right-4 z-10">
+                                  <h3 className="text-base sm:text-xl font-heading font-black text-white leading-tight tracking-tight">
+                                    {service.name}
+                                  </h3>
+                                </div>
+                              </div>
 
-                    {/* Card Action Button */}
-                    <div className="p-4 sm:p-6 pt-0">
-                      <div className="block w-full text-center py-2.5 sm:py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer">
-                        Inquire Activity
-                      </div>
-                    </div>
-                  </motion.article>
-                );
-              })}
+                              <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                                <p className="text-gray-300 font-body text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3">
+                                  {service.shortDescription || service.fullDescription}
+                                </p>
+
+                                <div className="flex items-center justify-between border-t border-white/10 pt-3 sm:pt-4 text-xs font-body text-gray-300">
+                                  <div className="flex items-center gap-1.5 text-cyan-300">
+                                    <Clock size={13} />
+                                    <span>{service.duration}</span>
+                                  </div>
+
+                                  <span className="text-lg sm:text-2xl font-heading font-black text-amber-400">
+                                    {service.price}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="p-4 sm:p-6 pt-0">
+                              <div className="block w-full text-center py-2.5 sm:py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer">
+                                Inquire Activity
+                              </div>
+                            </div>
+                                          </motion.article>
+              );
+            })}
+              </div>
             </div>
           </div>
         )}
