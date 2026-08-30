@@ -16,10 +16,10 @@ const PackageCard = ({ pkg, index, navigate ,onExpand}) => {
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       onClick={() => onExpand(pkg)}
-      className={`snap-center shrink-0 w-[85vw] sm:w-[340px] md:w-auto relative rounded-3xl overflow-hidden transition-all duration-300 ease-out border flex flex-col justify-between group cursor-pointer min-h-[580px] sm:min-h-[620px] transform-gpu hover:-translate-y-3 hover:scale-[1.02] ${recommended
-          ? "bg-slate-950/90 text-white shadow-2xl border-cyan-400/60 ring-4 ring-cyan-400/30 md:scale-[1.03] z-10 hover:border-amber-400/80 hover:shadow-cyan-500/20"
-          : "bg-slate-900/90 text-white border-white/15 hover:border-cyan-400/50 shadow-xl hover:shadow-2xl hover:shadow-cyan-950/50"
-        }`}
+      className={`snap-center shrink-0 w-[85vw] sm:w-[340px] md:w-auto relative rounded-3xl overflow-hidden transition-all duration-300 ease-out border flex flex-col justify-between group cursor-pointer min-h-[clamp(500px,70vh,620px)] transform-gpu hover:-translate-y-3 hover:scale-[1.015] ${recommended
+  ? "bg-slate-950/90 text-white shadow-2xl border-cyan-400/60 ring-4 ring-cyan-400/30 z-10 hover:border-amber-400/80 hover:shadow-cyan-500/20"
+  : "bg-slate-900/90 text-white border-white/15 hover:border-cyan-400/50 shadow-xl hover:shadow-2xl hover:shadow-cyan-950/50"
+}`}
     >
       {/* Glassmorphic Most Popular Tag */}
       {recommended && (
@@ -229,10 +229,17 @@ useEffect(() => {
         )}
 
         {/* Layout: In-page 3-Column Grid on Desktop / Smooth Horizontal Touch Carousel on Mobile */}
+        {/* overflow-hidden is only needed below md (to hide the drag-carousel
+            overflow on mobile). Leaving it on unconditionally was also
+            clipping the desktop hover effect (-translate-y-3, scale-1.015,
+            hover:shadow-2xl) on the grid layout, since any part of a card
+            that grew/lifted beyond this box's bounds got cut off. Switching
+            to overflow-visible from md: up fixes that without touching the
+            mobile carousel behavior. */}
         {packages && (
   <div
     ref={mobileViewportRef}
-    className="overflow-hidden w-full"
+    className="relative overflow-hidden md:overflow-visible w-full"
   >
     <motion.div
   ref={mobileTrackRef}
@@ -325,64 +332,86 @@ animate(mobileX, targetX, {
         />
       ))}
     </motion.div>
+    {/* Mobile Package Navigation */}
+<div className="md:hidden absolute inset-y-0 left-0 right-0 pointer-events-none flex items-center justify-between px-2 z-20">
+
+  <button
+    type="button"
+    onClick={() => {
+      if (mobilePackageIndex === 0) return;
+
+      const nextIndex = mobilePackageIndex - 1;
+      setMobilePackageIndex(nextIndex);
+
+      const cards = Array.from(
+        mobileTrackRef.current?.children || []
+      );
+
+      const viewport = mobileViewportRef.current;
+      const targetCard = cards[nextIndex];
+
+      if (!viewport || !targetCard) return;
+
+      const targetX =
+        viewport.clientWidth / 2 -
+        (targetCard.offsetLeft + targetCard.offsetWidth / 2);
+
+      animate(mobileX, targetX, {
+        type: "tween",
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+      });
+    }}
+    className={`pointer-events-auto w-9 h-9 rounded-full border flex items-center justify-center text-lg font-bold shadow-lg transition-all ${
+      mobilePackageIndex === 0
+        ? "border-white/10 bg-black/20 text-white/20 opacity-40"
+        : "border-amber-400/60 bg-[#021915]/90 text-amber-400 active:scale-90"
+    }`}
+    aria-label="Previous package"
+  >
+    ←
+  </button>
+
+  <button
+    type="button"
+    onClick={() => {
+      if (!packages || mobilePackageIndex >= packages.length - 1) return;
+
+      const nextIndex = mobilePackageIndex + 1;
+      setMobilePackageIndex(nextIndex);
+
+      const cards = Array.from(
+        mobileTrackRef.current?.children || []
+      );
+
+      const viewport = mobileViewportRef.current;
+      const targetCard = cards[nextIndex];
+
+      if (!viewport || !targetCard) return;
+
+      const targetX =
+        viewport.clientWidth / 2 -
+        (targetCard.offsetLeft + targetCard.offsetWidth / 2);
+
+      animate(mobileX, targetX, {
+        type: "tween",
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+      });
+    }}
+    className={`pointer-events-auto w-9 h-9 rounded-full border flex items-center justify-center text-lg font-bold shadow-lg transition-all ${
+      packages && mobilePackageIndex >= packages.length - 1
+        ? "border-white/10 bg-black/20 text-white/20 opacity-40"
+        : "border-amber-400/60 bg-[#021915]/90 text-amber-400 active:scale-90"
+    }`}
+    aria-label="Next package"
+  >
+    →
+  </button>
+
+</div>
   </div>
 )}
-        
-        {/* Mobile Package Navigation */}
-        <div className="md:hidden flex items-center justify-center gap-5 mt-4 mb-2">
-          <button
-  type="button"
-  onClick={() => {
-    if (mobilePackageIndex === 0) return;
-
-    const nextIndex = mobilePackageIndex - 1;
-    setMobilePackageIndex(nextIndex);
-
-    animate(mobileX, mobileX.get() + 350, {
-      type: "tween",
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1],
-    });
-  }}
-  className={`w-9 h-9 rounded-full border flex items-center justify-center text-lg font-bold shadow-lg transition-all ${
-    mobilePackageIndex === 0
-      ? "border-white/10 bg-white/5 text-white/20 cursor-not-allowed opacity-40"
-      : "border-amber-400/60 bg-[#021915]/90 text-amber-400 active:scale-90"
-  }`}
-  aria-label="Previous package"
->
-  ←
-</button>
-
-          <span className="text-xs text-amber-400 font-heading font-bold uppercase tracking-wider">
-            Swipe to explore
-          </span>
-
-          <button
-  type="button"
-  onClick={() => {
-    if (!packages || mobilePackageIndex >= packages.length - 1) return;
-
-    const nextIndex = mobilePackageIndex + 1;
-    setMobilePackageIndex(nextIndex);
-
-    animate(mobileX, mobileX.get() - 350, {
-      type: "tween",
-      duration: 0.8,
-      ease: [0.22, 1, 0.36, 1],
-    });
-  }}
-  className={`w-9 h-9 rounded-full border flex items-center justify-center text-lg font-bold shadow-lg transition-all ${
-    packages && mobilePackageIndex >= packages.length - 1
-      ? "border-white/10 bg-white/5 text-white/20 cursor-not-allowed opacity-40"
-      : "border-amber-400/60 bg-[#021915]/90 text-amber-400 active:scale-90"
-  }`}
-  aria-label="Next package"
->
-  →
-</button>
-        </div>
-        
       </div>
       <AnimatePresence>
   {selectedPackage && (

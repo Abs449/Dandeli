@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
+
 
 @theme {
   --color-primary: #052e26;
@@ -253,14 +256,13 @@ html {
   }
 
   h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Bebas Neue", "Montserrat", sans-serif;
-    letter-spacing: 0.02em;
-  }
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Bebas Neue", sans-serif;
+}
 }
 
 /* ── Hero background: continuous rightward track, no fade and no blank frames ── */

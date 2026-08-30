@@ -46,7 +46,14 @@ const Footer = () => {
             <ul className="space-y-4 text-sm md:text-base font-body">
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-cyan-400 mt-0.5 shrink-0" />
-                <span className="text-gray-300 leading-relaxed">{CONTACT.address}</span>
+                <a
+                  href={CONTACT.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 leading-relaxed hover:text-cyan-400 transition-colors"
+                >
+                  {CONTACT.address}
+                </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-cyan-400 shrink-0" />

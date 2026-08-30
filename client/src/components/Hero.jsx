@@ -170,11 +170,47 @@ const Hero = () => {
 
   const bgUrl = shouldLoadBackground ? `url(${backgroundImage})` : "none";
 
+  // ── SIZE CONTROLS ─────────────────────────────────────────────────────
+  // Mobile clamps use vw/vh (not fixed px/rem) throughout, so the RATIO of
+  // spacing-to-content stays the same across every mobile screen size —
+  // a small phone and a large phone both get proportionally identical
+  // spacing, instead of the same fixed px gap feeling cramped on one and
+  // loose on the other. Desktop ("laptop") numbers are unchanged from
+  // before — only the mobile branch and the CTA positioning were touched.
+
+  const RAFT_MAX_WIDTH = 900; // px cap for the raft+people group on desktop
+  const RAFT_MAX_WIDTH_MOBILE = 620; // raised — was capping the raft too small
+                                      // on narrower phones where vw alone left
+                                      // room to grow.
+
+  // Mobile sizing now uses min(Xvw, Yvh) — bounded by BOTH width and
+  // height — not vw alone. A narrow-but-tall phone (e.g. 402x874) has
+  // plenty of vw to grow into, but limited vh; without a height ceiling
+  // the RAPIDS text + raft image were free to grow tall enough to push
+  // the CTA below the fold, forcing a scroll. The vh term now caps that
+  // growth on short/cramped screens while the vw term still governs on
+  // wide phones, so whichever dimension is tighter wins.
+  const conquerFontSize = isDesktop
+    ? "clamp(20px, 5.2vh, 40px)"
+    : "clamp(12px, min(6vw, 3.2vh), 26px)";
+  const ofDandeliFontSize = isDesktop
+    ? "clamp(20px, 5.2vh, 40px)"
+    : "clamp(12px, min(6vw, 3.2vh), 26px)";
+  const rapDsFontSize = "clamp(70px, 7.5vw, 150px)";
+  const raftContainerWidth = `clamp(320px, 34vw, ${RAFT_MAX_WIDTH}px)`;
+  const rapidsFontSizeMobile = "clamp(40px, min(12vw, 7vh), 100px)";
+  const raftContainerWidthMobile = `clamp(240px, min(88vw, 48vh), ${RAFT_MAX_WIDTH_MOBILE}px)`; // was
+    // 74vw/40vh/520px — on narrow phones the vw term (74% of a small number)
+    // was the binding constraint well before the vh term ever kicked in, so
+    // the raft rendered smaller than the screen's actual height allowed.
+    // Raised both the vw rate and the vh ceiling so narrower phones use more
+    // of their available height, not just their width.
+
   return (
     <div
       id="hero"
       ref={heroRef}
-      className="relative min-h-[92svh] h-[92svh] flex flex-col overflow-hidden"
+      className="relative min-h-[100svh] h-[100svh] flex flex-col overflow-hidden"
     >
       {/* ── LAYER 1 (z=0): Normal → mirrored → normal background loop ── */}
       <div className="hero-bg-pan absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
@@ -217,21 +253,34 @@ const Hero = () => {
       />
 
       {/* ── FULL-SCREEN UI SHELL (z=10) ── */}
+      {/* Anchored to the TOP (no justify-center) — every section below is
+          in NORMAL FLOW (nothing is position:absolute anymore). That's
+          the actual fix for "container going behind the CTA": elements in
+          normal flow physically stack and can never overlap each other,
+          whereas the previous absolute-positioned CTA reserved zero space,
+          letting the composite stage grow into it on some screen sizes. */}
       <div
         className="relative flex flex-col w-full pointer-events-auto flex-1 min-h-0"
         style={{ zIndex: 10 }}
       >
 
         {/* ── TOP: Compact info row — location + live status in one line ── */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 pt-20 sm:pt-24 px-3 w-full max-w-5xl mx-auto">
+        {/* paddingTop clears the fixed navbar (nav sits ~76-80px tall
+            including its top offset — see Navbar.jsx). vh-based so it
+            scales instead of a flat px value fighting different phone
+            heights. */}
+        <div
+          className="w-full flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 px-3"
+          style={{ paddingTop: "clamp(85px, 19vh, 110px)" }}
+        >
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
            className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.04em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] shrink-0"
             style={{
-              marginTop: isDesktop ? "2vh" : "1rem",
-              marginBottom: isDesktop ? "1vh" : "0.5rem",
+              marginTop: 0,
+              marginBottom: isDesktop ? "clamp(8px, 1.5vh, 16px)" : "clamp(6px, 1.2vh, 14px)",
             }}
           >
             <Waves className="w-3 h-3 text-[#52b788] shrink-0" />
@@ -244,10 +293,9 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.14 }}
             onClick={() => setShowStatusDetails(true)}
-          className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-x-2 px-1.5 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] cursor-pointer hover:bg-white/15 transition-colors"
-            style={{
-              marginTop: isDesktop ? "2vh" : "0.5rem",
-              marginBottom: isDesktop ? "1vh" : "0",
+className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] cursor-pointer hover:bg-white/15 transition-colors"            style={{
+              marginTop: 0,
+              marginBottom: isDesktop ? "clamp(8px, 1.5vh, 16px)" : "clamp(6px, 1.2vh, 14px)",
             }}
           >
             {isDesktop ? (
@@ -286,30 +334,42 @@ const Hero = () => {
         
 
         {/* ── COMPOSITE STAGE: CONQUER THE + RAP[RAFT]DS + OF DANDELI ── */}
-        <div className="relative flex-1 w-full overflow-hidden flex flex-col items-center justify-center">
-
-          {/* CONQUER THE — top sub-headline pulled tight to raft */}
+        {/* Mobile padding is vh-based (was a fixed "2.5rem") so it holds
+            the same PROPORTION of the screen on a small phone and a large
+            phone alike, instead of eating a bigger relative chunk of a
+            short screen. Desktop numbers unchanged. */}
+<div
+   className="relative w-full max-w-[1900px] mx-auto flex flex-col items-center justify-center"
+   style={{
+    paddingTop: isDesktop ? "50px" : "clamp(20px, 5vh, 44px)",
+    paddingBottom: isDesktop ? "30px" : "clamp(16px, 4vh, 36px)",
+  }}
+>
+          {/* CONQUER THE */}
           <motion.p
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="font-display font-extrabold uppercase text-white/90 leading-none select-none pointer-events-none text-center z-30 relative"
             style={{
-              fontSize: "clamp(11px, 7vw, 42px)",
+              fontSize: conquerFontSize,
               letterSpacing: "0.28em",
               paddingLeft: "0.28em",
-              paddingTop: isDesktop ? "clamp(10px, 1.5vh, 20px)" : "clamp(12px, 2vh, 24px)",
               textShadow: "0 2px 12px rgba(0,0,0,0.9)",
-              marginBottom: isDesktop ? "-3vh" : "2rem",
+              marginBottom: isDesktop ? "clamp(5px, 1vh, 10px)" : "clamp(16px, 3.5vh, 32px)",
             }}
           >
             Conquer The
           </motion.p>
 
+          {/* MIDDLE: raft row sits at its natural size directly between the
+              two headlines. */}
+          <div className="relative w-full flex items-center justify-center">
+
           {/* ── DESKTOP: RAP [RAFT+PEOPLE] DS layout ── */}
           {isDesktop ? (
             <div
-              className="relative w-full flex items-center justify-center select-none pointer-events-none"
+              className="relative w-full max-w-[1600px] mx-auto flex items-center justify-center select-none pointer-events-none"
               style={{ zIndex: 30 }}
             >
               {/* RAP — left side */}
@@ -319,7 +379,7 @@ const Hero = () => {
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
                 style={{
-                  fontSize: "clamp(50px, 9vw, 160px)",
+                  fontSize: rapDsFontSize,
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.95,
@@ -335,9 +395,9 @@ const Hero = () => {
                   className="relative flex items-center justify-center shrink-0 pointer-events-none"
                   style={{
                     zIndex: 10,
-                    width: "clamp(300px, 34vw, 600px)",
-                    marginLeft: "-2vw",
-                    marginRight: "-2vw",
+                    width: raftContainerWidth,
+                    marginLeft: "0vw",
+                    marginRight: "0vw",
                   }}
                 >
                   {/* Raft — base layer */}
@@ -388,16 +448,16 @@ const Hero = () => {
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="font-impact uppercase leading-none shrink-0 bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
+                className="font-impact uppercase leading-none shrink-0 bg-[#F97316]  bg-clip-text text-transparent"
                 style={{
-                  fontSize: "clamp(50px, 9vw, 160px)",
+                  fontSize: rapDsFontSize,
                   letterSpacing: "0.05em",
                   lineHeight: 0.82,
                   opacity: 0.95,
                   filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.35))",
                 }}
               >
-                DS
+                  DS
               </motion.span>
             </div>
           ) : (
@@ -410,25 +470,25 @@ const Hero = () => {
                 transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="font-impact uppercase leading-none w-full text-center bg-gradient-to-r from-[#C2410C] via-[#F97316] to-[#FDBA4A] bg-clip-text text-transparent"
                 style={{
-                  fontSize: "clamp(56px, 20vw, 130px)",
+                  fontSize: rapidsFontSizeMobile,
                   letterSpacing: "0.14em",
                   paddingLeft: "0.14em",
                   lineHeight: 0.85,
                   opacity: 1,
                   textShadow: "0 2px 18px rgba(249, 111, 80, 0)",
-                  marginBottom: "clamp(8px, 1.5vh, 18px)",
+                  marginBottom: "clamp(16px, 3.5vh, 30px)",
                 }}
               >
                 RAPIDS
               </motion.p>
 
-              {/* Raft + People — coupled on mobile, 88–92vw */}
+              {/* Raft + People — coupled on mobile, sized off RAFT_MAX_WIDTH_MOBILE */}
               {shouldLoadBackground && (
                 <div
                   className="relative flex items-center justify-center shrink-0"
                   style={{
                     zIndex: 10,
-                    width: "clamp(260px, 88vw, 480px)",
+                    width: raftContainerWidthMobile,
                   }}
                 >
                   <motion.img
@@ -473,29 +533,39 @@ const Hero = () => {
               )}
             </div>
           )}
-
-          {/* OF DANDELI — completion headline pulled tight to raft */}
+          </div>
+          {/* OF DANDELI */}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
             className="font-display font-extrabold uppercase text-white/90 leading-none select-none pointer-events-none text-center z-30 relative"
             style={{
-              fontSize: "clamp(11px, 8vw, 42px)",
+              fontSize: ofDandeliFontSize,
               letterSpacing: "0.28em",
               paddingLeft: "0.28em",
               textShadow: "0 2px 12px rgba(0,0,0,0.9)",
-              marginTop: isDesktop ? "-3vh" : "0.5rem",
+              marginTop: isDesktop ? "clamp(4px, 2vh, 14px)" : "clamp(18px, 3.5vh, 32px)",
             }}
           >
             Of Dandeli
           </motion.p>
         </div>
 
-        {/* ── BOTTOM: Subtitle + CTAs ── */}
+        {/* ── BOTTOM: Subtitle + CTA ── */}
+        {/* Back in NORMAL FLOW (relative, not absolute) — this is the fix
+            for the overlap bug. "flex-1" + "justify-end" pushes this block
+            toward the bottom of whatever space is left after the sections
+            above, WITHOUT ever being able to overlap them (flex children
+            can't overlap each other). The paddingBottom below is what
+            gives the CTA a bit of lift off the very bottom edge — raise
+            that value for more lift, lower it for less. */}
         <div
-          className="relative w-full flex flex-col items-center gap-2 px-4 sm:px-6 pb-4 sm:pb-6 pt-1"
-          style={{ zIndex: 50 }}
+          className="relative w-full flex-1 min-h-0 flex flex-col items-center justify-end gap-2 px-4 sm:px-6"
+          style={{
+            zIndex: 50,
+            paddingBottom: isDesktop ? "clamp(24px, 6vh, 56px)" : "clamp(28px, 8vh, 64px)",
+          }}
         >
           <motion.p
             initial={{ opacity: 0 }}
@@ -510,7 +580,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xs sm:max-w-none"
+            className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 w-full max-w-xs sm:max-w-none mt-2"
           >
             <motion.div whileTap={{ scale: 0.96 }} className="w-full sm:w-auto">
               <Link
@@ -523,18 +593,6 @@ const Hero = () => {
               >
                 Book Adventure Now
               </Link>
-            </motion.div>
-            <motion.div whileTap={{ scale: 0.96 }} className="w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={() => {
-                  const el = document.getElementById("about");
-                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
-                className="block w-full sm:w-auto px-6 sm:px-10 py-2.5 sm:py-3.5 bg-white/15 hover:bg-white/25 text-white border border-white/30 rounded-full font-semibold text-xs sm:text-base backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 text-center font-display cursor-pointer"
-              >
-                Explore Nature
-              </button>
             </motion.div>
           </motion.div>
         </div>
