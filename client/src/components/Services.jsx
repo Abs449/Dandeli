@@ -48,6 +48,11 @@ const getDifficultyColor = (difficulty) => {
 };
 
 const Services = () => {
+
+
+  const CARD_WIDTH = 400;
+  const CARD_GAP = 30;
+
   const { data: services, loading } = useServices();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [damStatus, setDamStatus] = useState({
@@ -135,8 +140,7 @@ const Services = () => {
   // is exactly one card width plus that gap — this keeps every click
   // landing flush on a card edge instead of stopping mid-card, which is
   // what made the native smooth-scroll feel jerky.
-  const CARD_SCROLL_STEP = 300 + 24;
-
+  const CARD_SCROLL_STEP = CARD_WIDTH + CARD_GAP;
   // Detect whether the scroll track actually overflows its container.
   // When it doesn't (e.g. a category with only 3-4 cards, now centered via
   // `safe center`), the arrows would be visible but do nothing — so we
@@ -315,7 +319,7 @@ const Services = () => {
 
             <div
               ref={servicesScrollRef}
-              className={`overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth snap-x snap-mandatory scroll-px-[calc((100vw-300px)/2)] px-[calc((100vw-300px)/2)] sm:px-12 ${
+              className={`overflow-x-auto overflow-y-hidden no-scrollbar scroll-smooth snap-x snap-mandatory ${
                 canScroll ? "" : "md:flex md:justify-center"
               }`}
             >
@@ -324,11 +328,13 @@ const Services = () => {
                   grid
                   grid-rows-2
                   auto-rows-[420px] sm:auto-rows-[460px]
-                  gap-4 sm:gap-6
                   w-max
                   items-start
                 "
-                style={{ gridTemplateColumns: `repeat(${columnsCount}, 300px)` }}
+                style={{
+                  gridTemplateColumns: `repeat(${columnsCount}, ${CARD_WIDTH}px)`,
+                  gap: `${CARD_GAP}px`,
+                }}
               >
                 {filteredServices.map((service, index) => {
                   const isRafting = service.name
@@ -338,7 +344,8 @@ const Services = () => {
                   return (
                     <article
                       key={service.id}
-                      className="w-[300px] h-[420px] sm:h-[460px] snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                      style={{ width: `${CARD_WIDTH}px` }}
+                      className="h-[420px] sm:h-[460px] snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
                       onClick={() => {
                         const message = `Hey Karthik , I want to know further details about ${service.name}`;
                         const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
