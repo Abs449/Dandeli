@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fresca&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 
@@ -54,25 +53,14 @@
 
   --color-foam: #08332a;
 
-  --font-display: "Bebas Neue", "Montserrat", sans-serif;
+  --font-display: "Fresca", sans-serif;
 
-  --font-heading: "Bebas Neue", "Montserrat", sans-serif;
 
-  --font-impact: "Bebas Neue", "Montserrat", sans-serif;
+  --font-heading: "Fresca", sans-serif;
 
-  --font-body: "Inter", system-ui, sans-serif;
+  --font-impact: "Fresca", sans-serif;
 
-}
-
-/* Custom font utilities */
-
-.font-display,
-
-.font-heading,
-
-.font-impact {
-
-  font-family: "Bebas Neue", "Montserrat", sans-serif;
+  --font-body: "Fresca", sans-serif;
 
 }
 
