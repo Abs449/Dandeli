@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import {
   motion,
   useScroll,
@@ -31,6 +31,18 @@ const categories = [
   { id: "camping", label: "Camping", Icon: Tent },
 ];
 
+// Card geometry — set mobile and desktop sizes here directly.
+// These feed real pixel math below (scroll step, grid-template-columns,
+// inline width), so they live in JS, not just Tailwind classes.
+// To change sizing, only touch these four numbers.
+const MOBILE_BREAKPOINT = 640; // matches Tailwind's `sm`
+
+const CARD_WIDTH_MOBILE = 260;
+const CARD_GAP_MOBILE = 16;
+
+const CARD_WIDTH_DESKTOP = 350;
+const CARD_GAP_DESKTOP = 30;
+
 const getDifficultyColor = (difficulty) => {
   switch ((difficulty || "").toLowerCase()) {
     case "easy":
@@ -48,11 +60,6 @@ const getDifficultyColor = (difficulty) => {
 };
 
 const Services = () => {
-
-
-  const CARD_WIDTH = 400;
-  const CARD_GAP = 30;
-
   const { data: services, loading } = useServices();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [damStatus, setDamStatus] = useState({
@@ -60,6 +67,23 @@ const Services = () => {
     isOpen: false,
   });
   const [canScroll, setCanScroll] = useState(false);
+  // Tracks whether the track is scrolled to its start/end, so the arrows
+  // can hide themselves instead of sitting there doing nothing.
+  const [scrollEdges, setScrollEdges] = useState({ atStart: true, atEnd: false });
+
+  // Which size bucket we're in. Starts false (desktop) and corrects
+  // itself on mount/resize.
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
+
+  const CARD_WIDTH = isMobile ? CARD_WIDTH_MOBILE : CARD_WIDTH_DESKTOP;
+  const CARD_GAP = isMobile ? CARD_GAP_MOBILE : CARD_GAP_DESKTOP;
 
   const sectionRef = useRef(null);
   const servicesScrollRef = useRef(null);
@@ -141,21 +165,36 @@ const Services = () => {
   // landing flush on a card edge instead of stopping mid-card, which is
   // what made the native smooth-scroll feel jerky.
   const CARD_SCROLL_STEP = CARD_WIDTH + CARD_GAP;
-  // Detect whether the scroll track actually overflows its container.
-  // When it doesn't (e.g. a category with only 3-4 cards, now centered via
-  // `safe center`), the arrows would be visible but do nothing — so we
-  // hide them in that case. Re-checked whenever the category (and thus
-  // the card count) changes, or the viewport is resized.
-  useEffect(() => {
-    const checkOverflow = () => {
-      const el = servicesScrollRef.current;
-      if (el) setCanScroll(el.scrollWidth > el.clientWidth + 1);
-    };
 
-    checkOverflow();
-    window.addEventListener("resize", checkOverflow);
-    return () => window.removeEventListener("resize", checkOverflow);
-  }, [selectedCategory, filteredServices]);
+  // Detect whether the scroll track actually overflows its container
+  // (drives whether arrows can ever show at all), AND — separately —
+  // whether it's currently scrolled all the way to the start/end (drives
+  // whether an individual arrow is shown right now). Re-checked whenever
+  // the category (and thus the card count) changes, the viewport is
+  // resized, or the user scrolls the track.
+  const checkScrollState = useCallback(() => {
+    const el = servicesScrollRef.current;
+    if (!el) return;
+    const overflows = el.scrollWidth > el.clientWidth + 1;
+    setCanScroll(overflows);
+    setScrollEdges({
+      atStart: el.scrollLeft <= 1,
+      atEnd: el.scrollLeft >= el.scrollWidth - el.clientWidth - 1,
+    });
+  }, []);
+
+  useEffect(() => {
+    checkScrollState();
+    window.addEventListener("resize", checkScrollState);
+    return () => window.removeEventListener("resize", checkScrollState);
+  }, [selectedCategory, filteredServices, isMobile, checkScrollState]);
+
+  useEffect(() => {
+    const el = servicesScrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", checkScrollState, { passive: true });
+    return () => el.removeEventListener("scroll", checkScrollState);
+  }, [checkScrollState]);
 
   return (
     <section
@@ -238,12 +277,6 @@ const Services = () => {
           })}
         </div>
 
-        {/* Mobile-only scroll hint for the category bar */}
-        <div className="flex md:hidden items-center justify-center gap-2 text-white/40 text-xs font-heading font-medium mt-3 mb-2">
-          <div className="flex md:hidden items-center justify-center gap-2 text-cyan-400/70 text-xs font-heading font-semibold mt-4">
-            <span className="animate-pulse">← Swipe horizontally to view all activities →</span>
-          </div>
-        </div>
         <div className="hidden md:block md:mb-2" />
 
         {/* ── SERVICES GRID ─────────────────────────────────────────────
@@ -255,25 +288,11 @@ const Services = () => {
             a fixed height (`h-[420px] sm:h-[460px]`) so both rows stay
             evenly aligned regardless of description length or badges.
 
-            `canScroll` (computed below) drives whether the track is
-            centered on desktop: when the cards DON'T overflow the
-            container (e.g. Rafting's 3 cards, Camping's 4), we add
-            `md:flex md:justify-center` so it centers under the category
-            bar instead of sitting flush-left with empty space on the
-            right — a premium, intentional look. When the cards DO
-            overflow (e.g. Water Sports' 6), we skip centering entirely
-            and keep the default left-aligned scrollable behavior, so
-            the first card is never clipped or centered off-screen.
-            (We center manually via `canScroll` rather than the CSS
-            `safe` keyword — `justify-content: safe center` isn't
-            reliably supported across browsers, and silently falling
-            back to no centering at all was the original bug here.)
-
-            The arrow buttons sit OUTSIDE the card container's edge
-            (in the section's own left/right padding gutter, via
-            negative left/right offsets) rather than overlapping the
-            first/last card, so they read as symmetric, standalone
-            controls instead of floating unevenly over the content. */}
+            `canScroll` drives whether the track is centered on desktop.
+            `scrollEdges` drives which individual arrow is shown: the
+            left arrow hides once you're back at the start, the right
+            arrow hides once you've reached the end — so there's never a
+            dead-end button sitting there doing nothing. */}
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mt-8">
             {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -285,37 +304,37 @@ const Services = () => {
           </div>
         ) : (
           <div className="-mx-4 sm:-mx-6 md:mx-0 mt-8 relative">
-            {canScroll && (
-  <button
-    type="button"
-    onClick={() => {
-      servicesScrollRef.current?.scrollBy({
-        left: -CARD_SCROLL_STEP,
-        behavior: "smooth",
-      });
-    }}
-    className="hidden md:flex absolute md:-left-[28px] lg:-left-[44px] top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 items-center justify-center rounded-full bg-[#021915]/95 border border-amber-400/70 text-amber-400 shadow-lg text-lg lg:text-xl hover:bg-amber-400 hover:text-slate-950 transition-all"
-    aria-label="Previous activities"
-  >
-    ←
-  </button>
-)}
+            {canScroll && !scrollEdges.atStart && (
+              <button
+                type="button"
+                onClick={() => {
+                  servicesScrollRef.current?.scrollBy({
+                    left: -CARD_SCROLL_STEP,
+                    behavior: "smooth",
+                  });
+                }}
+                className="hidden md:flex absolute md:-left-[28px] lg:-left-[44px] top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 items-center justify-center rounded-full bg-[#021915]/95 border border-amber-400/70 text-amber-400 shadow-lg text-lg lg:text-xl hover:bg-amber-400 hover:text-slate-950 transition-all"
+                aria-label="Previous activities"
+              >
+                ←
+              </button>
+            )}
 
-{canScroll && (
-  <button
-    type="button"
-    onClick={() => {
-      servicesScrollRef.current?.scrollBy({
-        left: CARD_SCROLL_STEP,
-        behavior: "smooth",
-      });
-    }}
-    className="hidden md:flex absolute md:-right-[28px] lg:-right-[44px] top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 items-center justify-center rounded-full bg-[#021915]/95 border border-amber-400/70 text-amber-400 shadow-lg text-lg lg:text-xl hover:bg-amber-400 hover:text-slate-950 transition-all"
-    aria-label="Next activities"
-  >
-    →
-  </button>
-)}
+            {canScroll && !scrollEdges.atEnd && (
+              <button
+                type="button"
+                onClick={() => {
+                  servicesScrollRef.current?.scrollBy({
+                    left: CARD_SCROLL_STEP,
+                    behavior: "smooth",
+                  });
+                }}
+                className="hidden md:flex absolute md:-right-[28px] lg:-right-[44px] top-1/2 -translate-y-1/2 z-20 w-12 h-12 lg:w-14 lg:h-14 items-center justify-center rounded-full bg-[#021915]/95 border border-amber-400/70 text-amber-400 shadow-lg text-lg lg:text-xl hover:bg-amber-400 hover:text-slate-950 transition-all"
+                aria-label="Next activities"
+              >
+                →
+              </button>
+            )}
 
             <div
               ref={servicesScrollRef}
