@@ -18,7 +18,7 @@ export const seedServices = [
       "Experience the excitement of white-water rafting on the Kali River with experienced guides and complete safety equipment.",
     image: imgShortRafting,
     images: [imgShortRafting, imgDrone, imgScenery],
-    price: "₹600",
+    price: "₹700",
     duration: "40 Mins",
     difficulty: "Beginner",
     equipment: ["Life Jacket", "Helmet", "Paddle"],
