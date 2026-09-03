@@ -142,7 +142,7 @@ const About = () => {
               "Every Traveler who books with me leaves as a friend"
             </h3>
 
-            <p className="text-base sm:text-lg text-gray-300 font-body font-light leading-relaxed max-w-xl">
+            <p className="text-base sm:text-lg text-gray-300 font-body font-dark leading-relaxed max-w-xl">
               Guiding white-water raft expeditions and forest stays across the Kali River isn't just a business for us and it is a lifelong passion.
             </p>
 

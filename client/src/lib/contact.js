@@ -14,9 +14,10 @@ export const CONTACT = {
   mapEmbedUrl:
     "https://maps.google.com/maps?q=Dandeli%20Kali%20River%20Rafting%20Ganeshgudi%2C%20Dandeli%2C%20Karnataka%20581365&t=&z=14&ie=UTF8&iwloc=&output=embed",
   socials: {
-    instagram: "https://instagram.com/",
-    facebook: "https://facebook.com/",
-    youtube: "https://youtube.com/",
+    instagram: "https://www.instagram.com/dandelikaliriverrafting?igsi=MXE4Nmt2Nzgwc253aw==",
+    facebook: "https://www.facebook.com/share/1YE3iaRy2G/",
+    youtube: "https://youtube.com/@dandelikaliriverrafting?si=CUnrPxayN6ue9kFs",
     whatsapp: "https://wa.me/919902014064",
   },
 };
+  
