@@ -4,6 +4,14 @@ import imgKayaking from "../assets/Backgroundimg/kayak-bg.webp";
 import imgDrone from "../assets/Backgroundimg/gallery-drone.webp";
 import imgScenery from "../assets/Backgroundimg/river-scenery.webp";
 import imgJungle from "../assets/Backgroundimg/gallery-jungle.webp";
+import imgswing from "../assets/Backgroundimg/Giant_Swing.webp";
+import imgcampfire from "../assets/Backgroundimg/campfire.webp";
+import imgkayak from "../assets/Backgroundimg/kayaking.webp";
+import imgNature from "../assets/Backgroundimg/Nature_trails.webp";
+import imgTrek from "../assets/Backgroundimg/Trekking.webp";
+import imgZip from "../assets/Backgroundimg/zipline.webp";
+import imgZorb from "../assets/Backgroundimg/Zorbing.webp";
+import imgWaterZip from "../assets/Backgroundimg/water_zipline.webp";
 
 export const seedServices = [
   // ─────────────────────────────────────────
@@ -68,8 +76,8 @@ export const seedServices = [
       "Soar across the river on an exciting zip-line adventure surrounded by the forests of Dandeli.",
     fullDescription:
       "Enjoy an exhilarating river zip-line experience with safety equipment and guidance from experienced instructors.",
-    image: imgDrone,
-    images: [imgDrone, imgScenery, imgJungle],
+    image: imgWaterZip,
+    images: [imgWaterZip, imgScenery, imgJungle],
     price: "₹350",
     duration: "As per activity",
     difficulty: "Easy",
@@ -84,8 +92,8 @@ export const seedServices = [
       "Paddle through the calm waters of the Kali River while enjoying the surrounding natural beauty.",
     fullDescription:
       "Explore the river at your own pace with a kayaking experience suitable for those looking for a peaceful water adventure.",
-    image: imgKayaking,
-    images: [imgKayaking, imgScenery, imgDrone],
+    image: imgkayak,
+    images: [imgkayak, imgScenery, imgDrone],
     price: "₹300",
     duration: "As per activity",
     difficulty: "Easy",
@@ -100,8 +108,8 @@ export const seedServices = [
       "Enjoy a fun-filled water zorbing experience suitable for friends and families.",
     fullDescription:
       "Step inside a large inflatable water ball and enjoy a playful adventure on the water.",
-    image: imgScenery,
-    images: [imgScenery, imgKayaking],
+    image: imgZorb,
+    images: [imgZorb, imgScenery, imgKayaking],
     price: "₹300",
     duration: "As per activity",
     difficulty: "Easy",
@@ -216,8 +224,8 @@ export const seedServices = [
       "Feel the rush of a giant swing experience surrounded by the forests of Dandeli.",
     fullDescription:
       "Take a thrilling swing from an elevated platform with professional safety equipment and supervision.",
-    image: imgJungle,
-    images: [imgJungle, imgDrone],
+    image: imgswing,
+    images: [imgswing, imgJungle, imgDrone],
     price: "₹400",
     duration: "As per activity",
     difficulty: "Moderate",
@@ -232,8 +240,8 @@ export const seedServices = [
       "Fly through the air on an exciting zipline surrounded by the lush forests of Dandeli.",
     fullDescription:
       "Enjoy a fun and exciting zipline experience with professional safety equipment and guidance.",
-    image: imgDrone,
-    images: [imgDrone, imgJungle],
+    image: imgZip,
+    images: [imgZip, imgJungle],
     price: "₹300",
     duration: "As per activity",
     difficulty: "Easy",
@@ -248,8 +256,8 @@ export const seedServices = [
       "Explore the beautiful forests and natural trails surrounding Dandeli on foot.",
     fullDescription:
       "Discover the natural beauty of the Western Ghats through guided trekking trails surrounded by dense forests and wildlife.",
-    image: imgJungle,
-    images: [imgJungle, imgScenery],
+    image: imgTrek,
+    images: [imgTrek, imgScenery],
     price: "₹250",
     duration: "As per activity",
     difficulty: "Moderate",
@@ -284,8 +292,8 @@ export const seedServices = [
       "Explore the forests of Dandeli through scenic nature trails surrounded by rich greenery.",
     fullDescription:
       "Walk through the natural landscapes of Dandeli and experience the forests, plants, and wildlife of the Western Ghats.",
-    image: imgJungle,
-    images: [imgJungle, imgScenery, imgDrone],
+    image: imgNature,
+    images: [imgNature, imgScenery, imgDrone],
     price: "₹1,800",
     duration: "As per activity",
     difficulty: "Easy",
@@ -384,8 +392,8 @@ export const seedServices = [
       "Relax around a warm campfire and enjoy an evening surrounded by nature.",
     fullDescription:
       "Unwind after a day of adventure with a peaceful campfire experience in the natural surroundings of Dandeli.",
-    image: imgJungle,
-    images: [imgJungle, imgScenery],
+    image: imgcampfire,
+    images: [imgcampfire, imgJungle, imgScenery],
     price: "₹150",
     duration: "As per activity",
     difficulty: "Easy",
