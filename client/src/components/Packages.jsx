@@ -1,12 +1,12 @@
 import { useRef , useState , useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AnimatePresence, motion, useScroll, useTransform ,useMotionValue,
 animate,} from "framer-motion";
 import { Check, Flame } from "lucide-react";
 import { usePackages } from "../lib/data";
 import bgAdventure from "../assets/Backgroundimg/kayak-bg.webp";
 
-const PackageCard = ({ pkg, index, navigate ,onExpand}) => {
+const PackageCard = ({ pkg, index, onExpand }) => {
   const recommended = pkg.recommended;
 
   return (
@@ -34,7 +34,9 @@ const PackageCard = ({ pkg, index, navigate ,onExpand}) => {
         <div className="h-64 sm:h-72 overflow-hidden relative">
           <img
             src={pkg.image}
-            alt={pkg.name}
+            alt={`${pkg.name} adventure package in Dandeli, Karnataka`}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 transform-gpu"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
@@ -86,7 +88,6 @@ const PackageCard = ({ pkg, index, navigate ,onExpand}) => {
       {/* Card Action CTA Button */}
       <div className="p-7 sm:p-8 pt-0 mt-auto">
         <div
-          
           className={`w-full py-4 rounded-full font-heading font-black text-xs uppercase tracking-wider transition-all duration-200 shadow-md cursor-pointer flex items-center justify-center gap-2 ${recommended
               ? "bg-amber-400 hover:bg-yellow-300 text-slate-950 shadow-amber-400/25 hover:shadow-lg"
               : "bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400"
@@ -109,14 +110,13 @@ const mobileViewportRef = useRef(null);
 const mobileX = useMotionValue(0);
 
 const MOBILE_SWIPE_DISTANCE = 80;
-const MOBILE_SCROLL_SPEED = 0.55;
 const [mobileDragConstraints, setMobileDragConstraints] = useState({
   left: 0,
   right: 0,
 });
 
-  const [selectedPackage, setSelectedPackage] = useState(null);
 const [mobilePackageIndex, setMobilePackageIndex] = useState(0);
+  const [selectedPackage, setSelectedPackage] = useState(null);
 
 useEffect(() => {
   if (!packages || window.innerWidth >= 768) return;
@@ -161,13 +161,14 @@ useEffect(() => {
   mobileX.set(0);
   setMobilePackageIndex(0);
 }, [packages]);
-  useEffect(() => {
-  document.body.style.overflow = selectedPackage ? "hidden" : "";
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [selectedPackage]);
+  useEffect(() => {
+    document.body.style.overflow = selectedPackage ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedPackage]);
 
   // Lightweight scroll transform
   const { scrollYProgress } = useScroll({
@@ -214,6 +215,11 @@ useEffect(() => {
           </h2>
           <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             All-inclusive multi-activity bundles designed for families, couples, and thrill-seeking groups.
+          </p>
+          <p className="mt-4 text-xs sm:text-sm font-body font-semibold">
+            <Link to="/dandeli-packages/" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-4">
+              See Full Package Details →
+            </Link>
           </p>
         </motion.div>
 
@@ -327,7 +333,6 @@ animate(mobileX, targetX, {
           key={pkg.id}
           pkg={pkg}
           index={index}
-          navigate={navigate}
           onExpand={setSelectedPackage}
         />
       ))}
@@ -444,7 +449,9 @@ animate(mobileX, targetX, {
         <div className="h-56 sm:h-72 relative overflow-hidden">
           <img
             src={selectedPackage.image}
-            alt={selectedPackage.name}
+            alt={`${selectedPackage.name} adventure package in Dandeli, Karnataka`}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
 

@@ -6,6 +6,8 @@ import FloatingButtons from "./components/FloatingButtons";
 
 const Home = lazy(() => import("./pages/Home"));
 const Booking = lazy(() => import("./pages/Booking"));
+const RaftingInDandeli = lazy(() => import("./pages/RaftingInDandeli"));
+const DandeliPackages = lazy(() => import("./pages/DandeliPackages"));
 
 const RouteFallback = () => (
   <div className="min-h-[40vh] flex items-center justify-center">
@@ -23,6 +25,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/booking" element={<Booking />} />
+              <Route path="/rafting-in-dandeli" element={<RaftingInDandeli />} />
+              <Route path="/dandeli-packages" element={<DandeliPackages />} />
             </Routes>
           </Suspense>
         </main>

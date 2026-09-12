@@ -38,6 +38,16 @@ const Footer = () => {
                   Book Now
                 </Link>
               </li>
+              <li>
+                <Link to="/rafting-in-dandeli/" className="text-gray-300 hover:text-amber-400 transition-colors text-sm font-body">
+                  Rafting in Dandeli
+                </Link>
+              </li>
+              <li>
+                <Link to="/dandeli-packages/" className="text-gray-300 hover:text-amber-400 transition-colors text-sm font-body">
+                  Adventure Packages
+                </Link>
+              </li>
             </ul>
           </div>
 

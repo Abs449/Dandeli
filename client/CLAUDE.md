@@ -13,7 +13,8 @@ The site is **no longer frontend-only**: content (services, packages, reviews) i
 All commands run from the `client/` directory:
 
 - `npm run dev` — Start Vite dev server with HMR
-- `npm run build` — Production build to `dist/`
+- `npm run build` — Client build, SSR build, then prerender (see SEO landing pages below) — outputs to `dist/`
+- `npm run build:client-only` — Just the client `vite build`, skipping the SSR/prerender steps (useful when debugging a prerender failure in isolation)
 - `npm run preview` — Preview the production build locally
 - `npm run lint` — Run oxlint (Rust-based ESLint replacement) with React plugin
 
@@ -47,12 +48,29 @@ The site degrades gracefully without these — `lib/supabase.js` returns `null` 
 
 ### Routing & Layout (`src/App.jsx`)
 
-Two routes, both wrapped in a `Navbar` + `Footer` + `FloatingButtons` (desktop only) + `BottomNav` (mobile only) shell:
+All routes are wrapped in a `Navbar` + `Footer` + `FloatingButtons` (desktop only) + `BottomNav` (mobile only) shell:
 
 - `/` → `pages/Home.jsx` — composes the marketing sections in order
-- `/booking` → `pages/Booking.jsx` — react-hook-form, posts to Supabase + Sheets
+- `/booking` → `pages/Booking.jsx` — react-hook-form, posts to Google Sheets (see Gotchas)
+- `/rafting-in-dandeli/`, `/dandeli-packages/` — standalone SEO landing pages, see "SEO landing pages & prerendering" below
 
-`<main>` has `pt-14` to clear the fixed navbar and `pb-16 md:pb-0` to reserve space for the mobile bottom nav.
+`<main>` has `pt-14` to clear the fixed navbar.
+
+### SEO landing pages & prerendering
+
+`RaftingInDandeli.jsx` and `DandeliPackages.jsx` (in `src/pages/`) are standalone, keyword-targeted landing pages, each pulling content straight from `src/data/seedData.js` (they need to render synchronously, both client-side and at build time). There used to be two more of these (camping, adventure activities) — removed because having 4 near-identical standalone pages felt confusing to navigate and diluted focus from the two that matter most (rafting is the highest-search-volume term; packages is the actual product). If you add a new one back, keep it free of scroll-linked Framer Motion (`useScroll`/`useTransform`), Swiper, and any `window`/`document` read outside a `useEffect` (see the prerendering note below), and add it to `entry-server.jsx`'s `PAGES` map, `landingPagesMeta.js`, `App.jsx`'s routes, and `public/sitemap.xml`.
+
+These pages share `src/components/landing/` (`LandingHero` — includes a "Back" button using browser history with a `/` fallback, `Breadcrumbs`, `FaqSection`, `LandingCta`, `ActivityCard`) and per-route `<title>`/description config in `src/lib/landingPagesMeta.js`.
+
+`npm run build` prerenders these routes to real static HTML so crawlers get full content without executing JS:
+
+1. `vite build` — normal client bundle → `dist/`
+2. `vite build --ssr src/entry-server.jsx --outDir dist-ssr` — server bundle exposing a `render(path)` function
+3. `node scripts/prerender.js` — calls `render()` for each route and writes the result into `dist/<route>/index.html`, with the `<title>`/meta/canonical tags swapped in from `landingPagesMeta.js`
+
+Route paths use a trailing slash (`/rafting-in-dandeli/`) so they resolve to the prerendered `dist/<route>/index.html` on any static host without needing rewrite rules — React Router matches with or without the trailing slash, so this doesn't affect client-side nav.
+
+**`/` and `/booking` are intentionally NOT prerendered.** Home's sections (`Hero`, `Services`, `Packages`) read `window.innerWidth` and DOM refs directly in their render paths (not just in effects) and were never written with SSR in mind — prerendering them would risk breaking the carefully-tuned carousel/breakpoint logic for comparatively little SEO gain, since Google already indexes CSR content.
 
 ### Sections (`src/components/`)
 

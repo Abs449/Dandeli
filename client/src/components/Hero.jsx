@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Waves } from "lucide-react";
 import backgroundImage from "../assets/Backgroundimg/hero-bg.webp";
@@ -64,13 +64,6 @@ const Hero = () => {
     unit2: null,
     fetchedAt: null,
   });
-
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  const heroBgScale = useTransform(scrollYProgress, [0, 1], [1.0, 1.1]);
 
   useEffect(() => {
     const node = heroRef.current;
@@ -280,6 +273,13 @@ const Hero = () => {
         }}
       />
 
+      {/* Real semantic heading for SEO/accessibility — the animated letters
+          below (RAP/DS, RAPIDS, etc.) are decorative and marked
+          aria-hidden so screen readers and crawlers read this instead. */}
+      <h1 className="sr-only">
+        Conquer the Rapids of Dandeli — White-Water Rafting, Camping &amp; Jungle Adventures on the Kali River
+      </h1>
+
       {/* ── UI SHELL: real CSS Grid, three hard rows ────────────────────
           auto  = top status row: exactly as tall as its content
           1fr   = composite stage: gets ONLY the leftover space, and can
@@ -375,8 +375,9 @@ const Hero = () => {
             paddingBottom: isDesktop ? "clamp(6px, 2cqh, 20px)" : "clamp(4px, 2cqh, 14px)",
           }}
         >
-          {/* CONQUER THE */}
+          {/* CONQUER THE — decorative, duplicates the sr-only <h1> above */}
           <motion.p
+            aria-hidden="true"
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
@@ -396,6 +397,7 @@ const Hero = () => {
             {isDesktop ? (
               /* ── DESKTOP: RAP [RAFT+PEOPLE] DS ── */
               <div
+                aria-hidden="true"
                 className="relative w-full max-w-[1600px] mx-auto flex items-center justify-center select-none pointer-events-none"
                 style={{ zIndex: 30 }}
               >
@@ -433,7 +435,7 @@ const Hero = () => {
                   >
                     <motion.img
                       src={raftCutout}
-                      alt="Inflatable raft"
+                      alt="White-water rafting boat on the Kali River, Dandeli"
                       draggable={false}
                       initial={{ opacity: 0, y: 50 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -451,7 +453,7 @@ const Hero = () => {
                     />
                     <motion.img
                       src={personCutout}
-                      alt="Rafting group"
+                      alt="Group white-water rafting on the Kali River, Dandeli"
                       draggable={false}
                       initial={{ opacity: 0, y: 28 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -490,7 +492,7 @@ const Hero = () => {
               </div>
             ) : (
               /* ── MOBILE: RAPIDS stacked ── */
-              <div className="flex flex-col items-center w-full min-h-0 select-none pointer-events-none" style={{ zIndex: 30 }}>
+              <div aria-hidden="true" className="flex flex-col items-center w-full min-h-0 select-none pointer-events-none" style={{ zIndex: 30 }}>
                 <motion.p
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -520,7 +522,7 @@ const Hero = () => {
                   >
                     <motion.img
                       src={raftCutout}
-                      alt="Inflatable raft"
+                      alt="White-water rafting boat on the Kali River, Dandeli"
                       draggable={false}
                       initial={{ opacity: 0, y: 40 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -538,7 +540,7 @@ const Hero = () => {
                     />
                     <motion.img
                       src={personCutout}
-                      alt="Rafting group"
+                      alt="Group white-water rafting on the Kali River, Dandeli"
                       draggable={false}
                       initial={{ opacity: 0, y: 22 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -562,8 +564,9 @@ const Hero = () => {
             )}
           </div>
 
-          {/* OF DANDELI */}
+          {/* OF DANDELI — decorative, duplicates the sr-only <h1> above */}
           <motion.p
+            aria-hidden="true"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}

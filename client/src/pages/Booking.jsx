@@ -21,6 +21,7 @@ import {
 
 import { submitBookingToSheets } from "../lib/sheets";
 import { usePackages } from "../lib/data";
+import { useSEO } from "../lib/seo";
 
 const fieldClass =
   "w-full min-w-0 box-border px-5 py-3.5 rounded-2xl border border-white/15 bg-slate-950/80 backdrop-blur-md focus:bg-slate-900 focus:ring-4 focus:ring-cyan-500/20 focus:border-cyan-400 transition-all duration-300 outline-none shadow-sm text-white text-sm";
@@ -233,6 +234,13 @@ const SectionTitle = ({ children }) => (
 );
 
 const Booking = () => {
+  useSEO({
+    title: "Book Your Dandeli Rafting & Adventure Trip | Dandeli Kali River Rafting",
+    description:
+      "Reserve white-water rafting, camping, and jungle adventure packages on the Kali River in Dandeli. Fill out the booking form and our team confirms your trip within 24 hours.",
+    path: "/booking",
+  });
+
   const { data: packages } = usePackages();
 
   const [searchParams] = useSearchParams();

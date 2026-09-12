@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
   motion,
   useScroll,
@@ -17,6 +18,7 @@ import {
 import { useServices } from "../lib/data";
 import bckgroundimg from "../assets/Backgroundimg/aboutus-bg.webp";
 import { CONTACT } from "../lib/contact";
+import { getDifficultyColor } from "../lib/difficultyColor";
 
 // "all" is a pseudo-category — not a real value on any service — that shows
 // every activity at once. It's first in the list and selected by default,
@@ -42,22 +44,6 @@ const CARD_GAP_MOBILE = 16;
 
 const CARD_WIDTH_DESKTOP = 350;
 const CARD_GAP_DESKTOP = 30;
-
-const getDifficultyColor = (difficulty) => {
-  switch ((difficulty || "").toLowerCase()) {
-    case "easy":
-      return "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40";
-    case "beginner":
-      return "bg-cyan-950/90 text-cyan-300 border border-cyan-500/40";
-    case "moderate":
-      return "bg-amber-950/90 text-amber-300 border border-amber-500/40";
-    case "hard":
-    case "amateur":
-      return "bg-rose-950/90 text-rose-300 border border-rose-500/40";
-    default:
-      return "bg-slate-900 text-slate-300 border border-slate-700";
-  }
-};
 
 const Services = () => {
   const { data: services, loading } = useServices();
@@ -138,15 +124,6 @@ const Services = () => {
     if (selectedCategory === "all") return services;
     return services.filter((item) => item.category === selectedCategory);
   }, [services, selectedCategory]);
-
-  const categoryCounts = useMemo(() => {
-    const counts = { all: services?.length || 0 };
-    categories.forEach(({ id }) => {
-      if (id === "all") return;
-      counts[id] = (services || []).filter((s) => s.category === id).length;
-    });
-    return counts;
-  }, [services]);
 
   // Row-major fill: row 1 fills left-to-right first, and only once row 1
   // has `columnsCount` cards does the next item drop to row 2. CSS Grid's
@@ -231,6 +208,11 @@ const Services = () => {
           </h2>
           <p className="text-sm sm:text-base text-gray-200 max-w-2xl mx-auto font-body font-light leading-relaxed">
             From Class III white-water rapids to soothing natural river jacuzzis, explore all Kali River adventures.
+          </p>
+          <p className="mt-4 text-xs sm:text-sm font-body font-semibold">
+            <Link to="/rafting-in-dandeli/" className="text-cyan-400 hover:text-cyan-300 transition-colors underline underline-offset-4">
+              Full Rafting Guide →
+            </Link>
           </p>
         </motion.div>
 
@@ -355,7 +337,7 @@ const Services = () => {
                   gap: `${CARD_GAP}px`,
                 }}
               >
-                {filteredServices.map((service, index) => {
+                {filteredServices.map((service) => {
                   const isRafting = service.name
                     .toLowerCase()
                     .includes("rafting");
@@ -376,7 +358,9 @@ const Services = () => {
                         <div className="h-40 sm:h-48 overflow-hidden relative">
                           <img
                             src={service.image}
-                            alt={service.name}
+                            alt={`${service.name} in Dandeli, Karnataka`}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                           />
 

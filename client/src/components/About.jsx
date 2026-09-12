@@ -119,7 +119,9 @@ const About = () => {
               <div className="absolute inset-0 bg-radial from-cyan-500/20 via-transparent to-transparent blur-3xl pointer-events-none" />
               <img
                 src={photo}
-                alt="Lead Adventure Guide"
+                alt="Karthik, lead adventure guide at Dandeli Kali River Rafting"
+                loading="lazy"
+                decoding="async"
                 className="w-full max-h-[320px] sm:max-h-[400px] lg:max-h-[480px] object-contain object-center sm:object-left animate-float relative z-10"
               />
             </div>
@@ -230,7 +232,9 @@ const About = () => {
                   <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400 shrink-0 bg-slate-900 flex items-center justify-center">
                     <img
                       src={photo}
-                      alt="Guide Avatar"
+                      alt="Karthik, adventure guide at Dandeli Kali River Rafting"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   </div>

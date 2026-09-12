@@ -1,13 +1,14 @@
-// Fire-and-forget POST to a Google Apps Script Web App. The Apps Script
-// appends a row to the bound Google Sheet. We use `mode: 'no-cors'` because
-// the script endpoint doesn't return CORS headers; with no-cors the request
-// is sent and we just can't read the response. Supabase (in supabase.js) is
-// the source of truth for the booking — this Sheets write is the lead-capture
-// copy the client wants in their spreadsheet.
+// POST to a Google Apps Script Web App, which appends a row to the bound
+// Google Sheet — this is currently the only place a booking is recorded.
+// We use `mode: 'no-cors'` because the script endpoint doesn't return CORS
+// headers, which means the response is opaque: `ok: true` here only means
+// the request left the browser, not that the Apps Script actually saved
+// the row. A server-side failure in the script (quota, a script error,
+// revoked permissions) is invisible to this code and to the user, who
+// still sees a success screen.
 export async function submitBookingToSheets(payload) {
   const url = import.meta.env.VITE_GOOGLE_SHEETS_URL;
   if (!url) {
-    // No URL configured — silently skip; Supabase write is still the source of truth.
     return { ok: false, reason: 'not-configured' };
   }
 
