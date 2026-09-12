@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
 import { SITE_URL } from "../../lib/seo";
 
-// Visible breadcrumb trail + a matching BreadcrumbList schema so Google can
-// show the trail in search results and understand the page's place in the
-// site hierarchy.
+// No visible UI — just the BreadcrumbList schema, which is what actually
+// matters for SEO (eligibility for a breadcrumb trail in Google search
+// results, and a hierarchy signal for crawlers). The visible "Home / X"
+// text row was dropped as a design call; removing it has no SEO effect
+// since this schema doesn't depend on it. Page-to-page navigation is still
+// covered by the Back button and the main Navbar.
 const Breadcrumbs = ({ current }) => {
   const schema = {
     "@context": "https://schema.org",
@@ -23,24 +25,7 @@ const Breadcrumbs = ({ current }) => {
     ],
   };
 
-  return (
-    <>
-      <nav aria-label="Breadcrumb" className="mb-5 text-xs font-body">
-        <ol className="flex items-center justify-center gap-2 flex-wrap text-gray-300">
-          <li>
-            <Link to="/" className="hover:text-cyan-300 transition-colors">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li aria-current="page" className="text-cyan-300 font-semibold">
-            {current}
-          </li>
-        </ol>
-      </nav>
-      <script type="application/ld+json">{JSON.stringify(schema)}</script>
-    </>
-  );
+  return <script type="application/ld+json">{JSON.stringify(schema)}</script>;
 };
 
 export default Breadcrumbs;

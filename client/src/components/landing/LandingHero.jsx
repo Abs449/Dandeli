@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Breadcrumbs from "./Breadcrumbs";
@@ -7,6 +8,18 @@ import Breadcrumbs from "./Breadcrumbs";
 // identically during build-time prerendering and on the client.
 const LandingHero = ({ eyebrow, current, children, intro, bgImage }) => {
   const navigate = useNavigate();
+
+  // React Router's client-side navigation doesn't reset scroll position
+  // like a real page load does — clicking a link to one of these pages
+  // from further down another page (e.g. the footer) would otherwise land
+  // here still scrolled to roughly the same spot, not at the top. `behavior:
+  // "instant"` is required (not the default) because <html> has
+  // `scroll-behavior: smooth` globally — without it this would animate up
+  // from wherever the previous page was scrolled, which is still visibly
+  // "somewhere in between" for a moment.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, []);
 
   const handleBack = () => {
     if (window.history.length > 1) {
