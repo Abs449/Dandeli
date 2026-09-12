@@ -1183,7 +1183,7 @@ const Booking = () => {
             {/* =====================================
                 ADD-ON SERVICES
             ====================================== */}
-
+            {/*
             <div className="mb-10">
 
               <SectionTitle>
@@ -1196,7 +1196,7 @@ const Booking = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-                {/* RESORT STAY */}
+                
                 <label className="flex items-center gap-3 p-4 rounded-2xl border border-white/15 bg-slate-950/60 cursor-pointer hover:border-cyan-400/40 transition-all">
 
                   <input
@@ -1220,7 +1220,7 @@ const Booking = () => {
                   </div>
                 </label>
 
-                {/* PICKUP/DROP */}
+                // PICKUP/DROP 
                 <label className="flex items-center gap-3 p-4 rounded-2xl border border-white/15 bg-slate-950/60 cursor-pointer hover:border-cyan-400/40 transition-all">
 
                   <input
@@ -1244,7 +1244,7 @@ const Booking = () => {
                   </div>
                 </label>
 
-                {/* FOOD PACKAGE */}
+                // FOOD PACKAGE 
                 <label className="flex items-center gap-3 p-4 rounded-2xl border border-white/15 bg-slate-950/60 cursor-pointer hover:border-cyan-400/40 transition-all">
 
                   <input
@@ -1269,6 +1269,7 @@ const Booking = () => {
                 </label>
               </div>
             </div>
+            */}
 
             {/* =====================================
                 SPECIAL REQUESTS
