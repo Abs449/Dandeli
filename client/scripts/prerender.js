@@ -88,7 +88,7 @@ const toItemList = (name, items, mapItem) => ({
   })),
 });
 
-const activitiesCatalog = toItemList("Dandeli Adventure Activities", seedServices, (service) => ({
+const activitiesCatalog = toItemList("Kali River Rafting Activities", seedServices, (service) => ({
   "@type": "Service",
   name: service.name,
   description: service.shortDescription,
@@ -100,7 +100,7 @@ const activitiesCatalog = toItemList("Dandeli Adventure Activities", seedService
   },
 }));
 
-const packagesCatalog = toItemList("Dandeli Adventure Packages", seedPackages, (pkg) => ({
+const packagesCatalog = toItemList("Kali River Rafting Packages", seedPackages, (pkg) => ({
   "@type": "Product",
   name: pkg.name,
   description: pkg.description,

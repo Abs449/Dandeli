@@ -267,7 +267,7 @@ const Services = () => {
             once row 1 has `columnsCount` cards does the next item drop
             to row 2 — `columnsCount` is computed above as enough columns
             to hold half the filtered list, rounded up. Every card has
-            a fixed height (`h-[420px] sm:h-[460px]`) so both rows stay
+            a fixed height (`h-[340px] sm:h-[460px]`) so both rows stay
             evenly aligned regardless of description length or badges.
 
             `canScroll` drives whether the track is centered on desktop.
@@ -328,7 +328,7 @@ const Services = () => {
                 className="
                   grid
                   grid-rows-2
-                  auto-rows-[420px] sm:auto-rows-[460px]
+                  auto-rows-[340px] sm:auto-rows-[460px]
                   w-max
                   items-start
                 "
@@ -346,7 +346,7 @@ const Services = () => {
                     <article
                       key={service.id}
                       style={{ width: `${CARD_WIDTH}px` }}
-                      className="h-[420px] sm:h-[460px] snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+                      className="h-[340px] sm:h-[460px] snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
                       onClick={() => {
                         const message = `Hey Karthik , I want to know further details about ${service.name}`;
                         const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;

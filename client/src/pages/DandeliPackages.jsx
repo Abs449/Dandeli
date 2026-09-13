@@ -43,10 +43,10 @@ const DandeliPackages = () => {
       <LandingHero
         eyebrow="Handcrafted Deals"
         current="Dandeli Packages"
-        intro="All-inclusive Dandeli adventure packages covering rafting, kayaking, meals, and — for overnight options — riverside stays and resort activities. Compare what's included before you book."
+        intro="All-inclusive Kali River Rafting packages covering rafting, kayaking, meals, and — for overnight options — riverside stays and resort activities. Compare what's included before you book."
         bgImage={bgImage}
       >
-        Dandeli Adventure Packages: Day Trips &amp; Overnight Stays
+        Kali River Rafting Packages: Day Trips &amp; Overnight Stays
       </LandingHero>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 bg-[#021915] text-white">

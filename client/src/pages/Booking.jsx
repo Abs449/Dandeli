@@ -481,7 +481,7 @@ const Booking = () => {
           </h2>
 
           <p className="text-gray-300 mb-8 leading-relaxed font-body text-sm sm:text-base">
-            Thank you for choosing Dandeli Adventure.
+            Thank you for choosing Kali River Rafting.
             We've received your inquiry and our team
             will contact you shortly to confirm the
             details.

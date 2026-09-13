@@ -17,8 +17,8 @@ export const LANDING_PAGES = {
   },
   packages: {
     path: "/dandeli-packages/",
-    title: "Dandeli Adventure Packages | Day Trips & Overnight Rafting + Camping Stays",
+    title: "Kali River Packages | Day Trips & Overnight Rafting + Camping Stays",
     description:
-      "Compare all-inclusive Dandeli adventure packages — day trips, riverside camping stays, and premium rooms with rafting, kayaking, meals, and resort activities. Transparent pricing, no hidden costs.",
+      "Compare all-inclusive Kali River Rafting packages — day trips, riverside camping stays, and premium rooms with rafting, kayaking, meals, and resort activities. Transparent pricing, no hidden costs.",
   },
 };

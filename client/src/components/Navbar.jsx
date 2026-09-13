@@ -106,12 +106,12 @@ const Navbar = () => {
               to="/"
               className="text-xl sm:text-2xl font-heading font-bold tracking-tight flex items-center gap-1.5 group"
             >
-              <span className="text-white">Dandeli</span>
+              <span className="text-white">Kali River</span>
               <span
                 className="font-extrabold transition-colors duration-150 group-hover:opacity-80"
                 style={{ color: '#e8715a' }}
               >
-                Adventure
+                Rafting
               </span>
             </Link>
 
