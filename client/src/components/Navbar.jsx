@@ -52,22 +52,36 @@ const Navbar = () => {
 
   const handleNavClick = (event, link) => {
     event?.preventDefault();
+    const wasDrawerOpen = isOpen;
     setIsOpen(false);
 
-    if (!link.targetId) {
-      if (location.pathname !== '/') {
-        navigate('/');
-      } else {
-        smoothScrollTo(0, 1000);
+    const go = () => {
+      if (!link.targetId) {
+        if (location.pathname !== '/') {
+          navigate('/');
+        } else {
+          smoothScrollTo(0, 1000);
+        }
+        return;
       }
-      return;
-    }
 
-    if (location.pathname !== '/') {
-      // Navigate home first, then scroll — Home.jsx reads location.state.scrollTo
-      navigate('/', { state: { scrollTo: link.targetId } });
+      if (location.pathname !== '/') {
+        // Navigate home first, then scroll — Home.jsx reads location.state.scrollTo
+        navigate('/', { state: { scrollTo: link.targetId } });
+      } else {
+        scrollToElement(link.targetId);
+      }
+    };
+
+    if (wasDrawerOpen) {
+      // Let the drawer's exit animation finish first — starting the scroll's
+      // rAF loop while it's still animating makes both compete for the main
+      // thread/compositor on mobile, which is what causes the jittery,
+      // inconsistent-speed scroll (desktop never opens the drawer, so it
+      // never hits this contention).
+      setTimeout(go, 220);
     } else {
-      scrollToElement(link.targetId);
+      go();
     }
   };
 

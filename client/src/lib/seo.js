@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 
-// TODO: replace with the real production domain before launch.
 export const SITE_URL = "https://www.dandelikaliriverrafting.com";
 
 const upsertMeta = (attr, key, content) => {
