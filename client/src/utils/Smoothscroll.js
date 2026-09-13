@@ -26,14 +26,18 @@ export const smoothScrollTo = (targetTop, duration = 1200) => {
   const step = (now) => {
     const progress = Math.min((now - startTime) / duration, 1);
 
-    // behavior: 'auto' explicitly overrides any CSS `scroll-behavior: smooth`
-    // that might get added later — without it, browsers can layer their own
-    // smoothing on top of every scrollTo() call in this loop and cause
-    // exactly the "speeds up abruptly" stutter.
+    // behavior: 'instant' is required, not 'auto' — <html> has an inline
+    // `style="scroll-behavior: smooth"` in index.html which, per the CSS
+    // spec, 'auto' defers to rather than overrides (only 'instant' bypasses
+    // it unconditionally). With 'auto', every one of these ~60/sec calls
+    // kicked off the browser's own native smooth-scroll animation toward a
+    // new target on top of the last one, layering dozens of competing
+    // animations — that's what caused the jittery, inconsistent-speed
+    // scroll (see the same workaround/explanation in LandingHero.jsx).
     window.scrollTo({
       top: start + distance * easeInOutCubic(progress),
       left: 0,
-      behavior: 'auto',
+      behavior: 'instant',
     });
 
     if (progress < 1) {
