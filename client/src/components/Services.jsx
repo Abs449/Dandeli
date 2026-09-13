@@ -81,6 +81,9 @@ const Services = () => {
         behavior: "auto",
       });
     }
+    mobileRowRefs.current.forEach((el) => {
+      el?.scrollTo({ left: 0, behavior: "auto" });
+    });
   }, [selectedCategory]);
 
   // Lightweight scroll transform
@@ -137,6 +140,17 @@ const Services = () => {
   // 4 items -> 2 cols (2 + 2), 3 items -> 2 cols (2 + 1).
   const columnsCount = Math.max(1, Math.ceil(filteredServices.length / 2));
 
+  // Mobile only (see render below): each row becomes its own independently
+  // horizontally-scrollable track instead of one shared 2D scroll area, so
+  // swiping row 1 doesn't drag row 2 along with it. Split the same
+  // row-major way the desktop grid does, so the two layouts always agree
+  // on which cards belong to which row.
+  const mobileRows = useMemo(
+    () => [filteredServices.slice(0, columnsCount), filteredServices.slice(columnsCount)],
+    [filteredServices, columnsCount]
+  );
+  const mobileRowRefs = useRef([null, null]);
+
   // Arrow buttons only render at md+ (sm:gap-6 = 24px), so the scroll step
   // is exactly one card width plus that gap — this keeps every click
   // landing flush on a card edge instead of stopping mid-card, which is
@@ -172,6 +186,97 @@ const Services = () => {
     el.addEventListener("scroll", checkScrollState, { passive: true });
     return () => el.removeEventListener("scroll", checkScrollState);
   }, [checkScrollState]);
+
+  // Shared card markup — used by both the desktop 2-row grid and the
+  // mobile independently-scrollable rows so they never drift apart.
+  const renderServiceCard = (service) => {
+    const isRafting = service.name.toLowerCase().includes("rafting");
+
+    return (
+      <article
+        key={service.id}
+        style={{ width: `${CARD_WIDTH}px` }}
+        className="shrink-0 h-[340px] sm:h-[460px] snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
+        onClick={() => {
+          const message = `Hey Karthik , I want to know further details about ${service.name}`;
+          const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
+
+          window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+        }}
+      >
+        <div>
+          <div className="h-40 sm:h-48 overflow-hidden relative">
+            <img
+              src={service.image}
+              alt={`${service.name} in Dandeli, Karnataka`}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+
+            <div className="absolute top-3 left-3 z-10">
+              <span
+                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(service.difficulty)}`}
+              >
+                <Shield size={9} />
+                {service.difficulty}
+              </span>
+            </div>
+
+            {isRafting && !damStatus.loading && (
+              <div className="absolute top-3 right-3 z-10">
+                <span
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${
+                    damStatus.isOpen
+                      ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
+                      : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
+                  }`}
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
+                    }`}
+                  />
+                  {damStatus.isOpen ? "Active" : "Calm"}
+                </span>
+              </div>
+            )}
+
+            <div className="absolute bottom-3 left-4 right-4 z-10">
+              <h3 className="text-base sm:text-xl font-heading font-black text-white leading-tight tracking-tight">
+                {service.name}
+              </h3>
+            </div>
+          </div>
+
+          <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+            <p className="text-gray-300 font-body text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3">
+              {service.shortDescription || service.fullDescription}
+            </p>
+
+            <div className="flex items-center justify-between border-t border-white/10 pt-3 sm:pt-4 text-xs font-body text-gray-300">
+              <div className="flex items-center gap-1.5 text-cyan-300">
+                <Clock size={13} />
+                <span>{service.duration}</span>
+              </div>
+
+              <span className="text-lg sm:text-2xl font-heading font-black text-amber-400">
+                {service.price}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4 sm:p-6 pt-0">
+          <div className="block w-full text-center py-2.5 sm:py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer">
+            Inquire Activity
+          </div>
+        </div>
+      </article>
+    );
+  };
 
   return (
     <section
@@ -284,6 +389,27 @@ const Services = () => {
               />
             ))}
           </div>
+        ) : isMobile ? (
+          // Mobile: each row is its own independently-scrollable track, so
+          // swiping row 1 doesn't drag row 2 with it (unlike the desktop
+          // grid below, which shares one scroll area on purpose so the
+          // arrow buttons can advance both rows together).
+          <div className="-mx-4 sm:-mx-6 mt-8 space-y-4">
+            {mobileRows.map((rowItems, rowIndex) =>
+              rowItems.length === 0 ? null : (
+                <div
+                  key={rowIndex}
+                  ref={(el) => {
+                    mobileRowRefs.current[rowIndex] = el;
+                  }}
+                  className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory px-4"
+                  style={{ gap: `${CARD_GAP}px` }}
+                >
+                  {rowItems.map(renderServiceCard)}
+                </div>
+              )
+            )}
+          </div>
         ) : (
           <div className="-mx-4 sm:-mx-6 md:mx-0 mt-8 relative">
             {canScroll && !scrollEdges.atStart && (
@@ -337,96 +463,7 @@ const Services = () => {
                   gap: `${CARD_GAP}px`,
                 }}
               >
-                {filteredServices.map((service) => {
-                  const isRafting = service.name
-                    .toLowerCase()
-                    .includes("rafting");
-
-                  return (
-                    <article
-                      key={service.id}
-                      style={{ width: `${CARD_WIDTH}px` }}
-                      className="h-[340px] sm:h-[460px] snap-center bg-slate-900/90 border border-white/15 hover:border-cyan-400/40 rounded-3xl overflow-hidden shadow-xl backdrop-blur-xl flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
-                      onClick={() => {
-                        const message = `Hey Karthik , I want to know further details about ${service.name}`;
-                        const whatsappUrl = `https://wa.me/91${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
-
-                        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-                      }}
-                    >
-                      <div>
-                        <div className="h-40 sm:h-48 overflow-hidden relative">
-                          <img
-                            src={service.image}
-                            alt={`${service.name} in Dandeli, Karnataka`}
-                            loading="lazy"
-                            decoding="async"
-                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                          />
-
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
-
-                          <div className="absolute top-3 left-3 z-10">
-                            <span
-                              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${getDifficultyColor(service.difficulty)}`}
-                            >
-                              <Shield size={9} />
-                              {service.difficulty}
-                            </span>
-                          </div>
-
-                          {isRafting && !damStatus.loading && (
-                            <div className="absolute top-3 right-3 z-10">
-                              <span
-                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] sm:text-[10px] font-heading font-black uppercase tracking-wider shadow-md backdrop-blur-md ${
-                                  damStatus.isOpen
-                                    ? "bg-emerald-950/90 text-emerald-300 border border-emerald-500/40"
-                                    : "bg-amber-950/90 text-amber-300 border border-amber-500/40"
-                                }`}
-                              >
-                                <span
-                                  className={`w-1.5 h-1.5 rounded-full ${
-                                    damStatus.isOpen ? "bg-emerald-400 animate-ping" : "bg-amber-400"
-                                  }`}
-                                />
-                                {damStatus.isOpen ? "Active" : "Calm"}
-                              </span>
-                            </div>
-                          )}
-
-                          <div className="absolute bottom-3 left-4 right-4 z-10">
-                            <h3 className="text-base sm:text-xl font-heading font-black text-white leading-tight tracking-tight">
-                              {service.name}
-                            </h3>
-                          </div>
-                        </div>
-
-                        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                          <p className="text-gray-300 font-body text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3">
-                            {service.shortDescription || service.fullDescription}
-                          </p>
-
-                          <div className="flex items-center justify-between border-t border-white/10 pt-3 sm:pt-4 text-xs font-body text-gray-300">
-                            <div className="flex items-center gap-1.5 text-cyan-300">
-                              <Clock size={13} />
-                              <span>{service.duration}</span>
-                            </div>
-
-                            <span className="text-lg sm:text-2xl font-heading font-black text-amber-400">
-                              {service.price}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="p-4 sm:p-6 pt-0">
-                        <div className="block w-full text-center py-2.5 sm:py-3.5 bg-white/10 hover:bg-amber-400 hover:text-slate-950 text-white rounded-full font-heading font-black text-[10px] sm:text-xs uppercase tracking-wider transition-all duration-300 border border-white/20 hover:border-amber-400 shadow-md cursor-pointer">
-                          Inquire Activity
-                        </div>
-                      </div>
-                    </article>
-                  );
-                })}
+                {filteredServices.map(renderServiceCard)}
               </div>
             </div>
           </div>
