@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE_URL } from "../src/lib/seo.js";
+import { CONTACT } from "../src/lib/contact.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -113,26 +114,44 @@ const toItemList = (name, items, mapItem) => ({
   })),
 });
 
+// Asset imports resolve to root-relative URLs (/assets/x-hash.webp) in the SSR
+// bundle; schema.org wants absolute image URLs.
+const absoluteImage = (image) => (image ? `${SITE_URL}${image}` : undefined);
+
+const provider = { "@type": "Organization", name: CONTACT.businessName, url: `${SITE_URL}/` };
+
 const activitiesCatalog = toItemList("Kali River Rafting Activities", seedServices, (service) => ({
   "@type": "Service",
   name: service.name,
   description: service.shortDescription,
+  image: absoluteImage(service.image),
+  provider,
   areaServed: { "@type": "City", name: "Dandeli" },
   offers: {
     "@type": "Offer",
     price: toNumericPrice(service.price),
     priceCurrency: "INR",
+    availability: "https://schema.org/InStock",
   },
 }));
 
+// Google's Product rich-result check requires `image`; brand/url/availability
+// are recommended fields. shippingDetails and hasMerchantReturnPolicy are
+// deliberately omitted — they describe shipped physical goods and don't apply
+// to a booked experience.
 const packagesCatalog = toItemList("Kali River Rafting Packages", seedPackages, (pkg) => ({
   "@type": "Product",
   name: pkg.name,
   description: pkg.description,
+  image: absoluteImage(pkg.image),
+  url: `${SITE_URL}/dandeli-packages/`,
+  brand: { "@type": "Brand", name: CONTACT.businessName },
   offers: {
     "@type": "Offer",
+    url: `${SITE_URL}/dandeli-packages/`,
     price: toNumericPrice(pkg.price),
     priceCurrency: "INR",
+    availability: "https://schema.org/InStock",
   },
 }));
 
