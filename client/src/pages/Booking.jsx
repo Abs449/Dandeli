@@ -19,7 +19,8 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-import { submitBookingToSheets } from "../lib/sheets";
+import { submitBookingToSheets, newSubmissionId } from "../lib/sheets";
+import { trackEvent } from "../lib/analytics";
 import { usePackages } from "../lib/data";
 import { useSEO } from "../lib/seo";
 
@@ -258,6 +259,10 @@ const Booking = () => {
     error: null,
   });
 
+  // Stable across retries of the same booking so a resend after a timeout
+  // can't create a duplicate row in the sheet.
+  const submissionIdRef = useRef(newSubmissionId());
+
   const [whatsappTouched, setWhatsappTouched] =
     useState(false);
 
@@ -383,6 +388,7 @@ const Booking = () => {
       : null;
 
     const payload = {
+      submission_id: submissionIdRef.current,
       full_name: data.full_name.trim(),
       email: data.email.trim(),
 
@@ -416,6 +422,10 @@ const Booking = () => {
         await submitBookingToSheets(payload);
 
       if (!sheetsResult?.ok) {
+        trackEvent("booking_submit_failed", {
+          reason: sheetsResult?.reason || "unknown",
+        });
+
         setSubmitState({
           status: "error",
           error:
@@ -424,6 +434,15 @@ const Booking = () => {
 
         return;
       }
+
+      // Only reached once the script has confirmed the row is in the sheet.
+      trackEvent("generate_lead", {
+        form_name: "booking",
+        package_name: payload.package_name || "not_selected",
+        adults: payload.adults,
+        children: payload.children,
+      });
+      submissionIdRef.current = newSubmissionId();
 
       setSubmitState({
         status: "success",

@@ -1,5 +1,6 @@
 import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
 import { CONTACT } from "../lib/contact";
+import { trackEvent } from "../lib/analytics";
 
 const FloatingButtons = () => {
   return (
@@ -8,6 +9,7 @@ const FloatingButtons = () => {
         href={CONTACT.socials.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => trackEvent("whatsapp_click", { link_location: "floating_button", page_path: window.location.pathname })}
         className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
         aria-label="Chat on WhatsApp"
       >
@@ -15,6 +17,7 @@ const FloatingButtons = () => {
       </a>
       <a
         href={`tel:${CONTACT.phoneRaw}`}
+        onClick={() => trackEvent("call_click", { link_location: "floating_button", page_path: window.location.pathname })}
         className="flex h-12 w-12 items-center justify-center rounded-full bg-[#4783b3] text-white shadow-xl transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
         aria-label="Call us"
       >

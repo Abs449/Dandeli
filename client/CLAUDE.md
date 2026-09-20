@@ -96,8 +96,8 @@ Each is a self-contained section component, mounted sequentially in `Home.jsx`:
 ### Data flow
 
 - **Read path**: Components call hooks from `lib/data.js` (`useServices`, `usePackages`, `useReviews`). Each hook fetches the corresponding Supabase table, ordered by `display_order`. On error or empty result, falls back to the matching array in `src/data/seedData.js`. A tiny in-memory cache avoids re-fetching on re-mount.
-- **Write path (booking)**: see `lib/data.js` → `submitBooking(payload)`. Inserts into the `bookings` Supabase table. Concurrently, `lib/sheets.js` → `submitBookingToSheets(payload)` does a fire-and-forget `fetch` (with `mode: 'no-cors'`) to the Apps Script Web App. The Sheets write is best-effort — the Supabase row is the source of truth.
-- **Booking form**: `react-hook-form` with field validation (email regex, phone regex, required name). On submit, both writes are attempted and the UI shows a success or error state.
+- **Write path (booking)**: `lib/sheets.js` → `submitBookingToSheets(payload)` POSTs to the Apps Script Web App (normal CORS `text/plain` request) and resolves `ok: true` only when the script's JSON body says the row is saved. The sheet is currently the only booking record. GA4 events (`generate_lead`, `booking_submit_failed`, `whatsapp_click`, `call_click`) go through `lib/analytics.js` → `trackEvent`.
+- **Booking form**: `react-hook-form` with field validation (email regex, phone regex, required name). On submit the sheet write is attempted and the UI shows the success screen only if the script confirmed the row; otherwise an error, and a retry is safe (same `submission_id`).
 
 ### Data Model
 
@@ -141,7 +141,7 @@ Single source of truth for phone, WhatsApp, email, address, hours, Maps URL, and
 - `google-reviews-widget` was previously in `dependencies` and is no longer used; safe to remove
 - The `Activities` and `Services` components read the same `services` table but render different card styles — they exist to give the home page two distinct visual sections over the same underlying data
 - Supabase RLS allows anon-insert on `bookings` but not anon-select — the public can never read other people's bookings
-- The Google Sheets write uses `mode: 'no-cors'`, so we can't read the response; failures are silently swallowed. Supabase is the source of truth.
+- Apps Script always replies HTTP 200, even on failure — success is the `ok` flag in the JSON body. Never switch `lib/sheets.js` back to `mode: 'no-cors'` (opaque response = every failure looks like success). Editing `Code.gs` changes nothing until the script is re-deployed as a **New version**.
 - `mockData.js` is kept on disk but is not imported by any component
 - `App.css` is kept as a near-empty placeholder — Vite's `index.css` holds the real theme
 - No tests, no CI config

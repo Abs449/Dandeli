@@ -1,14 +1,17 @@
 # Google Sheets lead capture — setup
 
-The Dandeli website sends every booking form submission to two places:
+The Dandeli website sends every booking form submission to a Google Sheet via
+the Apps Script in this folder. **The sheet is currently the only record of a
+booking**, so the site only shows its success screen after the script has
+confirmed the row is really in the sheet.
 
-1. **Supabase** (`bookings` table) — the source of truth, with RLS so the
-   public can only insert, not read.
-2. **Google Sheets** (via the Apps Script in this folder) — a copy the team
-   can browse, filter, and export from.
-
-The Supabase write happens regardless. The Sheets write is best-effort and
-silently skipped if `VITE_GOOGLE_SHEETS_URL` is empty.
+How the confirmation works: Apps Script always answers HTTP 200, even when it
+fails, so the client reads the JSON body (`{ ok: true }` / `{ ok: false,
+error }`) instead of the status code. That is why `client/src/lib/sheets.js`
+uses a normal CORS `text/plain` POST and must never use `mode: 'no-cors'`
+(which hides the response and turns every failure into a false success). Each
+booking carries a `submission_id`, so a retry after a timeout never creates a
+duplicate row.
 
 ## One-time setup
 
@@ -48,10 +51,16 @@ silently skipped if `VITE_GOOGLE_SHEETS_URL` is empty.
 
 1. Submit a test booking from the website.
 2. Check the spreadsheet — a new row should appear at the bottom.
-3. Also check the Supabase `bookings` table — a row should be there too.
+3. Open the site's browser dev tools → Network and confirm the request to the
+   script URL returns `{"ok":true}`. GA4 → Realtime should also show a
+   `generate_lead` event.
 
 If Sheets rows don't appear:
 
 - Re-check the column headers match exactly.
 - Re-deploy the Web App: **Deploy → Manage deployments → pencil icon → Version: New version → Deploy**.
-- The URL stays the same after re-deploying as a new version.
+- The URL stays the same after re-deploying as a new version, **but the live
+  script does not change until you do this** — editing the code alone is not
+  enough. Opening the script URL in a browser should show
+  `{"ok":true,"message":"Dandeli booking endpoint. Use POST."}`; a
+  "Script function not found: doGet" error means an outdated version is live.
