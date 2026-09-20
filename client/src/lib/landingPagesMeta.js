@@ -21,4 +21,10 @@ export const LANDING_PAGES = {
     description:
       "Compare all-inclusive Kali River Rafting packages — day trips, riverside camping stays, and premium rooms with rafting, kayaking, meals, and resort activities. Transparent pricing, no hidden costs.",
   },
+  guides: {
+    path: "/dandeli-guides/",
+    title: "Dandeli Travel Guides | Best Time, How to Reach & Itineraries",
+    description:
+      "Plan your Dandeli trip with our travel guides — best time to visit, how to reach, things to do, a 2-day itinerary and budget, rafting tips, camping, wildlife and places to see nearby.",
+  },
 };

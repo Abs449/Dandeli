@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /rafting-in-dandeli/
+Allow: /dandeli-packages/
+Allow: /dandeli-guides/
 
-Sitemap: https://www.dandelikaliriverrafting.com/sitemap.xml
+Sitemap: https://dandelikaliriverrafting.com/sitemap.xml

@@ -53,12 +53,13 @@ All routes are wrapped in a `Navbar` + `Footer` + `FloatingButtons` (desktop onl
 - `/` → `pages/Home.jsx` — composes the marketing sections in order
 - `/booking` → `pages/Booking.jsx` — react-hook-form, posts to Google Sheets (see Gotchas)
 - `/rafting-in-dandeli/`, `/dandeli-packages/` — standalone SEO landing pages, see "SEO landing pages & prerendering" below
+- `/dandeli-guides/` and `/dandeli-guides/:slug` — travel guide index + articles, content lives in `seedGuides` in `src/data/seedData.js` (see "Travel guides" below)
 
 `<main>` has `pt-14` to clear the fixed navbar.
 
 ### SEO landing pages & prerendering
 
-`RaftingInDandeli.jsx` and `DandeliPackages.jsx` (in `src/pages/`) are standalone, keyword-targeted landing pages, each pulling content straight from `src/data/seedData.js` (they need to render synchronously, both client-side and at build time). There used to be two more of these (camping, adventure activities) — removed because having 4 near-identical standalone pages felt confusing to navigate and diluted focus from the two that matter most (rafting is the highest-search-volume term; packages is the actual product). If you add a new one back, keep it free of scroll-linked Framer Motion (`useScroll`/`useTransform`), Swiper, and any `window`/`document` read outside a `useEffect` (see the prerendering note below), and add it to `entry-server.jsx`'s `PAGES` map, `landingPagesMeta.js`, `App.jsx`'s routes, and `public/sitemap.xml`.
+`RaftingInDandeli.jsx` and `DandeliPackages.jsx` (in `src/pages/`) are standalone, keyword-targeted landing pages, each pulling content straight from `src/data/seedData.js` (they need to render synchronously, both client-side and at build time). There used to be two more of these (camping, adventure activities) — removed because having 4 near-identical standalone pages felt confusing to navigate and diluted focus from the two that matter most (rafting is the highest-search-volume term; packages is the actual product). If you add a new one back, keep it free of scroll-linked Framer Motion (`useScroll`/`useTransform`), Swiper, and any `window`/`document` read outside a `useEffect` (see the prerendering note below), and add it to `landingPagesMeta.js` (`entry-server.jsx` picks its title/description up automatically), the `<Routes>` in both `entry-server.jsx` and `App.jsx`, and `public/sitemap.xml`.
 
 These pages share `src/components/landing/` (`LandingHero` — includes a "Back" button using browser history with a `/` fallback, `Breadcrumbs`, `FaqSection`, `LandingCta`, `ActivityCard`) and per-route `<title>`/description config in `src/lib/landingPagesMeta.js`.
 
@@ -71,6 +72,12 @@ These pages share `src/components/landing/` (`LandingHero` — includes a "Back"
 Route paths use a trailing slash (`/rafting-in-dandeli/`) so they resolve to the prerendered `dist/<route>/index.html` on any static host without needing rewrite rules — React Router matches with or without the trailing slash, so this doesn't affect client-side nav.
 
 **`/` and `/booking` are intentionally NOT prerendered.** Home's sections (`Hero`, `Services`, `Packages`) read `window.innerWidth` and DOM refs directly in their render paths (not just in effects) and were never written with SSR in mind — prerendering them would risk breaking the carefully-tuned carousel/breakpoint logic for comparatively little SEO gain, since Google already indexes CSR content.
+
+### Travel guides
+
+`pages/Guides.jsx` (index) and `pages/GuideArticle.jsx` (one page per article) render everything from the `seedGuides` array in `src/data/seedData.js` — slug, `seoTitle`, `metaDescription`, hero image, `sections[]` (text supports `[label](/path/)` internal links, optional inline image/tip/list), `faqs[]` and `related[]`. Each guide gets Article + FAQPage + BreadcrumbList JSON-LD. `entry-server.jsx` builds `prerenderPages` from `LANDING_PAGES` plus every guide, so `npm run build` prerenders them all (with a per-guide `og:image`). **To add a guide:** append it to `seedGuides` and add its `<url>` to `public/sitemap.xml` (the sitemap is hand-maintained). Footer visibility per route lives in `lib/layout.js` (shared by `App.jsx` and the prerender entry so they can't drift).
+
+`Footer` uses `Contactus-1920.webp` and `FaqSection` uses `faq-1920.webp` as backgrounds. These are web-sized copies of the much larger `Contactus.webp` (15 MB) / `faq.webp` (8 MB) originals — don't point components at the originals.
 
 ### Sections (`src/components/`)
 

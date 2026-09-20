@@ -1,22 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.dandelikaliriverrafting.com/</loc>
+    <loc>https://dandelikaliriverrafting.com/</loc>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.dandelikaliriverrafting.com/rafting-in-dandeli/</loc>
+    <loc>https://dandelikaliriverrafting.com/rafting-in-dandeli/</loc>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.dandelikaliriverrafting.com/dandeli-packages/</loc>
+    <loc>https://dandelikaliriverrafting.com/dandeli-packages/</loc>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.dandelikaliriverrafting.com/booking</loc>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/best-time-to-visit-dandeli/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/how-to-reach-dandeli/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/things-to-do-in-dandeli/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/dandeli-2-day-itinerary-and-trip-cost/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/kali-river-rafting-first-timers-guide/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/dandeli-camping-and-riverside-stays-guide/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/dandeli-wildlife-and-jungle-safari-guide/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/dandeli-guides/places-to-visit-near-dandeli/</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dandelikaliriverrafting.com/booking</loc>
+    <lastmod>2026-09-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

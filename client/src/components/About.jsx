@@ -39,8 +39,8 @@ const SmoothCountUp = ({ end, duration = 2.0, decimals = 0, suffix = "" }) => {
 };
 
 const stats = [
-  { numericEnd: 5000, suffix: "+", decimals: 0, label: "Happy Travelers" },
-  { numericEnd: 8, suffix: "+", decimals: 0, label: "Years of Experience" },
+  { numericEnd: 10000, suffix: "+", decimals: 0, label: "Happy Travelers" },
+  { numericEnd: 12, suffix: "+", decimals: 0, label: "Years of Experience" },
   { numericEnd: 4.9, suffix: "★", decimals: 1, label: "Rated on Google" },
   { numericEnd: 100, suffix: "%", decimals: 0, label: "Transparent Pricing" },
 ];

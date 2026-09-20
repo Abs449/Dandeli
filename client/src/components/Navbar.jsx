@@ -54,6 +54,11 @@ const Navbar = () => {
     event?.preventDefault();
     setIsOpen(false);
 
+    if (link.route) {
+      navigate(link.route);
+      return;
+    }
+
     if (!link.targetId) {
       if (location.pathname !== '/') {
         navigate('/');
@@ -83,6 +88,7 @@ const Navbar = () => {
     { name: 'Services', to: '/#services', targetId: 'services' },
     { name: 'Packages', to: '/#packages', targetId: 'packages' },
     { name: 'Reviews',  to: '/#reviews',  targetId: 'reviews' },
+    { name: 'Guides',   to: '/dandeli-guides/', targetId: null, route: '/dandeli-guides/' },
     { name: 'Contact',  to: '/#contact',  targetId: 'contact' }
   ];
 
@@ -104,25 +110,25 @@ const Navbar = () => {
             {/* Logo */}
             <Link
               to="/"
-              className="text-xl sm:text-2xl font-heading font-bold tracking-tight flex items-center gap-1.5 group"
+              className="text-xl sm:text-2xl font-heading font-bold tracking-tight flex items-center gap-1.5 group whitespace-nowrap"
             >
               <span className="text-white">Kali River</span>
               <span
                 className="font-extrabold transition-colors duration-150 group-hover:opacity-80"
-                style={{ color: '#e8715a' }}
+                style={{ color: '#4783b3' }}
               >
                 Rafting
               </span>
             </Link>
 
             {/* Desktop nav links */}
-            <div className="hidden md:flex items-center space-x-7">
+            <div className="hidden md:flex items-center space-x-3 lg:space-x-7">
               {navLinks.map((link) => (
                 <button
                   key={link.name}
                   type="button"
                   onClick={(event) => handleNavClick(event, link)}
-                  className="font-heading text-sm font-medium tracking-wide transition-all duration-150 text-gray-300 hover:text-white py-1 cursor-pointer relative group"
+                  className="font-heading text-[13px] lg:text-sm font-medium tracking-wide transition-all duration-150 text-gray-300 hover:text-white py-1 cursor-pointer relative group"
                 >
                   {link.name}
                   {/* Subtle underline on hover */}
@@ -135,7 +141,7 @@ const Navbar = () => {
               <button
                 type="button"
                 onClick={goToBooking}
-                className="px-6 py-2 rounded-full font-heading font-bold transition-all duration-150 active:scale-95 text-xs uppercase tracking-wider shadow-md cursor-pointer"
+                className="px-4 lg:px-6 py-2 rounded-full font-heading font-bold transition-all duration-150 active:scale-95 text-xs uppercase tracking-wider shadow-md cursor-pointer whitespace-nowrap"
                 style={{
                   backgroundColor: '#FF6B4A',
                   color: '#fff',

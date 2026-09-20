@@ -4,6 +4,7 @@ import LandingHero from "../components/landing/LandingHero";
 import ActivityCard from "../components/landing/ActivityCard";
 import FaqSection from "../components/landing/FaqSection";
 import LandingCta from "../components/landing/LandingCta";
+import GuideLinks from "../components/guides/GuideLinks";
 import { seedServices } from "../data/seedData";
 import { useSEO } from "../lib/seo";
 import { LANDING_PAGES } from "../lib/landingPagesMeta";
@@ -28,7 +29,7 @@ const highlights = [
   },
   {
     Icon: Users,
-    title: "8+ Years, 5000+ Rafters",
+    title: "12+ Years, 10000+ Rafters",
     body: "Locally run since day one, with transparent pricing and no hidden add-ons.",
   },
 ];
@@ -98,6 +99,12 @@ const RaftingInDandeli = () => {
       </section>
 
       <FaqSection faqs={faqs} />
+
+      <GuideLinks
+        heading="Rafting"
+        highlight="Guides"
+        slugs={["kali-river-rafting-first-timers-guide", "best-time-to-visit-dandeli", "things-to-do-in-dandeli"]}
+      />
 
       <LandingCta
         heading="Ready to Hit the Rapids?"

@@ -3,11 +3,14 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FloatingButtons from "./components/FloatingButtons";
+import { shouldShowFooter } from "./lib/layout";
 
 const Home = lazy(() => import("./pages/Home"));
 const Booking = lazy(() => import("./pages/Booking"));
 const RaftingInDandeli = lazy(() => import("./pages/RaftingInDandeli"));
 const DandeliPackages = lazy(() => import("./pages/DandeliPackages"));
+const Guides = lazy(() => import("./pages/Guides"));
+const GuideArticle = lazy(() => import("./pages/GuideArticle"));
 
 const RouteFallback = () => (
   <div className="min-h-[40vh] flex items-center justify-center">
@@ -15,14 +18,8 @@ const RouteFallback = () => (
   </div>
 );
 
-const NO_FOOTER_PATHS = ["/rafting-in-dandeli", "/dandeli-packages"];
-
 function AppShell() {
   const location = useLocation();
-  const hideFooter = NO_FOOTER_PATHS.some(
-    (path) => location.pathname === path || location.pathname === `${path}/`
-  );
-
   return (
     <div className="flex flex-col min-h-screen bg-background text-gray-900 font-body overflow-x-hidden">
       <Navbar />
@@ -33,10 +30,12 @@ function AppShell() {
             <Route path="/booking" element={<Booking />} />
             <Route path="/rafting-in-dandeli" element={<RaftingInDandeli />} />
             <Route path="/dandeli-packages" element={<DandeliPackages />} />
+            <Route path="/dandeli-guides" element={<Guides />} />
+            <Route path="/dandeli-guides/:slug" element={<GuideArticle />} />
           </Routes>
         </Suspense>
       </main>
-      {!hideFooter && <Footer />}
+      {shouldShowFooter(location.pathname) && <Footer />}
       <FloatingButtons />
     </div>
   );

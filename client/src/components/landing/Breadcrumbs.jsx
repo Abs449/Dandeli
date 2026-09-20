@@ -6,7 +6,7 @@ import { SITE_URL } from "../../lib/seo";
 // text row was dropped as a design call; removing it has no SEO effect
 // since this schema doesn't depend on it. Page-to-page navigation is still
 // covered by the Back button and the main Navbar.
-const Breadcrumbs = ({ current }) => {
+const Breadcrumbs = ({ current, parent }) => {
   const schema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -17,9 +17,19 @@ const Breadcrumbs = ({ current }) => {
         name: "Home",
         item: `${SITE_URL}/`,
       },
+      ...(parent
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: parent.name,
+              item: `${SITE_URL}${parent.path}`,
+            },
+          ]
+        : []),
       {
         "@type": "ListItem",
-        position: 2,
+        position: parent ? 3 : 2,
         name: current,
       },
     ],

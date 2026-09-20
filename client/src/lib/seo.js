@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const SITE_URL = "https://www.dandelikaliriverrafting.com";
+export const SITE_URL = "https://dandelikaliriverrafting.com";
 
 const upsertMeta = (attr, key, content) => {
   let tag = document.head.querySelector(`meta[${attr}="${key}"]`);

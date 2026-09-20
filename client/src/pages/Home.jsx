@@ -6,13 +6,14 @@ import Services from "../components/Services";
 import Packages from "../components/Packages";
 import Location from "../components/Location";
 import FaqSection from "../components/landing/FaqSection";
+import GuideLinks from "../components/guides/GuideLinks";
 import { scrollToElement } from "../utils/Smoothscroll";
 import { useSEO } from "../lib/seo";
 
 const ReviewCarousel = lazy(() => import("../components/ReviewCarousel"));
 
 // Broad, brand-level questions — distinct from the topic-specific FAQs on
-// the rafting/packages/camping/activities landing pages, so this reinforces
+// the rafting/packages landing pages, so this reinforces
 // different search queries instead of competing with them. The homepage is
 // the highest-authority page on the site, so its own FAQPage schema (added
 // by FaqSection) carries more weight than any single landing page's.
@@ -23,7 +24,7 @@ const homeFaqs = [
   },
   {
     q: "What activities and packages do you offer?",
-    a: "White-water rafting, kayaking, zipline, water zorbing, trekking, jungle safaris, riverside and jungle camping, and all-inclusive day and overnight packages. Browse our rafting, packages, camping, and adventure activities pages for full details and pricing.",
+    a: "White-water rafting, kayaking, zipline, water zorbing, trekking, jungle safaris, riverside and jungle camping, and all-inclusive day and overnight packages. Browse our rafting and packages pages for full details and pricing, or read our travel guides for planning tips.",
   },
   {
     q: "Is rafting suitable for beginners and families with kids?",
@@ -57,7 +58,7 @@ const Home = () => {
   useSEO({
     title: "Dandeli River Rafting & Jungle Adventures | Book Kali River Rafting, Camping & Zipline",
     description:
-      "Book white-water rafting, kayaking, zipline, jungle safaris, and riverside camping in Dandeli, Karnataka with Dandeli Kali River Rafting. 8+ years' experience, 5000+ happy travelers, transparent pricing.",
+      "Book white-water rafting, kayaking, zipline, jungle safaris, and riverside camping in Dandeli, Karnataka with Dandeli Kali River Rafting. 12+ years' experience, 10,000+ happy travelers, transparent pricing.",
     path: "/",
   });
 
@@ -87,6 +88,11 @@ const Home = () => {
       <Suspense fallback={<ReviewFallback />}>
         <ReviewCarousel />
       </Suspense>
+      <GuideLinks
+        heading="Plan Your Dandeli"
+        highlight="Trip"
+        slugs={["best-time-to-visit-dandeli", "things-to-do-in-dandeli", "dandeli-2-day-itinerary-and-trip-cost"]}
+      />
       <section className="bg-[#021915] border-t border-white/10">
         <FaqSection faqs={homeFaqs} />
       </section>

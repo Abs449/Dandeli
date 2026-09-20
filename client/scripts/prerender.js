@@ -1,4 +1,4 @@
-// Runs after the client + SSR builds. For each SEO landing page, renders its
+// Runs after the client + SSR builds. For each SEO landing page and guide, renders its
 // real markup server-side and writes it as static HTML (dist/<route>/index.html)
 // so crawlers and no-JS clients get full content immediately — the client
 // bundle then boots normally and re-renders over it (main.jsx uses
@@ -7,14 +7,13 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { LANDING_PAGES } from "../src/lib/landingPagesMeta.js";
 import { SITE_URL } from "../src/lib/seo.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const distDir = join(root, "dist");
 
-const { render, seedServices, seedPackages } = await import(join(root, "dist-ssr", "entry-server.js"));
+const { render, prerenderPages, seedServices, seedPackages } = await import(join(root, "dist-ssr", "entry-server.js"));
 
 const template = readFileSync(join(distDir, "index.html"), "utf-8");
 
@@ -25,7 +24,7 @@ const setTag = (html, pattern, replacement) => {
   return html.replace(pattern, replacement);
 };
 
-for (const { path, title, description } of Object.values(LANDING_PAGES)) {
+for (const { path, title, description, image, imageAlt, article } of prerenderPages) {
   const appHtml = render(path);
   if (appHtml == null) {
     throw new Error(`prerender: no SSR render registered for route ${path}`);
@@ -56,6 +55,32 @@ for (const { path, title, description } of Object.values(LANDING_PAGES)) {
     /<meta\s+name="twitter:description"\s+content=".*?"\s*\/>/s,
     `<meta name="twitter:description" content="${escapedDescription}" />`,
   );
+  if (image) {
+    // Per-page share image (guides have their own hero photo); pages without
+    // one keep the site-wide og-image.webp from the template.
+    const imageUrl = `${SITE_URL}${image}`;
+    html = setTag(html, /<meta property="og:image" content=".*?" \/>/s, `<meta property="og:image" content="${imageUrl}" />`);
+    html = setTag(html, /<meta name="twitter:image" content=".*?" \/>/s, `<meta name="twitter:image" content="${imageUrl}" />`);
+    // The template's width/height and alt describe the site-wide og-image;
+    // stale values would mislead scrapers about this page's own image.
+    const escapedAlt = (imageAlt || title).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+    html = setTag(html, /\s*<meta property="og:image:width" content=".*?" \/>/s, "");
+    html = setTag(html, /\s*<meta property="og:image:height" content=".*?" \/>/s, "");
+    html = setTag(html, /<meta property="og:image:alt" content=".*?" \/>/s, `<meta property="og:image:alt" content="${escapedAlt}" />`);
+    html = setTag(html, /<meta name="twitter:image:alt" content=".*?" \/>/s, `<meta name="twitter:image:alt" content="${escapedAlt}" />`);
+  }
+  if (article) {
+    html = setTag(
+      html,
+      /<meta property="og:type" content="website" \/>/,
+      [
+        `<meta property="og:type" content="article" />`,
+        `<meta property="article:published_time" content="${article.publishedTime}" />`,
+        `<meta property="article:modified_time" content="${article.modifiedTime}" />`,
+        `<meta property="article:section" content="${article.section.replace(/&/g, "&amp;")}" />`,
+      ].join("\n    "),
+    );
+  }
   html = setTag(html, /<div id="root"><\/div>/, `<div id="root">${appHtml}</div>`);
 
   const outDir = join(distDir, path.replace(/^\/|\/$/g, ""));

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import LandingHero from "../components/landing/LandingHero";
 import FaqSection from "../components/landing/FaqSection";
 import LandingCta from "../components/landing/LandingCta";
+import GuideLinks from "../components/guides/GuideLinks";
 import { seedPackages } from "../data/seedData";
 import { useSEO } from "../lib/seo";
 import { LANDING_PAGES } from "../lib/landingPagesMeta";
@@ -130,6 +131,12 @@ const DandeliPackages = () => {
       </section>
 
       <FaqSection faqs={faqs} />
+
+      <GuideLinks
+        heading="Plan Your Stay"
+        highlight="Guides"
+        slugs={["dandeli-2-day-itinerary-and-trip-cost", "dandeli-camping-and-riverside-stays-guide", "how-to-reach-dandeli"]}
+      />
 
       <LandingCta
         heading="Not Sure Which Package Fits?"

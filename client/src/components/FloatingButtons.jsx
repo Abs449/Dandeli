@@ -15,7 +15,7 @@ const FloatingButtons = () => {
       </a>
       <a
         href={`tel:${CONTACT.phoneRaw}`}
-        className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white shadow-xl transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
+        className="flex h-12 w-12 items-center justify-center rounded-full bg-[#4783b3] text-white shadow-xl transition-transform duration-200 active:scale-95 sm:h-14 sm:w-14 sm:hover:scale-110"
         aria-label="Call us"
       >
         <FaPhoneAlt className="h-5 w-5 sm:h-5.5 sm:w-5.5" />

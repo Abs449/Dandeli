@@ -2,13 +2,23 @@ import { Link } from 'react-router-dom';
 import { FaInstagram, FaFacebookF, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { CONTACT } from '../lib/contact';
+import contactBg from '../assets/Backgroundimg/Contactus-1920.webp';
 
 const Footer = () => {
   return (
     <footer
-    id='contact' 
-    className="bg-[#021915] text-white pt-16 pb-24 md:pb-12 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    id='contact'
+    className="relative overflow-hidden bg-[#021915] text-white pt-16 pb-24 md:pb-12 border-t border-white/10">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-cover bg-center opacity-45"
+        style={{ backgroundImage: `url(${contactBg})` }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-b from-[#021915]/85 via-[#021915]/60 to-[#021915]/90 pointer-events-none"
+      />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="space-y-4">
             <h3 className="text-2xl font-heading font-black text-white tracking-tight">
@@ -46,6 +56,11 @@ const Footer = () => {
               <li>
                 <Link to="/dandeli-packages/" className="text-gray-300 hover:text-amber-400 transition-colors text-sm font-body">
                   Adventure Packages
+                </Link>
+              </li>
+              <li>
+                <Link to="/dandeli-guides/" className="text-gray-300 hover:text-amber-400 transition-colors text-sm font-body">
+                  Dandeli Travel Guides
                 </Link>
               </li>
             </ul>

@@ -6,7 +6,7 @@ import Breadcrumbs from "./Breadcrumbs";
 // Static banner for the standalone SEO landing pages — deliberately kept
 // free of scroll-linked motion (unlike the homepage Hero) so it renders
 // identically during build-time prerendering and on the client.
-const LandingHero = ({ eyebrow, current, children, intro, bgImage }) => {
+const LandingHero = ({ eyebrow, current, parent, children, intro, bgImage }) => {
   const navigate = useNavigate();
 
   // React Router's client-side navigation doesn't reset scroll position
@@ -51,7 +51,7 @@ const LandingHero = ({ eyebrow, current, children, intro, bgImage }) => {
         </button>
 
         <div className="text-center">
-          <Breadcrumbs current={current} />
+          <Breadcrumbs current={current} parent={parent} />
           <span className="inline-block text-cyan-400 uppercase tracking-widest text-xs font-bold mb-4 bg-cyan-950/60 border border-cyan-500/30 px-4 py-1.5 rounded-full">
             {eyebrow}
           </span>
