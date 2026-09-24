@@ -277,7 +277,7 @@ const Hero = () => {
           below (RAP/DS, RAPIDS, etc.) are decorative and marked
           aria-hidden so screen readers and crawlers read this instead. */}
       <h1 className="sr-only">
-        Conquer the Rapids of Dandeli — White-Water Rafting, Camping &amp; Jungle Adventures on the Kali River
+        Dandeli Rafting on the Dandeli River — White-Water Rafting, Camping &amp; Jungle Adventures on the Kali River, Dandeli
       </h1>
 
       {/* ── UI SHELL: real CSS Grid, three hard rows ────────────────────

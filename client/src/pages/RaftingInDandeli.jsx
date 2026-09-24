@@ -73,7 +73,7 @@ const RaftingInDandeli = () => {
         intro="Three white-water rafting routes on the Kali River at Ganeshgudi — from a quick 40-minute introduction to a full 3-hour expedition through the Western Ghats. Certified guides, complete safety gear, and transparent pricing on every route."
         bgImage={bgImage}
       >
-        White-Water Rafting in Dandeli on the Kali River
+        Dandeli Rafting on the Dandeli River
       </LandingHero>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 bg-[#021915] text-white">
@@ -103,7 +103,7 @@ const RaftingInDandeli = () => {
       <GuideLinks
         heading="Rafting"
         highlight="Guides"
-        slugs={["kali-river-rafting-first-timers-guide", "best-time-to-visit-dandeli", "things-to-do-in-dandeli"]}
+        slugs={["kali-river-rafting-first-timers-guide", "dandeli-river-guide", "best-time-to-visit-dandeli"]}
       />
 
       <LandingCta

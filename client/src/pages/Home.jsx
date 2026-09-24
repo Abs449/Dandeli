@@ -56,9 +56,9 @@ const Home = () => {
   const location = useLocation();
 
   useSEO({
-    title: "Dandeli River Rafting & Jungle Adventures | Book Kali River Rafting, Camping & Zipline",
+    title: "Dandeli Rafting on the Dandeli River | Dandeli Kali River Rafting, Camping & Zipline",
     description:
-      "Book white-water rafting, kayaking, zipline, jungle safaris, and riverside camping in Dandeli, Karnataka with Dandeli Kali River Rafting. 12+ years' experience, 10,000+ happy travelers, transparent pricing.",
+      "Dandeli rafting on the Dandeli River (Kali River) — book white-water rafting, kayaking, zipline, jungle safaris, and riverside camping in Dandeli, Karnataka with Dandeli Kali River Rafting. 12+ years' experience, 10,000+ happy travelers.",
     path: "/",
   });
 

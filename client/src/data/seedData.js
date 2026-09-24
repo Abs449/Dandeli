@@ -734,7 +734,7 @@ export const seedGuides = [
         a: "Not necessarily. Days are hot, but river activities are refreshing and mornings and evenings are comfortable. Plan outdoor activities early or late in the day.",
       },
     ],
-    related: ["how-to-reach-dandeli", "dandeli-2-day-itinerary-and-trip-cost", "kali-river-rafting-first-timers-guide"],
+    related: ["dandeli-river-guide", "dandeli-2-day-itinerary-and-trip-cost", "kali-river-rafting-first-timers-guide"],
   },
 
   {
@@ -1222,7 +1222,7 @@ export const seedGuides = [
         a: "Definitely. Expect to be splashed and possibly soaked, so wear quick-dry clothes and bring a change.",
       },
     ],
-    related: ["best-time-to-visit-dandeli", "things-to-do-in-dandeli", "dandeli-2-day-itinerary-and-trip-cost"],
+    related: ["best-time-to-visit-dandeli", "dandeli-river-guide", "dandeli-2-day-itinerary-and-trip-cost"],
   },
 
   {
@@ -1446,7 +1446,7 @@ export const seedGuides = [
         a: "Generally yes, as long as children can stay calm and quiet. Check with us about age suitability and timings before booking.",
       },
     ],
-    related: ["things-to-do-in-dandeli", "dandeli-camping-and-riverside-stays-guide", "places-to-visit-near-dandeli"],
+    related: ["dandeli-river-guide", "dandeli-camping-and-riverside-stays-guide", "places-to-visit-near-dandeli"],
   },
 
   {
@@ -1559,5 +1559,105 @@ export const seedGuides = [
       },
     ],
     related: ["how-to-reach-dandeli", "dandeli-2-day-itinerary-and-trip-cost", "dandeli-wildlife-and-jungle-safari-guide"],
+  },
+
+  {
+    id: 9,
+    slug: "dandeli-river-guide",
+    seoTitle: "Dandeli River Guide: The Kali River in Dandeli Explained",
+    metaDescription:
+      "The Dandeli River is really the Kali River — its route, rapids, dam releases, wildlife, and the best places to see and raft it near Ganeshgudi, Dandeli.",
+    title: "The Dandeli River: A Complete Guide to the Kali River",
+    excerpt:
+      "What everyone calls the 'Dandeli River' is officially the Kali River — here's its route, rapids, dam, wildlife, and the best places to experience it.",
+    summary:
+      "Most visitors call it the Dandeli River, but its official name is the Kali River — the water that shapes every trip here. This guide covers where the river comes from and goes, why its mood changes daily with the dam release, what its rapids actually feel like, the wildlife along its banks, and the best spots to see it without getting in a raft.",
+    category: "River Guide",
+    readTime: "8 min read",
+    datePublished: "2026-09-24",
+    dateModified: "2026-09-24",
+    image: imgScenery,
+    imageAlt: "The Dandeli River flowing through forested rocks near Ganeshgudi, Dandeli",
+    sections: [
+      {
+        heading: "Is it the Dandeli River or the Kali River?",
+        paragraphs: [
+          "Most visitors call it the Dandeli River, but its official name is the Kali River (also spelled Kalinadi). Dandeli is the town that sits beside the river, not the other way round — so \"Dandeli River\" is really shorthand for \"the river at Dandeli,\" and both names point to exactly the same water.",
+          "Locals and tour operators mostly use \"Kali River,\" since that's the name on maps and government records. But if you've searched for \"Dandeli River,\" every result — including this page — is describing the same stretch of water that runs past Ganeshgudi and through the forests around Dandeli town.",
+        ],
+      },
+      {
+        heading: "Where the river comes from and where it goes",
+        paragraphs: [
+          "The Kali River — the Dandeli River — rises in the Western Ghats near Diggi village in Uttara Kannada district, Karnataka. From there it runs roughly 180km through dense forest and hill country, gathering pace and volume as it drops through gorges and past several dams, before meeting the Arabian Sea at Karwar.",
+          "The stretch that matters for a Dandeli trip is a much shorter section — the run through Ganeshgudi and the forests around Dandeli town, where the river narrows through rocky channels and opens into calm, wide pools. That contrast between fast water and still water is exactly what makes it such a good rafting river: exciting stretches, with places to catch your breath in between.",
+        ],
+      },
+      {
+        heading: "The Supa Dam, and why the river's mood changes daily",
+        paragraphs: [
+          "Upstream of Dandeli sits the Supa Dam, and the water released from it each day is what actually decides how the river behaves — how strong the rapids run, and whether rafting can go ahead safely at all.",
+          "That's why conditions can differ from one day to the next, even within the same week. We check the release schedule and live river status before every rafting day, which is also why a two-day trip is a safer bet than a single tightly-booked day — see our [best time to visit](/dandeli-guides/best-time-to-visit-dandeli/) guide for how this plays out across the year.",
+        ],
+      },
+      {
+        heading: "The rapids: what the river feels like from a raft",
+        paragraphs: [
+          "The Dandeli stretch of the Kali River is rated Class II–III — real white-water, but manageable for beginners on the right route. Expect a mix of drops, standing waves and fast chutes, broken up by long, calm pools where you can relax, float, or just take in the forest on either bank.",
+        ],
+        list: [
+          "Short Rafting (1km, about 40 minutes) — a beginner-friendly taste of the rapids close to the put-in point.",
+          "Mid Rafting (5km, about 1.5 hours) — more rapids and more time reading the river.",
+          "Long Rafting (11km, about 3 hours) — the full run, through the deepest forest and the biggest rapids on offer.",
+          "Full route details and prices are on our [rafting in Dandeli](/rafting-in-dandeli/) page.",
+        ],
+        image: imgLongRafting,
+        imageAlt: "Rafters paddling through white-water rapids on the Dandeli River",
+        caption: "The Dandeli River's rapids, mid-run near Ganeshgudi.",
+      },
+      {
+        heading: "Wildlife along the riverbanks",
+        paragraphs: [
+          "The forest on either side of the river is part of the wider Western Ghats ecosystem, and the water itself supports its own wildlife: fish, otters, and — occasionally — crocodiles basking on quiet stretches of bank, which is one reason swimming is only done in sections your guide clears as safe.",
+          "Birdlife is especially rich along the water's edge, with kingfishers, herons and hornbills all regular sightings for early risers. Our [wildlife and jungle safari guide](/dandeli-guides/dandeli-wildlife-and-jungle-safari-guide/) goes into more detail on what to look for and when.",
+        ],
+      },
+      {
+        heading: "The best places to actually see the river",
+        paragraphs: [
+          "Rafting puts you directly on the water, but there are a few spots where you can appreciate the river without getting in a raft. Syntheri Rocks is a dramatic gorge where the river narrows between towering rock walls — one of the most photographed views in Dandeli. The Supa Dam backwaters offer the opposite mood: still, wide water framed by forest, best at sunrise or late afternoon.",
+          "See our [places to visit near Dandeli](/dandeli-guides/places-to-visit-near-dandeli/) guide for how to fit these into a trip.",
+        ],
+      },
+      {
+        heading: "When the river is at its best",
+        paragraphs: [
+          "The river looks and behaves differently through the year. October to February brings clear water, lively rapids and the most reliable rafting conditions. March to May runs lower and gentler, good for families and first-timers. The monsoon (June to September) turns the river into something else entirely — powerful, muddy and generally too dangerous for rafting, though it's when the surrounding forest is at its greenest.",
+          "Our [best time to visit Dandeli](/dandeli-guides/best-time-to-visit-dandeli/) guide breaks this down month by month.",
+        ],
+      },
+      {
+        heading: "How to experience the Dandeli River yourself",
+        paragraphs: [
+          "Rafting is the most direct way to experience the river, but it isn't the only one. Kayaking lets you set your own pace along the quieter stretches, river boating and the river jacuzzi are gentler ways to enjoy the water with kids or a larger group, and simply standing on the bank at Ganeshgudi at dawn, with mist rising off the water, is worth the trip on its own.",
+          "Ready to get on the water? See every route and price on our [rafting in Dandeli](/rafting-in-dandeli/) page, or [book your slot](/booking) directly.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Is the Dandeli River the same as the Kali River?",
+        a: "Yes. \"Dandeli River\" is the common name visitors use for the river that runs through Dandeli; its official name is the Kali River (Kalinadi). Both names refer to exactly the same river.",
+      },
+      {
+        q: "How long is the Kali River?",
+        a: "The Kali River runs roughly 180km from its source in the Western Ghats near Diggi village to the Arabian Sea at Karwar. The stretch used for rafting near Ganeshgudi and Dandeli is a much shorter section of that full length.",
+      },
+      {
+        q: "Can you swim in the Dandeli River?",
+        a: "Swimming is possible in specific, guide-supervised stretches of calmer water — it's offered as one of our river activities — but the river isn't safe to swim in everywhere, due to current, depth and occasional wildlife like crocodiles. Always swim only where your guide clears it.",
+      },
+    ],
+    related: ["kali-river-rafting-first-timers-guide", "best-time-to-visit-dandeli", "dandeli-wildlife-and-jungle-safari-guide"],
   },
 ];
