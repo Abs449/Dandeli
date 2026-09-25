@@ -122,6 +122,8 @@ const About = () => {
                 alt="Karthik, lead adventure guide at Dandeli Kali River Rafting"
                 loading="lazy"
                 decoding="async"
+                width={433}
+                height={600}
                 className="w-full max-h-[320px] sm:max-h-[400px] lg:max-h-[480px] object-contain object-center sm:object-left animate-float relative z-10"
               />
             </div>

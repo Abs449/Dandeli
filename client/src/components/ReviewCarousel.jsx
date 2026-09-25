@@ -140,9 +140,9 @@ const ReviewCarousel = () => {
                         {initials}
                       </div>
                       <div>
-                        <h4 className="font-heading font-black text-white group-hover:text-cyan-300 transition-colors text-base leading-tight">
+                        <p className="font-heading font-black text-white group-hover:text-cyan-300 transition-colors text-base leading-tight">
                           {review.name}
-                        </h4>
+                        </p>
                         <span className="text-xs text-cyan-400/80 font-body">
                           Verified Adventurer
                         </span>

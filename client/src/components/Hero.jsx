@@ -611,7 +611,7 @@ const Hero = () => {
             <motion.div whileTap={{ scale: 0.96 }} className="w-full sm:w-auto">
               <Link
                 to="/booking"
-                className="block w-full sm:w-auto px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-full font-bold text-xs sm:text-base transition-all duration-200 hover:-translate-y-0.5 text-center uppercase tracking-wider font-display text-white shadow-xl hover:brightness-110"
+                className="block w-full sm:w-auto px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-full font-bold text-xs sm:text-base transition-all duration-200 hover:-translate-y-0.5 text-center uppercase tracking-wider font-display text-[#021915] shadow-xl hover:brightness-110"
                 style={{
                   backgroundColor: "#FF6B4A",
                   boxShadow: "0 6px 24px rgba(255,90,31,0.35)",

@@ -99,16 +99,17 @@ const Footer = () => {
             <h4 className="text-lg font-heading font-bold mb-6 text-white uppercase tracking-wider text-s">Follow Us</h4>
             <div className="flex space-x-3">
               {[
-                { href: CONTACT.socials.instagram, Icon: FaInstagram },
-                { href: CONTACT.socials.facebook, Icon: FaFacebookF },
-                { href: CONTACT.socials.whatsapp, Icon: FaWhatsapp },
-                { href: CONTACT.socials.youtube, Icon: FaYoutube },
-              ].map(({ href, Icon }, i) => (
+                { href: CONTACT.socials.instagram, Icon: FaInstagram, label: "Instagram" },
+                { href: CONTACT.socials.facebook, Icon: FaFacebookF, label: "Facebook" },
+                { href: CONTACT.socials.whatsapp, Icon: FaWhatsapp, label: "WhatsApp" },
+                { href: CONTACT.socials.youtube, Icon: FaYoutube, label: "YouTube" },
+              ].map(({ href, Icon, label }, i) => (
                 <a
                   key={i}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`${CONTACT.businessName} on ${label}`}
                   className="w-10 h-10 rounded-full bg-slate-900 border border-white/15 flex items-center justify-center text-gray-300 hover:bg-cyan-500 hover:text-slate-950 transition-all duration-300 hover:scale-110"
                 >
                   <Icon size={18} />

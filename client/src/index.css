@@ -1,5 +1,7 @@
-/*@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fresca&family=Inter:wght@400;500;600;700&display=swap');*/
-@import url('https://fonts.googleapis.com/css2?family=Fresca&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/* Fresca + Roboto are loaded from index.html (a real <link>, discoverable by
+   the browser's preload scanner immediately) rather than here — a CSS
+   @import buries the font request behind "fetch this stylesheet, parse it,
+   then discover the @import" before the font request even starts. */
 @import "tailwindcss";
 
 
@@ -403,22 +405,6 @@ html {
     /* JS RAF handles smooth scrolling */
 
   }
-
-  h1,
-
-h2,
-
-h3,
-
-h4,
-
-h5,
-
-h6 {
-
-  font-family: "Bebas Neue", sans-serif;
-
-}
 
 }
 

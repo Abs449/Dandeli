@@ -4,8 +4,13 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FloatingButtons from "./components/FloatingButtons";
 import { shouldShowFooter } from "./lib/layout";
+// Home is loaded eagerly, unlike every other route below: it's by far the
+// most common landing page, and code-splitting it out only added a second
+// sequential chunk fetch before the browser could even discover the hero's
+// background image — Lighthouse measured ~600ms of that delay directly
+// against LCP on this page specifically.
+import Home from "./pages/Home";
 
-const Home = lazy(() => import("./pages/Home"));
 const Booking = lazy(() => import("./pages/Booking"));
 const RaftingInDandeli = lazy(() => import("./pages/RaftingInDandeli"));
 const DandeliPackages = lazy(() => import("./pages/DandeliPackages"));

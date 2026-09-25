@@ -144,7 +144,7 @@ const Navbar = () => {
                 className="px-4 lg:px-6 py-2 rounded-full font-heading font-bold transition-all duration-150 active:scale-95 text-xs uppercase tracking-wider shadow-md cursor-pointer whitespace-nowrap"
                 style={{
                   backgroundColor: '#FF6B4A',
-                  color: '#fff',
+                  color: '#021915',
                   boxShadow: '0 4px 18px rgba(82,183,136,0.35)',
                 }}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = '#62c496'}
@@ -197,7 +197,7 @@ const Navbar = () => {
                   className="block w-full text-center px-6 py-4 rounded-2xl font-heading font-bold uppercase tracking-wider shadow-lg hover:opacity-90 active:scale-95 transition-all text-base cursor-pointer"
                   style={{
                     backgroundColor: '#FF6B4A',
-                    color: '#fff',
+                    color: '#021915',
                     boxShadow: '0 6px 24px rgba(255,90,31,0.35)',
                   }}
                 >

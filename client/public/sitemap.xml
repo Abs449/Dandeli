@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Static fallback only, served as-is by `npm run dev` / `vite preview` /
+     `build:client-only`. `npm run build` (the one Vercel runs) overwrites
+     this file at dist/sitemap.xml with one auto-generated from
+     entry-server.jsx's prerenderPages list — see scripts/prerender.js. Keep
+     this in sync manually only if you rely on one of those other commands
+     for anything sitemap-related. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://dandelikaliriverrafting.com/</loc>
@@ -77,11 +83,5 @@
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://dandelikaliriverrafting.com/booking</loc>
-    <lastmod>2026-09-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>

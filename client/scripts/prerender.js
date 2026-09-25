@@ -4,7 +4,7 @@
 // bundle then boots normally and re-renders over it (main.jsx uses
 // createRoot().render(), a plain CSR mount, not hydrateRoot(), so there's no
 // server/client markup-matching requirement here).
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE_URL } from "../src/lib/seo.js";
@@ -159,8 +159,77 @@ const catalogScripts = [activitiesCatalog, packagesCatalog]
   .map((schema) => `<script type="application/ld+json">${JSON.stringify(schema)}</script>`)
   .join("\n    ");
 
-const homeHtml = setTag(template, /<\/head>/, `    ${catalogScripts}\n  </head>`);
+// Preload the Hero background image, but only on dist/index.html — every
+// other route below reuses this same `template`, and they don't render
+// Hero. Home is the one page that's never prerendered (see the note atop
+// entry-server.jsx), so the browser has no way to discover this image until
+// React has rendered; Lighthouse measured this as the single largest
+// contributor to LCP on this page. Vite already emitted the hashed filename
+// into dist/assets/ during the client build (step 1) — read it back rather
+// than guessing it, since the hash changes on every image edit.
+const heroBgFile = readdirSync(join(distDir, "assets")).find((f) => /^hero-bg-.*\.webp$/.test(f));
+let heroPreloadTag = "";
+if (heroBgFile) {
+  heroPreloadTag = `<link rel="preload" as="image" fetchpriority="high" href="/assets/${heroBgFile}" />\n    `;
+} else {
+  console.warn("prerender: no hero-bg-*.webp found in dist/assets — skipping LCP preload for dist/index.html");
+}
+
+const homeHtml = setTag(template, /<\/head>/, `    ${heroPreloadTag}${catalogScripts}\n  </head>`);
 writeFileSync(join(distDir, "index.html"), homeHtml);
 console.log(
   `injected activities + packages catalog schema into dist/index.html (${seedServices.length} activities, ${seedPackages.length} packages)`,
 );
+
+// public/sitemap.xml used to be a hand-edited file, which drifted out of
+// sync every time a page was added (a guide would go live with no <url>
+// entry, or vice versa). Generating it here from the exact same
+// `prerenderPages` list that drives the prerendered HTML above means the
+// sitemap can never disagree with what's actually on the site, and each
+// guide's <lastmod> comes from its own real `dateModified` instead of a
+// hand-typed date someone forgets to update.
+const buildDate = new Date().toISOString().slice(0, 10);
+
+// Static routes that aren't in `prerenderPages` (Home and Booking are
+// client-rendered, not prerendered — see entry-server.jsx for why).
+//
+// /booking is deliberately NOT listed here even though the route is real
+// and fully crawlable via internal links. vercel.json serves it by
+// rewriting to this same dist/index.html file verbatim (there's no
+// prerendering or server logic for it), so a crawler reading its raw,
+// pre-JS HTML sees <link rel="canonical" href=".../"> pointing at the
+// homepage, not at /booking itself. Asserting /booking in the sitemap
+// ("please index this URL") while its own unrendered markup says "actually,
+// canonicalize to the homepage" is a contradictory signal — so it's left
+// out of the sitemap rather than sent with a self-undermining canonical.
+const staticRoutes = [{ path: "/", changefreq: "weekly", priority: "1.0" }];
+
+const priorityFor = (path) => {
+  if (path === "/dandeli-guides/") return "0.8";
+  if (path.startsWith("/dandeli-guides/")) return "0.7";
+  return "0.9"; // the rafting/packages landing pages
+};
+
+const sitemapEntries = [
+  ...staticRoutes.map((r) => ({ ...r, lastmod: buildDate })),
+  ...prerenderPages.map(({ path, article }) => ({
+    path,
+    lastmod: article?.modifiedTime || buildDate,
+    changefreq: path === "/dandeli-guides/" ? "weekly" : "monthly",
+    priority: priorityFor(path),
+  })),
+];
+
+const sitemapXml = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...sitemapEntries.map(
+    ({ path, lastmod, changefreq, priority }) =>
+      `  <url>\n    <loc>${SITE_URL}${path}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`,
+  ),
+  "</urlset>",
+  "",
+].join("\n");
+
+writeFileSync(join(distDir, "sitemap.xml"), sitemapXml);
+console.log(`generated dist/sitemap.xml (${sitemapEntries.length} urls, overwriting the static copy from public/)`);
