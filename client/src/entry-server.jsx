@@ -8,7 +8,7 @@ import RaftingInDandeli from "./pages/RaftingInDandeli";
 import DandeliPackages from "./pages/DandeliPackages";
 import Guides from "./pages/Guides";
 import GuideArticle from "./pages/GuideArticle";
-import { seedGuides } from "./data/seedData";
+import { seedGuides } from "./data/seedGuides";
 import { shouldShowFooter } from "./lib/layout";
 import { guidePath } from "./lib/guides";
 import { LANDING_PAGES } from "./lib/landingPagesMeta";
@@ -18,7 +18,8 @@ import { LANDING_PAGES } from "./lib/landingPagesMeta";
 // directly under plain Node — seedData.js imports .webp assets, which Vite
 // transforms into URL strings during this SSR build but plain Node can't
 // load at all (unknown file extension).
-export { seedServices, seedPackages, seedGuides } from "./data/seedData";
+export { seedServices, seedPackages } from "./data/seedData";
+export { seedGuides } from "./data/seedGuides";
 
 // Only the standalone SEO landing pages and travel guides are prerendered
 // here — they were written without scroll-linked motion or DOM-only

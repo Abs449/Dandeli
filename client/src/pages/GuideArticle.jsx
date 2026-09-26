@@ -5,7 +5,8 @@ import LandingCta from "../components/landing/LandingCta";
 import FaqSection from "../components/landing/FaqSection";
 import GuidePost from "../components/guides/GuidePost";
 import RichText from "../components/guides/RichText";
-import { GUIDES_PATH, formatGuideDate, getGuide, getRelatedGuides, guidePath, headingId } from "../lib/guides";
+import { GUIDES_PATH, formatGuideDate, getRelatedGuideSummaries, guidePath, headingId } from "../lib/guides";
+import { getGuide } from "../lib/guideContent";
 import { useSEO, SITE_URL } from "../lib/seo";
 import { CONTACT } from "../lib/contact";
 
@@ -22,7 +23,7 @@ const GuideArticle = () => {
   if (!guide) return <Navigate to={GUIDES_PATH} replace />;
 
   const canonicalUrl = `${SITE_URL}${guidePath(guide.slug)}`;
-  const relatedGuides = getRelatedGuides(guide);
+  const relatedGuides = getRelatedGuideSummaries(guide);
   const wordCount = guide.sections
     .flatMap((section) => [...section.paragraphs, ...(section.list || [])])
     .join(" ")

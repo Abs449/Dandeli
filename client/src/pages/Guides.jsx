@@ -1,7 +1,7 @@
 import LandingHero from "../components/landing/LandingHero";
 import LandingCta from "../components/landing/LandingCta";
 import GuidePost from "../components/guides/GuidePost";
-import { seedGuides } from "../data/seedData";
+import { seedGuideSummaries } from "../data/guideSummaries";
 import { guidePath } from "../lib/guides";
 import { useSEO, SITE_URL } from "../lib/seo";
 import { LANDING_PAGES } from "../lib/landingPagesMeta";
@@ -18,7 +18,7 @@ const Guides = () => {
     description: LANDING_PAGES.guides.description,
     mainEntity: {
       "@type": "ItemList",
-      itemListElement: seedGuides.map((guide, index) => ({
+      itemListElement: seedGuideSummaries.map((guide, index) => ({
         "@type": "ListItem",
         position: index + 1,
         url: `${SITE_URL}${guidePath(guide.slug)}`,
@@ -41,7 +41,7 @@ const Guides = () => {
       <section className="bg-[#021915] text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 lg:gap-x-14 gap-y-16 sm:gap-y-20">
-            {seedGuides.map((guide) => (
+            {seedGuideSummaries.map((guide) => (
               <GuidePost key={guide.slug} guide={guide} />
             ))}
           </div>

@@ -11,19 +11,19 @@
 export const LANDING_PAGES = {
   rafting: {
     path: "/rafting-in-dandeli/",
-    title: "Dandeli Rafting Guide: Dandeli River Rafting Prices & Timings",
+    title: "Dandeli Rafting Guide: Dandeli River Prices & Timings",
     description:
       "Dandeli rafting on the Dandeli River (Kali River) at Ganeshgudi — short, mid, and long white-water routes. Certified guides, safety gear included, prices from ₹700. Check live river status and book online.",
   },
   packages: {
     path: "/dandeli-packages/",
-    title: "Kali River Packages | Day Trips & Overnight Rafting + Camping Stays",
+    title: "Kali River Packages | Day Trips & Camping Stays",
     description:
       "Compare all-inclusive Kali River Rafting packages — day trips, riverside camping stays, and premium rooms with rafting, kayaking, meals, and resort activities. Transparent pricing, no hidden costs.",
   },
   guides: {
     path: "/dandeli-guides/",
-    title: "Dandeli Travel Guides | Best Time, How to Reach & Itineraries",
+    title: "Dandeli Travel Guides: Best Time, Reach & Itineraries",
     description:
       "Plan your Dandeli trip with our travel guides — best time to visit, how to reach, things to do, a 2-day itinerary and budget, rafting tips, camping, wildlife and places to see nearby.",
   },

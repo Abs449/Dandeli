@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import GuidePost from "./GuidePost";
-import { GUIDES_PATH, getGuide } from "../../lib/guides";
+import { GUIDES_PATH, getGuideSummary } from "../../lib/guides";
 
 // A "read more" strip linking a page to a handpicked set of guides. Gives the
 // prerendered landing pages real, crawlable internal links into the guides
 // (the footer is hidden on those pages, so they'd otherwise have none).
 const GuideLinks = ({ slugs, heading = "Plan Your Trip", highlight = "Guides" }) => {
-  const guides = slugs.map(getGuide).filter(Boolean);
+  const guides = slugs.map(getGuideSummary).filter(Boolean);
   if (guides.length === 0) return null;
 
   return (
