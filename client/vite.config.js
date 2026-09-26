@@ -20,20 +20,32 @@ export default defineConfig({
       // only reaches it through a genuinely lazy route (GuideArticle.jsx).
       // It still loads correctly on demand via the route's own dynamic
       // import(); this only removes the eager, unwanted preload hint.
-      resolveDependencies: (_filename, deps) => deps.filter((d) => !d.includes("guide-content")),
+      //
+      // Same for vendor-animation (framer-motion) and vendor-swiper: nothing
+      // on any page's startup path imports them anymore (the navbar drawer
+      // is plain CSS, and everything animated is a lazy chunk), but Vite
+      // would still preload them from the HTML. Only the HTML's hints are
+      // filtered — a lazy chunk that needs framer still preloads it when
+      // that chunk loads.
+      resolveDependencies: (_filename, deps, { hostType }) =>
+        hostType === "html"
+          ? deps.filter((d) => !/guide-content|vendor-animation|vendor-swiper/.test(d))
+          : deps.filter((d) => !d.includes("guide-content")),
     },
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (id.includes("react") || id.includes("react-dom") || id.includes("react-router")) {
+            // Exact package directories only. This used to be
+            // id.includes("react"), which also swept lucide-react,
+            // react-icons and react-hook-form (only used by /booking) into
+            // the startup bundle every page preloads. Icon packages are left
+            // to Rollup so each chunk carries only the icons it uses.
+            if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom)[\\/]/.test(id)) {
               return "vendor-core";
             }
-            if (id.includes("framer-motion") || id.includes("motion")) {
+            if (id.includes("framer-motion") || /[\\/]node_modules[\\/]motion-/.test(id)) {
               return "vendor-animation";
-            }
-            if (id.includes("lucide-react") || id.includes("react-icons")) {
-              return "vendor-icons";
             }
             if (id.includes("swiper")) {
               return "vendor-swiper";
@@ -50,6 +62,15 @@ export default defineConfig({
           // it was observed duplicating seedData's content across the main
           // bundle and a separate chunk instead of cleanly sharing one.
           // Pinning it to an explicit chunk makes the split deterministic.
+          // Image imports compile to tiny modules that just export a URL
+          // string. Left to Rollup, a URL shared by several chunks gets
+          // placed inside one of them — e.g. river-scenery.webp landed in
+          // guide-content, so the homepage's About section downloaded all
+          // nine guide articles just to read one image URL. One shared,
+          // few-hundred-byte chunk of URLs avoids that.
+          if (/\.(webp|png|jpe?g|gif|svg|avif)$/.test(id)) {
+            return "asset-urls";
+          }
           if (id.includes("/src/data/seedData.js")) {
             return "seed-data";
           }

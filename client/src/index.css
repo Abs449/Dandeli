@@ -1,8 +1,54 @@
-/* Fresca + Roboto are loaded from index.html (a real <link>, discoverable by
-   the browser's preload scanner immediately) rather than here — a CSS
-   @import buries the font request behind "fetch this stylesheet, parse it,
-   then discover the @import" before the font request even starts. */
 @import "tailwindcss";
+
+/* Fresca (headings/display) + Roboto (body), self-hosted from
+   src/assets/fonts — the latin + latin-ext subsets Google Fonts serves
+   (₹ is in latin-ext), fetched from fonts.googleapis.com and kept with the
+   same unicode-ranges, so a browser only downloads the subsets its text
+   uses. Self-hosting removes two third-party origins (fonts.googleapis.com
+   + fonts.gstatic.com), each of which cost a full DNS + TCP + TLS setup
+   before a single font byte arrived — significant on mobile connections.
+   `font-display: optional` is deliberate: with `swap` the text reflowed when
+   these finished loading, which was the page's largest layout shift. Both
+   fonts are OFL/Apache-licensed, which permits self-hosting. */
+/* Fresca — latin-ext */
+@font-face {
+  font-family: 'Fresca';
+  font-style: normal;
+  font-weight: 400;
+  font-display: optional;
+  src: url('./assets/fonts/fresca-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Fresca — latin */
+@font-face {
+  font-family: 'Fresca';
+  font-style: normal;
+  font-weight: 400;
+  font-display: optional;
+  src: url('./assets/fonts/fresca-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Roboto — latin-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 100%;
+  font-display: optional;
+  src: url('./assets/fonts/roboto-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Roboto — latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 100%;
+  font-display: optional;
+  src: url('./assets/fonts/roboto-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 
 
 
@@ -470,6 +516,53 @@ html {
 
   background-position: center;
 
+}
+
+/* Below-the-fold homepage sections (and the site footer). The browser skips
+   style, layout and paint for these until they approach the viewport —
+   which also means their loading="lazy" images and the Maps iframe don't
+   start downloading. Without this, Chrome's lazy-load distance (1250-2500px)
+   reached far enough into the prerendered page to start ~700KB of service
+   card and guide photos alongside the hero image, the LCP element. Content
+   is still in the DOM: crawlers index it, find-in-page and screen readers
+   still see it. `auto` in contain-intrinsic-size makes the browser remember
+   each section's real height once it has rendered.
+   html.cv-all switches it off — Smoothscroll.js adds it right before
+   measuring a scroll target, so the navbar's smooth-scroll lands on real
+   section heights rather than placeholder estimates. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+html.cv-all .cv-auto {
+  content-visibility: visible;
+}
+
+/* Mirrors Hero.jsx's breakpoints (<= 767px = mobile layout). Done in CSS
+   rather than from JS screen-size state so the prerendered homepage HTML
+   positions the hero background correctly before any JS has run. */
+.hero-bg-position {
+  background-position: center 38%;
+  background-image: var(--hero-bg-wide);
+}
+
+/* Each hero layer is viewport-sized with background-size: cover, so on a
+   screen at least as tall as it is wide-ish (aspect <= 3:4) only the
+   image's center ~672px strip is ever visible — the pan animation just
+   slides between mirrored copies of that same strip. hero-portrait.webp is
+   exactly that center 700px crop at about half the bytes, and this is the
+   LCP image on phones. Same query as the preload in scripts/prerender.js. */
+@media (max-aspect-ratio: 3/4) {
+  .hero-bg-position {
+    background-image: var(--hero-bg-portrait);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-bg-position {
+    background-position: center 55%;
+  }
 }
 
 .hero-bg-layer-1 {

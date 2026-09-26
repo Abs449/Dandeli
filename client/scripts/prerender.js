@@ -14,7 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const distDir = join(root, "dist");
 
-const { render, prerenderPages, seedServices, seedPackages } = await import(join(root, "dist-ssr", "entry-server.js"));
+const { render, renderHome, prerenderPages, seedServices, seedPackages } = await import(join(root, "dist-ssr", "entry-server.js"));
 
 const template = readFileSync(join(distDir, "index.html"), "utf-8");
 
@@ -25,17 +25,14 @@ const setTag = (html, pattern, replacement) => {
   return html.replace(pattern, replacement);
 };
 
-for (const { path, title, description, image, imageAlt, article } of prerenderPages) {
-  const appHtml = render(path);
-  if (appHtml == null) {
-    throw new Error(`prerender: no SSR render registered for route ${path}`);
-  }
-
+// Swaps the template's default (homepage) <title>, description, canonical,
+// and social tags for one page's own values.
+const withPageMeta = (baseHtml, { path, title, description, image, imageAlt, article }) => {
   const canonicalUrl = `${SITE_URL}${path}`;
   const escapedTitle = title.replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const escapedDescription = description.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 
-  let html = template;
+  let html = baseHtml;
   html = setTag(html, /<title>.*?<\/title>/s, `<title>${escapedTitle}</title>`);
   html = setTag(
     html,
@@ -82,7 +79,84 @@ for (const { path, title, description, image, imageAlt, article } of prerenderPa
       ].join("\n    "),
     );
   }
+  return html;
+};
+
+// The site's single stylesheet (~17KB gzipped) is inlined into each page's
+// <head> instead of linked. A linked stylesheet is render-blocking: nothing
+// paints until a second request for it completes. On a slow mobile
+// connection that extra round trip sat directly in front of the first paint
+// and the LCP. Its font url()s are absolute (/assets/...), so they resolve
+// the same inline.
+const inlineCss = (html) => {
+  const link = html.match(/<link rel="stylesheet" crossorigin href="(\/assets\/[^"]+\.css)">/);
+  if (!link) throw new Error("prerender: stylesheet <link> not found in template");
+  const css = readFileSync(join(distDir, link[1]), "utf-8");
+  if (css.includes("</style")) throw new Error("prerender: stylesheet contains </style — cannot inline safely");
+  return html.replace(link[0], () => `<style>${css}</style>`);
+};
+
+// Every prerendered page (home, landing pages, guides) arrives with its full
+// content already in the HTML, so none of it needs JavaScript to be seen or
+// read. Vite's default markup starts downloading the app bundle (~85KB
+// gzipped: React, the router, the entry chunk) in the first few
+// milliseconds, competing with the CSS and the hero image for bandwidth —
+// on a slow phone that pushed back the first paint and the LCP image for
+// JS that wasn't needed for either. This moves the bundle, and its
+// modulepreload hints, to start after the `load` event and the first paint
+// instead: the page paints from HTML first, then becomes interactive. A 3s fallback
+// covers a slow straggler resource holding up `load`.
+// Not applied to /booking: its shell is empty until JS renders the form.
+const deferAppBoot = (html) => {
+  const entry = html.match(/<script type="module" crossorigin src="([^"]+)"><\/script>/);
+  if (!entry) throw new Error("prerender: entry <script type=module> not found in template");
+  const preloads = [...html.matchAll(/<link rel="modulepreload" crossorigin href="([^"]+)">/g)].map((m) => m[1]);
+  let out = html.replace(entry[0], "");
+  out = out.replace(/\s*<link rel="modulepreload" crossorigin href="[^"]+">/g, "");
+  const boot = `<script>
+      (function () {
+        var started = false;
+        function boot() {
+          if (started) return;
+          started = true;
+          ${JSON.stringify(preloads)}.forEach(function (href) {
+            var l = document.createElement('link');
+            l.rel = 'modulepreload';
+            l.crossOrigin = '';
+            l.href = href;
+            document.head.appendChild(l);
+          });
+          var s = document.createElement('script');
+          s.type = 'module';
+          s.crossOrigin = '';
+          s.src = ${JSON.stringify(entry[1])};
+          document.head.appendChild(s);
+        }
+        // Wait for the first frame after load to actually paint: rAF runs
+        // just before that frame, the setTimeout just after it. With the CSS
+        // inlined, load can fire before first paint, and starting the JS
+        // then would put it back in front of FCP/LCP.
+        function afterPaint() {
+          requestAnimationFrame(function () { setTimeout(boot, 0); });
+        }
+        if (document.readyState === 'complete') afterPaint();
+        else window.addEventListener('load', afterPaint);
+        setTimeout(boot, 3000);
+      })();
+    </script>`;
+  return setTag(out, /<\/head>/, `  ${boot}\n  </head>`);
+};
+
+for (const page of prerenderPages) {
+  const { path } = page;
+  const appHtml = render(path);
+  if (appHtml == null) {
+    throw new Error(`prerender: no SSR render registered for route ${path}`);
+  }
+
+  let html = withPageMeta(template, page);
   html = setTag(html, /<div id="root"><\/div>/, `<div id="root">${appHtml}</div>`);
+  html = inlineCss(deferAppBoot(html));
 
   const outDir = join(distDir, path.replace(/^\/|\/$/g, ""));
   mkdirSync(outDir, { recursive: true });
@@ -159,26 +233,50 @@ const catalogScripts = [activitiesCatalog, packagesCatalog]
   .map((schema) => `<script type="application/ld+json">${JSON.stringify(schema)}</script>`)
   .join("\n    ");
 
-// Preload the Hero background image, but only on dist/index.html — every
-// other route below reuses this same `template`, and they don't render
-// Hero. Home is the one page that's never prerendered (see the note atop
-// entry-server.jsx), so the browser has no way to discover this image until
-// React has rendered; Lighthouse measured this as the single largest
-// contributor to LCP on this page. Vite already emitted the hashed filename
-// into dist/assets/ during the client build (step 1) — read it back rather
-// than guessing it, since the hash changes on every image edit.
-const heroBgFile = readdirSync(join(distDir, "assets")).find((f) => /^hero-bg-.*\.webp$/.test(f));
+// Preload the Hero background image (the homepage's LCP element), but only
+// on dist/index.html — every other route reuses this same `template`, and
+// they don't render Hero. Vite already emitted the hashed filename into
+// dist/assets/ during the client build (step 1) — read it back rather than
+// guessing it, since the hash changes on every image edit.
+// Two variants, chosen by screen shape exactly like .hero-bg-position in
+// index.css — `media` makes the browser fetch only the one it will use.
+const assetFiles = readdirSync(join(distDir, "assets"));
+const heroBgFile = assetFiles.find((f) => /^hero-bg-.*\.webp$/.test(f));
+const heroPortraitFile = assetFiles.find((f) => /^hero-portrait-.*\.webp$/.test(f));
 let heroPreloadTag = "";
-if (heroBgFile) {
-  heroPreloadTag = `<link rel="preload" as="image" fetchpriority="high" href="/assets/${heroBgFile}" />\n    `;
+if (heroBgFile && heroPortraitFile) {
+  heroPreloadTag =
+    `<link rel="preload" as="image" fetchpriority="high" href="/assets/${heroPortraitFile}" media="(max-aspect-ratio: 3/4)" />\n    ` +
+    `<link rel="preload" as="image" fetchpriority="high" href="/assets/${heroBgFile}" media="(min-aspect-ratio: 3001/4000)" />\n    `;
 } else {
-  console.warn("prerender: no hero-bg-*.webp found in dist/assets — skipping LCP preload for dist/index.html");
+  throw new Error("prerender: hero-bg / hero-portrait webp not found in dist/assets — LCP preload would be missing");
 }
 
-const homeHtml = setTag(template, /<\/head>/, `    ${heroPreloadTag}${catalogScripts}\n  </head>`);
+// /booking stays client-rendered (a form, never built for SSR), and
+// vercel.json rewrites it to its own empty shell instead of dist/index.html:
+// now that index.html carries the prerendered homepage, serving it for
+// /booking would flash homepage content — and give crawlers the homepage's
+// markup and canonical — until the booking form's JS took over.
+const bookingDir = join(distDir, "booking");
+mkdirSync(bookingDir, { recursive: true });
+writeFileSync(
+  join(bookingDir, "index.html"),
+  inlineCss(withPageMeta(template, {
+    path: "/booking",
+    title: "Book Dandeli Rafting & Adventure Trips | Kali River Rafting",
+    description:
+      "Reserve white-water rafting, camping, and jungle adventure packages on the Kali River in Dandeli. Fill out the booking form and our team confirms your trip within 24 hours.",
+  })),
+);
+console.log("wrote dist/booking/index.html (client-rendered shell with its own canonical/meta)");
+
+const homeAppHtml = await renderHome();
+let homeHtml = setTag(template, /<\/head>/, `    ${heroPreloadTag}${catalogScripts}\n  </head>`);
+homeHtml = setTag(homeHtml, /<div id="root"><\/div>/, `<div id="root">${homeAppHtml}</div>`);
+homeHtml = inlineCss(deferAppBoot(homeHtml));
 writeFileSync(join(distDir, "index.html"), homeHtml);
 console.log(
-  `injected activities + packages catalog schema into dist/index.html (${seedServices.length} activities, ${seedPackages.length} packages)`,
+  `prerendered / -> dist/index.html (${(homeAppHtml.length / 1024).toFixed(1)} KB, hydrated on the client) + catalog schema (${seedServices.length} activities, ${seedPackages.length} packages)`,
 );
 
 // public/sitemap.xml used to be a hand-edited file, which drifted out of

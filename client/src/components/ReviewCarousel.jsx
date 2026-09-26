@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useNearViewport } from "../lib/useNearViewport";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -12,6 +13,7 @@ import "swiper/css/pagination";
 const ReviewCarousel = () => {
   const { data: reviews, loading } = useReviews();
   const sectionRef = useRef(null);
+  const bgNear = useNearViewport(sectionRef);
 
   // Scroll-linked background zoom effect with spring physics smoothing
   const { scrollYProgress } = useScroll({
@@ -32,7 +34,7 @@ const ReviewCarousel = () => {
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${bgReviews})`,
+          backgroundImage: bgNear ? `url(${bgReviews})` : undefined,
           scale: bgScale,
           opacity: bgOpacity,
         }}

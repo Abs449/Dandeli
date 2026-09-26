@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNearViewport } from "../lib/useNearViewport";
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import { BookOpen, X, Sparkles, Heart } from "lucide-react";
 import photo from "../assets/Backgroundimg/guide-photo.webp";
@@ -48,6 +49,7 @@ const stats = [
 const About = () => {
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const sectionRef = useRef(null);
+  const bgNear = useNearViewport(sectionRef);
   useEffect(() => {
   if (!isStoryModalOpen) return;
 
@@ -78,7 +80,7 @@ const About = () => {
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${imgJungle})`,
+          backgroundImage: bgNear ? `url(${imgJungle})` : undefined,
           scale: bgScale,
           opacity: bgOpacity,
         }}

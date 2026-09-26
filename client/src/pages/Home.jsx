@@ -1,16 +1,57 @@
 import { lazy, Suspense, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Hero from "../components/Hero";
-import About from "../components/About";
-import Services from "../components/Services";
-import Packages from "../components/Packages";
-import Location from "../components/Location";
 import FaqSection from "../components/landing/FaqSection";
 import GuideLinks from "../components/guides/GuideLinks";
 import { scrollToElement } from "../utils/Smoothscroll";
 import { useSEO } from "../lib/seo";
 
-const ReviewCarousel = lazy(() => import("../components/ReviewCarousel"));
+// Everything below the hero is its own lazy chunk behind its own Suspense
+// boundary. This is not about hiding content: the homepage is prerendered
+// with React's static prerender API, which waits for every lazy chunk, so
+// all of these sections are fully present in the HTML crawlers receive.
+// On the client, hydrateRoot keeps that server HTML on screen and hydrates
+// each boundary independently as its chunk arrives, instead of executing
+// every section's code in one long task before the page can respond —
+// that single long task was most of the homepage's mobile Total Blocking
+// Time.
+//
+// Each section also waits to even fetch its code until it's near the
+// viewport (or the visitor first interacts with the page). While it waits,
+// React simply leaves that section's prerendered HTML in place — visible,
+// readable, and crawlable, just not yet interactive. Without this, React
+// requests and hydrates every section at startup regardless of whether
+// it's anywhere near the screen.
+const whenNear = (id) =>
+  new Promise((resolve) => {
+    // Server render, or a client-side navigation to "/" (no prerendered
+    // section to watch): load right away.
+    if (typeof document === "undefined") return resolve();
+    const el = document.getElementById(id);
+    if (!el || typeof IntersectionObserver === "undefined") return resolve();
+
+    const events = ["pointerdown", "keydown", "touchstart", "wheel"];
+    const done = () => {
+      observer.disconnect();
+      events.forEach((e) => window.removeEventListener(e, done));
+      resolve();
+    };
+    const observer = new IntersectionObserver(([entry]) => entry.isIntersecting && done(), {
+      rootMargin: "300px 0px",
+    });
+    observer.observe(el);
+    // Any interaction also counts — e.g. a nav click that jumps down the
+    // page, or leaving and coming back before this section was reached.
+    events.forEach((e) => window.addEventListener(e, done, { once: true, passive: true }));
+  });
+
+const lazyNear = (id, load) => lazy(() => whenNear(id).then(load));
+
+const About = lazyNear("about", () => import("../components/About"));
+const Services = lazyNear("services", () => import("../components/Services"));
+const Packages = lazyNear("packages", () => import("../components/Packages"));
+const Location = lazyNear("location", () => import("../components/Location"));
+const ReviewCarousel = lazyNear("reviews", () => import("../components/ReviewCarousel"));
 
 // Broad, brand-level questions — distinct from the topic-specific FAQs on
 // the rafting/packages landing pages, so this reinforces
@@ -40,16 +81,15 @@ const homeFaqs = [
   },
 ];
 
-const ReviewFallback = () => (
-  <section className="py-24 bg-green-100/40">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className="rounded-3xl bg-white/60 animate-pulse h-64" />
-        ))}
-      </div>
-    </div>
-  </section>
+// Only ever seen on client-side navigation back to "/" (e.g. from a guide),
+// never on first load — there, the prerendered HTML stays visible until each
+// section hydrates.
+const SectionFallback = () => <div className="min-h-[70vh] bg-[#021915]" aria-hidden="true" />;
+
+const Deferred = ({ children }) => (
+  <div className="cv-auto">
+    <Suspense fallback={<SectionFallback />}>{children}</Suspense>
+  </div>
 );
 
 const Home = () => {
@@ -69,10 +109,16 @@ const Home = () => {
 
     if (!targetId) return;
 
-    // Small delay lets the route's sections mount/layout before we measure
-    // their position.
-    const timer = setTimeout(() => {
-      scrollToElement(targetId);
+    // Sections are lazy chunks, so the target may not exist yet when we
+    // arrive here from another page — keep checking briefly instead of a
+    // single fixed delay.
+    let attempts = 0;
+    let timer = setTimeout(function tryScroll() {
+      if (document.getElementById(targetId)) {
+        scrollToElement(targetId);
+      } else if (++attempts < 30) {
+        timer = setTimeout(tryScroll, 100);
+      }
     }, 300);
 
     return () => clearTimeout(timer);
@@ -81,19 +127,19 @@ const Home = () => {
   return (
     <>
       <Hero />
-      <About />
-      <Services />
-      <Packages />
-      <Location />
-      <Suspense fallback={<ReviewFallback />}>
-        <ReviewCarousel />
-      </Suspense>
-      <GuideLinks
-        heading="Plan Your Dandeli"
-        highlight="Trip"
-        slugs={["best-time-to-visit-dandeli", "things-to-do-in-dandeli", "dandeli-2-day-itinerary-and-trip-cost"]}
-      />
-      <section className="bg-[#021915] border-t border-white/10">
+      <Deferred><About /></Deferred>
+      <Deferred><Services /></Deferred>
+      <Deferred><Packages /></Deferred>
+      <Deferred><Location /></Deferred>
+      <Deferred><ReviewCarousel /></Deferred>
+      <div className="cv-auto">
+        <GuideLinks
+          heading="Plan Your Dandeli"
+          highlight="Trip"
+          slugs={["best-time-to-visit-dandeli", "things-to-do-in-dandeli", "dandeli-2-day-itinerary-and-trip-cost"]}
+        />
+      </div>
+      <section className="cv-auto bg-[#021915] border-t border-white/10">
         <FaqSection faqs={homeFaqs} />
       </section>
     </>

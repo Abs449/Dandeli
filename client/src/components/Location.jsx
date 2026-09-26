@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useNearViewport } from "../lib/useNearViewport";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { MapPinned, Phone, Clock, Navigation, Mail } from "lucide-react";
 import { CONTACT } from "../lib/contact";
@@ -41,6 +42,7 @@ const items = [
 
 const Location = () => {
   const sectionRef = useRef(null);
+  const bgNear = useNearViewport(sectionRef);
 
   // Lightweight scroll transform
   const { scrollYProgress } = useScroll({
@@ -61,7 +63,7 @@ const Location = () => {
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${bgLocation})`,
+          backgroundImage: bgNear ? `url(${bgLocation})` : undefined,
           scale: bgScale,
           opacity: bgOpacity,
         }}

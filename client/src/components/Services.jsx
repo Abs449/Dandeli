@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useNearViewport } from "../lib/useNearViewport";
 import { Link } from "react-router-dom";
 import {
   motion,
@@ -72,6 +73,8 @@ const Services = () => {
   const CARD_GAP = isMobile ? CARD_GAP_MOBILE : CARD_GAP_DESKTOP;
 
   const sectionRef = useRef(null);
+
+  const bgNear = useNearViewport(sectionRef);
   const servicesScrollRef = useRef(null);
 
   useEffect(() => {
@@ -287,7 +290,7 @@ const Services = () => {
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${bckgroundimg})`,
+          backgroundImage: bgNear ? `url(${bckgroundimg})` : undefined,
           scale: bgScale,
           opacity: bgOpacity,
         }}

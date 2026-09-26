@@ -23,7 +23,9 @@ const RouteFallback = () => (
   </div>
 );
 
-function AppShell() {
+// Exported so entry-server.jsx prerenders the homepage from this exact tree:
+// main.jsx hydrates it, and hydration needs server and client trees to match.
+export function AppShell() {
   const location = useLocation();
   return (
     <div className="flex flex-col min-h-screen bg-background text-gray-900 font-body overflow-x-hidden">

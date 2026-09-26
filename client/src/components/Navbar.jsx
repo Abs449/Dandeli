@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { smoothScrollTo, scrollToElement } from '../utils/Smoothscroll';
 
@@ -168,17 +167,24 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile full-screen drawer */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: '-100%' }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: '-100%' }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
-            style={{ willChange: 'transform, opacity' }}
-            className="fixed inset-0 z-[90] flex flex-col bg-[#021915] text-white shadow-2xl md:hidden pt-24"
-          >
+      {/* Mobile full-screen drawer — a plain CSS transition rather than
+          framer-motion, so the navbar (on every page, and part of the
+          prerendered homepage shell) doesn't pull the animation library into
+          the startup bundle. Always mounted; `invisible` when closed takes it
+          out of the tab order and accessibility tree. Visibility flips only
+          after the 220ms slide-out finishes, so the exit still animates. */}
+      <div
+        aria-hidden={!isOpen}
+        className={`fixed inset-0 z-[90] flex flex-col bg-[#021915] text-white shadow-2xl md:hidden pt-24 ${
+          isOpen ? 'visible opacity-100 translate-y-0' : 'invisible opacity-0 -translate-y-full'
+        }`}
+        style={{
+          willChange: 'transform, opacity',
+          transition: isOpen
+            ? 'transform 220ms ease-out, opacity 220ms ease-out, visibility 0s'
+            : 'transform 220ms ease-out, opacity 220ms ease-out, visibility 0s linear 220ms',
+        }}
+      >
             <div className="px-6 pt-4 pb-8 space-y-3 flex-1 overflow-y-auto">
               {navLinks.map((link) => (
                 <button
@@ -205,9 +211,7 @@ const Navbar = () => {
                 </button>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
     </>
   );
 };

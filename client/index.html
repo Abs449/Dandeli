@@ -3,25 +3,36 @@
   <head>
     <meta charset="UTF-8" />
 
-    <!-- Google tag (gtag.js) — the ~175KB script itself is deferred until
-         after `load` instead of fetched/parsed immediately: Lighthouse
-         measured it competing with the page's own critical rendering work
-         on the main thread. `gtag('js'/'config', ...)` calls made before the
-         real script arrives are queued in dataLayer and replayed once it
-         loads, so no events are lost — pageviews just get tracked once the
-         page is idle rather than while it's still trying to paint. -->
+    <!-- Google tag (gtag.js) — the ~175KB script is loaded on the visitor's
+         first interaction (tap, scroll, key) or 6s after the page finishes
+         loading, whichever comes first. Loaded any earlier, its parse/execute
+         lands as the two biggest long tasks on a mobile CPU while the page is
+         still becoming interactive. Nothing is lost by waiting: the
+         gtag('js'/'config') calls below — and any trackEvent() fired before
+         the script arrives (e.g. a WhatsApp tap) — are queued in dataLayer
+         and sent once it loads. The only visitors not counted are ones who
+         leave within ~6s without touching or scrolling the page. -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-F2ZKBBKPDN');
 
-      window.addEventListener('load', function () {
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-F2ZKBBKPDN';
-        document.head.appendChild(s);
-      });
+      (function () {
+        var loaded = false;
+        var events = ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel'];
+        function loadGA() {
+          if (loaded) return;
+          loaded = true;
+          events.forEach(function (e) { window.removeEventListener(e, loadGA); });
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-F2ZKBBKPDN';
+          document.head.appendChild(s);
+        }
+        events.forEach(function (e) { window.addEventListener(e, loadGA, { passive: true }); });
+        window.addEventListener('load', function () { setTimeout(loadGA, 6000); });
+      })();
     </script>
 
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
@@ -141,45 +152,6 @@
         "publisher": { "@id": "https://dandelikaliriverrafting.com/#business" }
       }
     </script>
-
-    <!-- Resource hints for low latency -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Fresca (all headings/display text) + Roboto (body text) are the
-         only two families this site actually renders — every other weight
-         axis Roboto ships (italics) is unused, so it's dropped here too.
-         `display=optional` (not `swap`) is deliberate: the previous `swap`
-         setup was the single largest cause of layout shift on this page —
-         Lighthouse measured ~0.6 CLS from the footer's text reflowing when
-         these fonts finished loading and replaced the fallback font.
-         `optional` tells the browser to use the web font only if it's
-         already cached or arrives within ~100ms, and otherwise keep the
-         fallback for the rest of this page view — trading "some first-time
-         visitors briefly see the fallback font" for "this layout shift
-         never happens." The stylesheet load itself is also non-blocking
-         (the standard preload-then-swap pattern below) — safe to do *because*
-         of `optional` above: whether this finishes before or after first
-         paint no longer affects CLS either way, so there's no reason to make
-         the page wait for it. -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Fresca&family=Roboto:wght@100..900&display=optional"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fresca&family=Roboto:wght@100..900&display=optional"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Fresca&family=Roboto:wght@100..900&display=optional"
-      />
-    </noscript>
   </head>
   <body>
     <div id="root"></div>

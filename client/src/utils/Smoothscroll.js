@@ -56,6 +56,12 @@ export const scrollToElement = (targetId, navbarHeight = 80, duration = 1200) =>
   const target = document.getElementById(targetId);
   if (!target) return;
 
+  // Render every content-visibility:auto section for real before measuring
+  // (see .cv-auto in index.css) — otherwise sections between here and the
+  // target still have placeholder heights and the scroll would land short
+  // or long. One-time cost; it stays on for the rest of the visit.
+  document.documentElement.classList.add("cv-all");
+
   const targetTop =
     target.getBoundingClientRect().top + window.scrollY - navbarHeight;
 

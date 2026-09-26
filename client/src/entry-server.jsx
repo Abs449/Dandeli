@@ -1,4 +1,5 @@
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
+import { prerenderToNodeStream } from "react-dom/static";
 import { StaticRouter } from "react-router";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -12,6 +13,7 @@ import { seedGuides } from "./data/seedGuides";
 import { shouldShowFooter } from "./lib/layout";
 import { guidePath } from "./lib/guides";
 import { LANDING_PAGES } from "./lib/landingPagesMeta";
+import { AppShell } from "./App";
 
 // Re-exported so scripts/prerender.js can read the catalog data through
 // this already-Vite-bundled SSR entry, instead of importing seedData.js
@@ -21,14 +23,10 @@ import { LANDING_PAGES } from "./lib/landingPagesMeta";
 export { seedServices, seedPackages } from "./data/seedData";
 export { seedGuides } from "./data/seedGuides";
 
-// Only the standalone SEO landing pages and travel guides are prerendered
-// here — they were written without scroll-linked motion or DOM-only
-// libraries specifically so they're safe to render on the server. Home ("/")
-// stays pure client-rendered: its Hero/Services/Packages sections read
-// window/DOM state directly in their render paths (viewport width, drag
-// carousels, Swiper) and were never built with SSR in mind, so prerendering
-// them would risk breaking carefully-tuned, already-working interactions for
-// comparatively little SEO benefit — Google already indexes CSR content.
+// The standalone SEO landing pages and travel guides are rendered to plain
+// static markup (render() below) and client-rendered over on load. The
+// homepage is handled separately by renderHome(), because it's hydrated
+// rather than re-rendered — see the notes there.
 export const prerenderPages = [
   ...Object.values(LANDING_PAGES),
   ...seedGuides.map((guide) => ({
@@ -67,4 +65,36 @@ export function render(url) {
       </div>
     </StaticRouter>,
   );
+}
+
+// The homepage is rendered in two passes:
+//  1. React's static prerender API, only to resolve every React.lazy()
+//     section. Its own output is discarded: React 19.2 "outlines" Suspense
+//     boundaries there (fallbacks inline, real content in hidden segments
+//     moved into place by inline scripts), which is wrong for crawlers
+//     without JS and for hydration.
+//  2. renderToString on the same tree. Nothing suspends anymore because
+//     every lazy module is already resolved, so it emits complete, inline
+//     HTML — with the plain Suspense boundary markers main.jsx's
+//     hydrateRoot needs to hydrate each section in place instead of
+//     discarding and re-rendering it.
+// It renders the exact same AppShell tree the client hydrates.
+const homeTree = () => (
+  <StaticRouter location="/">
+    <AppShell />
+  </StaticRouter>
+);
+
+export async function renderHome() {
+  const { prelude } = await prerenderToNodeStream(homeTree());
+  // eslint-disable-next-line no-unused-vars
+  for await (const _chunk of prelude) {
+    // drain — only resolving the lazy modules matters here
+  }
+
+  const html = renderToString(homeTree());
+  if (html.includes("<!--$?-->") || html.includes("<!--$!-->")) {
+    throw new Error("renderHome: a Suspense boundary still suspended — homepage HTML would be incomplete");
+  }
+  return html;
 }

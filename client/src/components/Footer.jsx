@@ -1,18 +1,23 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaInstagram, FaFacebookF, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { CONTACT } from '../lib/contact';
 import contactBg from '../assets/Backgroundimg/Contactus-1920.webp';
+import { useNearViewport } from '../lib/useNearViewport';
 
 const Footer = () => {
+  const footerRef = useRef(null);
+  const bgNear = useNearViewport(footerRef);
   return (
     <footer
+    ref={footerRef}
     id='contact'
-    className="relative overflow-hidden bg-[#021915] text-white pt-16 pb-24 md:pb-12 border-t border-white/10">
+    className="cv-auto relative overflow-hidden bg-[#021915] text-white pt-16 pb-24 md:pb-12 border-t border-white/10">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center opacity-45"
-        style={{ backgroundImage: `url(${contactBg})` }}
+        style={bgNear ? { backgroundImage: `url(${contactBg})` } : undefined}
       />
       <div
         aria-hidden="true"

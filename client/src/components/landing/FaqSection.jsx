@@ -1,9 +1,13 @@
+import { useRef } from "react";
 import faqBg from "../../assets/Backgroundimg/faq-1920.webp";
+import { useNearViewport } from "../../lib/useNearViewport";
 
 // Native <details>/<summary> accordion — content stays in the DOM even when
 // collapsed (unlike a JS-toggled show/hide), so it's fully crawlable and
 // needs no client-side state, which keeps this safe to prerender.
 const FaqSection = ({ faqs }) => {
+  const sectionRef = useRef(null);
+  const bgNear = useNearViewport(sectionRef);
   const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -18,11 +22,11 @@ const FaqSection = ({ faqs }) => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#021915]">
+    <section ref={sectionRef} className="relative overflow-hidden bg-[#021915]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center opacity-40"
-        style={{ backgroundImage: `url(${faqBg})` }}
+        style={bgNear ? { backgroundImage: `url(${faqBg})` } : undefined}
       />
       <div
         aria-hidden="true"

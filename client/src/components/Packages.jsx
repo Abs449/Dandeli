@@ -1,4 +1,5 @@
 import { useRef , useState , useEffect} from "react";
+import { useNearViewport } from "../lib/useNearViewport";
 import { useNavigate, Link } from "react-router-dom";
 import { AnimatePresence, motion, useScroll, useTransform ,useMotionValue,
 animate,} from "framer-motion";
@@ -104,6 +105,7 @@ const Packages = () => {
   const { data: packages, loading } = usePackages();
   const navigate = useNavigate();
   const sectionRef = useRef(null);
+  const bgNear = useNearViewport(sectionRef);
   const mobileTrackRef = useRef(null);
 const mobileViewportRef = useRef(null);
 
@@ -116,6 +118,17 @@ const [mobileDragConstraints, setMobileDragConstraints] = useState({
 });
 
 const [mobilePackageIndex, setMobilePackageIndex] = useState(0);
+// Swipe-to-drag only on mobile widths. Kept in state (set after mount)
+// rather than read from window during render, because the homepage is
+// prerendered and hydrated — the server has no window, and the first client
+// render must match what the server produced.
+const [dragEnabled, setDragEnabled] = useState(false);
+useEffect(() => {
+  const update = () => setDragEnabled(window.innerWidth < 768);
+  update();
+  window.addEventListener("resize", update);
+  return () => window.removeEventListener("resize", update);
+}, []);
   const [selectedPackage, setSelectedPackage] = useState(null);
 
 useEffect(() => {
@@ -189,7 +202,7 @@ useEffect(() => {
       <motion.div
         className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `url(${bgAdventure})`,
+          backgroundImage: bgNear ? `url(${bgAdventure})` : undefined,
           scale: bgScale,
           opacity: bgOpacity,
         }}
@@ -250,7 +263,7 @@ useEffect(() => {
     <motion.div
   ref={mobileTrackRef}
   id="packages-carousel"
-  drag={window.innerWidth < 768 ? "x" : false}
+  drag={dragEnabled ? "x" : false}
   dragConstraints={mobileDragConstraints}
 dragElastic={0}
   dragMomentum={false}
