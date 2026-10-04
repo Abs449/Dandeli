@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { CONTACT } from "../lib/contact";
 
 import {
   CheckCircle,
@@ -1338,7 +1339,10 @@ const Booking = () => {
             <div className="flex flex-col sm:flex-row gap-4">
 
               <a
-                href="tel:+917075805883"
+                href={`tel:${CONTACT.phoneRaw}`}
+                // onClick={()=>{
+                //   console.log("CAlling ",CONTACT.phoneRaw)
+                // }}
                 className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 bg-slate-950 border border-white/15 hover:bg-slate-900 text-gray-200 py-4 px-8 rounded-full font-bold transition-all duration-300 shadow-sm cursor-pointer text-sm font-heading"
               >
                 <Phone
@@ -1347,6 +1351,7 @@ const Booking = () => {
                 />
 
                 Call instead
+                
               </a>
 
               <button
