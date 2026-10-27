@@ -59,6 +59,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/is-dandeli-rafting-open-today/" className="text-gray-300 hover:text-amber-400 transition-colors text-sm font-body">
+                  Is Rafting Open Today?
+                </Link>
+              </li>
+              <li>
                 <Link to="/dandeli-packages/" className="text-gray-300 hover:text-amber-400 transition-colors text-sm font-body">
                   Adventure Packages
                 </Link>

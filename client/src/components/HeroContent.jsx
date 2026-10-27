@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Waves } from "lucide-react";
 import raftCutout from "../assets/Backgroundimg/raft-cutout.webp";
 import personCutout from "../assets/Backgroundimg/person-cutout.webp";
 import { getDamStatus } from "../lib/damStatus";
+import { RAFTING_STATUS_PATH } from "../lib/landingPagesMeta";
 
 // Everything in the hero that depends on the visitor's screen size (the
 // RAP/DS composite, paddings, the live river-status pill) — split out of
@@ -55,7 +56,6 @@ const HeroContent = ({ shouldLoadBackground }) => {
   const [bp, setBp] = useState(() =>
     typeof window !== "undefined" ? getBreakpointKey(window.innerWidth) : "lg",
   );
-  const [showStatusDetails, setShowStatusDetails] = useState(false);
   const [damStatus, setDamStatus] = useState({
     loading: true,
     status: "loading",
@@ -88,17 +88,6 @@ const HeroContent = ({ shouldLoadBackground }) => {
       if (frame !== null) cancelAnimationFrame(frame);
     };
   }, []);
-
-  useEffect(() => {
-    if (showStatusDetails) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [showStatusDetails]);
 
   useEffect(() => {
     let active = true;
@@ -223,14 +212,17 @@ const HeroContent = ({ shouldLoadBackground }) => {
             <span className="text-center leading-tight whitespace-normal sm:whitespace-nowrap">{locationLabel}</span>
           </motion.div>
 
-          <motion.button
-            type="button"
+          <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.14 }}
-            onClick={() => setShowStatusDetails(true)}
-            className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] cursor-pointer hover:bg-white/15 transition-colors"
+            className="max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 shrink-0"
             style={{ marginBottom: isDesktop ? "12px" : "10px" }}
+          >
+          <Link
+            to={RAFTING_STATUS_PATH}
+            aria-label={`Live rafting status: ${statusLabel}. See details`}
+            className="inline-flex w-fit max-w-[calc(100vw-2rem)] sm:max-w-none min-w-0 items-center justify-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.03em] sm:tracking-[0.16em] shadow-[0_4px_20px_rgba(0,0,0,0.2)] cursor-pointer hover:bg-white/15 transition-colors"
           >
             {isDesktop ? (
               <>
@@ -264,7 +256,8 @@ const HeroContent = ({ shouldLoadBackground }) => {
                 )}
               </div>
             )}
-          </motion.button>
+          </Link>
+          </motion.div>
         </div>
 
         {/* ── ROW 2: composite stage ──────────────────────────────────
@@ -536,75 +529,6 @@ const HeroContent = ({ shouldLoadBackground }) => {
         </div>
       </div>
 
-      <AnimatePresence>
-        {showStatusDetails && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4"
-            onClick={() => setShowStatusDetails(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.25 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl bg-[#021915] border border-[#f5c97a]/50 shadow-2xl p-6 sm:p-8 text-white"
-            >
-              <button
-                type="button"
-                onClick={() => setShowStatusDetails(false)}
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xl"
-                aria-label="Close"
-              >
-                ×
-              </button>
-
-              <div className="pr-10">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#f5c97a] font-bold mb-2">
-                  Live River Status
-                </p>
-                <h2 className="font-heading text-3xl sm:text-4xl font-black uppercase">{statusLabel}</h2>
-                <p className="mt-4 text-gray-300 leading-relaxed">{damStatus.message}</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-                <div className="rounded-2xl bg-white/5 border border-white/10 p-5">
-                  <p className="text-xs uppercase tracking-wider text-gray-400">River Flow</p>
-                  <p className="mt-2 text-xl font-bold">
-                    {isOpen ? "Strong Flow" : isClosed ? "Calm Flow" : "Unavailable"}
-                  </p>
-                </div>
-                <div className="rounded-2xl bg-white/5 border border-white/10 p-5">
-                  <p className="text-xs uppercase tracking-wider text-gray-400">Rafting Status</p>
-                  <p className="mt-2 text-xl font-bold">
-                    {isOpen ? "Active" : isClosed ? "Suspended" : "Unavailable"}
-                  </p>
-                </div>
-              </div>
-
-              {hasPowerData && (
-                <div className="mt-4 rounded-2xl bg-white/5 border border-white/10 p-5">
-                  <p className="text-xs uppercase tracking-wider text-[#f5c97a] font-bold">Power Data</p>
-                  <div className="mt-3 flex flex-wrap gap-4 font-mono text-sm">
-                    {damStatus.supaValue !== null && <span>SUPA {damStatus.supaValue} MW</span>}
-                    {damStatus.unit1 !== null && <span>U1 {damStatus.unit1} MW</span>}
-                    {damStatus.unit2 !== null && <span>U2 {damStatus.unit2} MW</span>}
-                  </div>
-                </div>
-              )}
-
-              {damStatus.fetchedAt && (
-                <p className="mt-5 text-xs text-gray-500">
-                  Reading as of: {new Date(damStatus.fetchedAt).toLocaleString()}
-                </p>
-              )}
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 };

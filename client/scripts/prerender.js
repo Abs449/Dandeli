@@ -313,7 +313,7 @@ const sitemapEntries = [
   ...prerenderPages.map(({ path, article }) => ({
     path,
     lastmod: article?.modifiedTime || buildDate,
-    changefreq: path === "/dandeli-guides/" ? "weekly" : "monthly",
+    changefreq: path === "/is-dandeli-rafting-open-today/" ? "daily" : path === "/dandeli-guides/" ? "weekly" : "monthly",
     priority: priorityFor(path),
   })),
 ];

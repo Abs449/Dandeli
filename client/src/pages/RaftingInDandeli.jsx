@@ -7,7 +7,8 @@ import LandingCta from "../components/landing/LandingCta";
 import GuideLinks from "../components/guides/GuideLinks";
 import { seedServices } from "../data/seedData";
 import { useSEO } from "../lib/seo";
-import { LANDING_PAGES } from "../lib/landingPagesMeta";
+import { LANDING_PAGES, RAFTING_STATUS_PATH } from "../lib/landingPagesMeta";
+import { Link } from "react-router-dom";
 import { CONTACT } from "../lib/contact";
 import bgImage from "../assets/Backgroundimg/gallery-raft1.webp";
 
@@ -49,7 +50,7 @@ const faqs = [
   },
   {
     q: "Is rafting always available, or does it depend on the river?",
-    a: "Rafting depends on daily water release from the Kali (Supa) dam. We track live river status and will tell you upfront if conditions mean rafting is paused for the day — check the live status banner on our homepage or call ahead before you travel.",
+    a: "Rafting depends on daily water release from the Kali (Supa) dam. We track live river status and will tell you upfront if conditions mean rafting is paused for the day — check our live “Is rafting open today?” page or call ahead before you travel.",
   },
   {
     q: "How do I book a rafting slot?",
@@ -90,6 +91,11 @@ const RaftingInDandeli = () => {
         <h2 className="text-2xl sm:text-3xl font-display font-black uppercase text-white mb-8 tracking-wider text-center">
           Choose Your <span className="text-amber-400">Rafting Route</span>
         </h2>
+        <p className="-mt-4 mb-8 text-center text-sm font-body font-semibold">
+          <Link to={RAFTING_STATUS_PATH} className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4">
+            Is rafting open today? Check the live river status →
+          </Link>
+        </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {raftingRoutes.map((route) => (

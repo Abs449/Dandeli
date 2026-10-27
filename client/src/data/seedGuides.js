@@ -56,7 +56,7 @@ export const seedGuides = [
     category: "Trip Planning",
     readTime: "8 min read",
     datePublished: "2026-09-20",
-    dateModified: "2026-09-20",
+    dateModified: "2026-10-27",
     image: imgAboutBg,
     imageAlt: "Mist over the Kali River in Dandeli with rafts resting on the bank",
     sections: [
@@ -103,6 +103,7 @@ export const seedGuides = [
         paragraphs: [
           "Rafting on the Kali depends on water released from the upstream dam, and that can change from day to day. Even in peak season, a day can be paused if conditions are not right, and on some days the release is timed for particular hours, which shapes the slots we can offer.",
           "We track live river status and tell you upfront if rafting is off, so leave a little flexibility in your itinerary — a two-day trip gives you a natural backup slot. You can see route options and prices on our [rafting in Dandeli](/rafting-in-dandeli/) page, and confirm the day's conditions with us before you travel.",
+          "On the day itself, check our [live rafting status](/is-dandeli-rafting-open-today/) page, which reads the Supa dam's power output every 5 minutes.",
         ],
       },
       {
@@ -146,6 +147,18 @@ export const seedGuides = [
     ],
     faqs: [
       {
+        q: "Which is the best month to visit Dandeli?",
+        a: "November to January. It is the heart of the October\u2013February peak season, with pleasant days, cool evenings and healthy river flow for rafting, subject to daily dam releases. Book early for weekends and holidays.",
+      },
+      {
+        q: "Is October a good time to visit Dandeli?",
+        a: "Yes. October opens the peak season: the forests are still green from the monsoon and rafting usually resumes, subject to daily water release from the Supa dam. Check the live rafting status before you travel.",
+      },
+      {
+        q: "How many days are enough for Dandeli?",
+        a: "Two days is enough for most travellers \u2014 enough for rafting, a few other activities and some sightseeing. See our 2-day Dandeli itinerary for a ready-made plan.",
+      },
+      {
         q: "Can you go rafting in Dandeli during the monsoon?",
         a: "Rafting is usually paused during the heaviest monsoon weeks because the river runs too high and fast to be safe. Other activities and stays may continue, but always confirm current conditions with us before you travel.",
       },
@@ -164,7 +177,7 @@ export const seedGuides = [
   {
     id: 2,
     slug: "how-to-reach-dandeli",
-    seoTitle: "How to Reach Dandeli from Bangalore, Goa, Pune & Hubli",
+    seoTitle: "How to Reach Dandeli: Nearest Railway Station, Road & Air",
     metaDescription:
       "Route-by-route guide to reaching Dandeli and Ganeshgudi — by road from Bengaluru, Goa, Pune and Hubballi, by train via Alnavar, and by air. Distances and tips.",
     title: "How to Reach Dandeli: By Road, Train & Air",
@@ -175,7 +188,7 @@ export const seedGuides = [
     category: "Getting There",
     readTime: "8 min read",
     datePublished: "2026-09-20",
-    dateModified: "2026-09-20",
+    dateModified: "2026-10-27",
     image: imgDrone,
     imageAlt: "Aerial view of rafts on the Kali River surrounded by forest in Dandeli",
     sections: [
@@ -211,7 +224,7 @@ export const seedGuides = [
         ],
       },
       {
-        heading: "By train",
+        heading: "Nearest railway station to Dandeli",
         paragraphs: [
           "Alnavar Junction, roughly 30 km from Dandeli, is the closest railway station. Hubballi Junction, about 75 km away, has far more long-distance connections from Bengaluru, Mumbai and Pune, so most travellers choose Hubballi and then continue by road.",
           "From either station you can take a taxi or local bus to Dandeli. If you would like pickup arranged, [message us](/booking) your train details and we will help you plan the transfer around your slot timing.",
@@ -876,7 +889,7 @@ export const seedGuides = [
   {
     id: 8,
     slug: "places-to-visit-near-dandeli",
-    seoTitle: "Places to Visit Near Dandeli: Caves, Falls & Viewpoints",
+    seoTitle: "Waterfalls & Places to Visit Near Dandeli: Caves, Viewpoints",
     metaDescription:
       "Best sightseeing near Dandeli — Syntheri Rocks, Kavala Caves, Ulavi, Supa Dam backwaters, Sathodi and Magod Falls — with distances and trip ideas.",
     title: "Places to Visit Near Dandeli: Caves, Waterfalls & Viewpoints",
@@ -887,7 +900,7 @@ export const seedGuides = [
     category: "Sightseeing",
     readTime: "9 min read",
     datePublished: "2026-09-20",
-    dateModified: "2026-09-20",
+    dateModified: "2026-10-27",
     image: imgReviewsBg,
     imageAlt: "Aerial view of the Kali River flowing between forested islands near Dandeli",
     sections: [
@@ -930,7 +943,7 @@ export const seedGuides = [
         ],
       },
       {
-        heading: "Sathodi and Magod Falls",
+        heading: "Waterfalls near Dandeli: Sathodi and Magod Falls",
         paragraphs: [
           "Further afield in the Yellapur area, Sathodi Falls and Magod Falls are two of the region's best-known waterfalls, roughly 60 to 90 km from Dandeli. They are at their most spectacular right after the monsoon and can be much thinner in summer.",
           "Treat them as a full-day outing, check road and access conditions first, and take care near the water — rocks are slippery and currents can be strong in the wet season.",
@@ -970,6 +983,10 @@ export const seedGuides = [
     ],
     faqs: [
       {
+        q: "Which waterfalls are near Dandeli?",
+        a: "Sathodi Falls and Magod Falls, in the Yellapur area roughly 60 to 90 km from Dandeli, are the best-known waterfalls nearby. Plan them as a full-day outing; they are at their best right after the monsoon.",
+      },
+      {
         q: "Which are the must-see places near Dandeli?",
         a: "Syntheri Rocks, Kavala Caves and the Supa Dam backwaters are the most popular nearby stops, with Ulavi and the Sathodi and Magod waterfalls as longer excursions.",
       },
@@ -999,7 +1016,7 @@ export const seedGuides = [
     category: "River Guide",
     readTime: "8 min read",
     datePublished: "2026-09-24",
-    dateModified: "2026-09-24",
+    dateModified: "2026-10-27",
     image: imgScenery,
     imageAlt: "The Dandeli River flowing through forested rocks near Ganeshgudi, Dandeli",
     sections: [
@@ -1022,6 +1039,7 @@ export const seedGuides = [
         paragraphs: [
           "Upstream of Dandeli sits the Supa Dam, and the water released from it each day is what actually decides how the river behaves — how strong the rapids run, and whether rafting can go ahead safely at all.",
           "That's why conditions can differ from one day to the next, even within the same week. We check the release schedule and live river status before every rafting day, which is also why a two-day trip is a safer bet than a single tightly-booked day — see our [best time to visit](/dandeli-guides/best-time-to-visit-dandeli/) guide for how this plays out across the year.",
+          "You can see whether the dam is releasing water right now on our [live rafting status](/is-dandeli-rafting-open-today/) page.",
         ],
       },
       {
@@ -1069,6 +1087,10 @@ export const seedGuides = [
       },
     ],
     faqs: [
+      {
+        q: "Which river flows in Dandeli?",
+        a: "The Kali River. Many visitors call it the Dandeli River, but it is the same river \u2014 the one used for white-water rafting at Ganeshgudi.",
+      },
       {
         q: "Is the Dandeli River the same as the Kali River?",
         a: "Yes. \"Dandeli River\" is the common name visitors use for the river that runs through Dandeli; its official name is the Kali River (Kalinadi). Both names refer to exactly the same river.",

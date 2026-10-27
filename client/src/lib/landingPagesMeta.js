@@ -8,6 +8,8 @@
 // resolves without needing host-specific rewrite config. React Router
 // matches routes regardless of a trailing slash, so client-side nav is
 // unaffected either way.
+export const RAFTING_STATUS_PATH = "/is-dandeli-rafting-open-today/";
+
 export const LANDING_PAGES = {
   rafting: {
     path: "/rafting-in-dandeli/",
@@ -20,6 +22,12 @@ export const LANDING_PAGES = {
     title: "Kali River Packages | Day Trips & Camping Stays",
     description:
       "Compare all-inclusive Kali River Rafting packages — day trips, riverside camping stays, and premium rooms with rafting, kayaking, meals, and resort activities. Transparent pricing, no hidden costs.",
+  },
+  status: {
+    path: RAFTING_STATUS_PATH,
+    title: "Is Dandeli River Rafting Open Today? Live Status",
+    description:
+      "Live Kali River rafting status for Dandeli (Ganeshgudi), from the Supa dam's power output, refreshed every 5 minutes. Check if rafting is running today, the season, and what to do if it's suspended.",
   },
   guides: {
     path: "/dandeli-guides/",

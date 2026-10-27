@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import FloatingButtons from "./components/FloatingButtons";
 import RaftingInDandeli from "./pages/RaftingInDandeli";
 import DandeliPackages from "./pages/DandeliPackages";
+import RaftingStatus from "./pages/RaftingStatus";
 import Guides from "./pages/Guides";
 import GuideArticle from "./pages/GuideArticle";
 import { seedGuides } from "./data/seedGuides";
@@ -56,6 +57,7 @@ export function render(url) {
           <Routes>
             <Route path="/rafting-in-dandeli" element={<RaftingInDandeli />} />
             <Route path="/dandeli-packages" element={<DandeliPackages />} />
+            <Route path="/is-dandeli-rafting-open-today" element={<RaftingStatus />} />
             <Route path="/dandeli-guides" element={<Guides />} />
             <Route path="/dandeli-guides/:slug" element={<GuideArticle />} />
           </Routes>

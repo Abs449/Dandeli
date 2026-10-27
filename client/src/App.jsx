@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 const Booking = lazy(() => import("./pages/Booking"));
 const RaftingInDandeli = lazy(() => import("./pages/RaftingInDandeli"));
 const DandeliPackages = lazy(() => import("./pages/DandeliPackages"));
+const RaftingStatus = lazy(() => import("./pages/RaftingStatus"));
 const Guides = lazy(() => import("./pages/Guides"));
 const GuideArticle = lazy(() => import("./pages/GuideArticle"));
 
@@ -37,6 +38,7 @@ export function AppShell() {
             <Route path="/booking" element={<Booking />} />
             <Route path="/rafting-in-dandeli" element={<RaftingInDandeli />} />
             <Route path="/dandeli-packages" element={<DandeliPackages />} />
+            <Route path="/is-dandeli-rafting-open-today" element={<RaftingStatus />} />
             <Route path="/dandeli-guides" element={<Guides />} />
             <Route path="/dandeli-guides/:slug" element={<GuideArticle />} />
           </Routes>
