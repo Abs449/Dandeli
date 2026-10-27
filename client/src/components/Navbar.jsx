@@ -109,9 +109,9 @@ const Navbar = () => {
             {/* Logo */}
             <Link
               to="/"
-              className="text-xl sm:text-2xl font-heading font-bold tracking-tight flex items-center gap-1.5 group whitespace-nowrap"
+              className="text-base min-[400px]:text-lg sm:text-2xl font-heading font-bold tracking-tight flex items-center gap-1.5 group whitespace-nowrap"
             >
-              <span className="text-white">Kali River</span>
+              <span className="text-white">Dandeli Kali River</span>
               <span
                 className="font-extrabold transition-colors duration-150 group-hover:opacity-80"
                 style={{ color: '#4783b3' }}

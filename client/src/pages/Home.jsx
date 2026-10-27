@@ -96,9 +96,9 @@ const Home = () => {
   const location = useLocation();
 
   useSEO({
-    title: "Dandeli Rafting on the Dandeli River | Kali River Rafting",
+    title: "Dandeli River Rafting from ₹700 – Book Online | Kali River, Ganeshgudi",
     description:
-      "Dandeli rafting on the Dandeli River (Kali River) — white-water rafting, kayaking, zipline, camping and jungle adventures. 12+ years' experience, 10,000+ happy travelers.",
+      "River rafting in Dandeli on the Kali River at Ganeshgudi — 1km, 5km & 11km routes from ₹700. Certified guides, safety gear included. Book online or WhatsApp.",
     path: "/",
   });
 

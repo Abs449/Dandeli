@@ -27,7 +27,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="space-y-4">
             <h3 className="text-2xl font-heading font-black text-white tracking-tight">
-              Dandeli<span className="text-cyan-400 font-extrabold">         Adventure</span>
+              Dandeli Kali River <span className="text-cyan-400 font-extrabold">Rafting</span>
             </h3>
             <p className="text-gray-300 text-sm md:text-base leading-relaxed font-body">
               Experience nature with our adventure tourism packages. We provide

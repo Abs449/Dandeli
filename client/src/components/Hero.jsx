@@ -115,7 +115,7 @@ const Hero = () => {
           below (RAP/DS, RAPIDS, etc.) are decorative and marked
           aria-hidden so screen readers and crawlers read this instead. */}
       <h1 className="sr-only">
-        Dandeli Rafting on the Dandeli River — White-Water Rafting, Camping &amp; Jungle Adventures on the Kali River, Dandeli
+        Dandeli River Rafting — River Rafting in Dandeli on the Kali River at Ganeshgudi, plus Kayaking, Camping &amp; Jungle Adventures
       </h1>
 
       {mounted && (

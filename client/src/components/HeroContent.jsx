@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Waves } from "lucide-react";
 import raftCutout from "../assets/Backgroundimg/raft-cutout.webp";
 import personCutout from "../assets/Backgroundimg/person-cutout.webp";
+import { getDamStatus } from "../lib/damStatus";
 
 // Everything in the hero that depends on the visitor's screen size (the
 // RAP/DS composite, paddings, the live river-status pill) — split out of
@@ -99,15 +100,11 @@ const HeroContent = ({ shouldLoadBackground }) => {
     };
   }, [showStatusDetails]);
 
-  const loadDamStatus = async () => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
-    try {
-      const apiUrl = import.meta.env.VITE_API_URL || "";
-      const response = await fetch(`${apiUrl}/api/dam-status`, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      const data = await response.json();
-      if (response.ok && data.success) {
+  useEffect(() => {
+    let active = true;
+    getDamStatus()
+      .then((data) => {
+        if (!active) return;
         setDamStatus({
           loading: false,
           status: data.status,
@@ -115,36 +112,26 @@ const HeroContent = ({ shouldLoadBackground }) => {
           supaValue: data.supaValue,
           unit1: data.unit1,
           unit2: data.unit2,
-          fetchedAt: data.fetchedAt,
+          // Time of the SLDC reading itself; older backends only send fetchedAt.
+          fetchedAt: data.readingAt || data.fetchedAt,
         });
-      } else {
+      })
+      .catch((error) => {
+        if (!active) return;
+        console.error("Unable to load dam status", error);
         setDamStatus({
           loading: false,
           status: "error",
-          message: data.message || "Unable to fetch live status.",
+          message: "Live status temporarily unavailable.",
           supaValue: null,
           unit1: null,
           unit2: null,
           fetchedAt: null,
         });
-      }
-    } catch (error) {
-      clearTimeout(timeoutId);
-      console.error("Unable to load dam status", error);
-      setDamStatus({
-        loading: false,
-        status: "error",
-        message: "Live status temporarily unavailable.",
-        supaValue: null,
-        unit1: null,
-        unit2: null,
-        fetchedAt: null,
       });
-    }
-  };
-
-  useEffect(() => {
-    loadDamStatus();
+    return () => {
+      active = false;
+    };
   }, []);
 
   const isDesktop = DESKTOP_LAYOUT_KEYS.has(bp);
@@ -611,7 +598,7 @@ const HeroContent = ({ shouldLoadBackground }) => {
 
               {damStatus.fetchedAt && (
                 <p className="mt-5 text-xs text-gray-500">
-                  Last updated: {new Date(damStatus.fetchedAt).toLocaleString()}
+                  Reading as of: {new Date(damStatus.fetchedAt).toLocaleString()}
                 </p>
               )}
             </motion.div>

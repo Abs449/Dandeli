@@ -237,7 +237,7 @@ const SectionTitle = ({ children }) => (
 
 const Booking = () => {
   useSEO({
-    title: "Book Dandeli Rafting & Adventure Trips | Kali River Rafting",
+    title: "Book Dandeli Rafting & Adventure Trips | Dandeli Kali River Rafting",
     description:
       "Reserve white-water rafting, camping, and jungle adventure packages on the Kali River in Dandeli. Fill out the booking form and our team confirms your trip within 24 hours.",
     path: "/booking",
@@ -501,7 +501,7 @@ const Booking = () => {
           </h2>
 
           <p className="text-gray-300 mb-8 leading-relaxed font-body text-sm sm:text-base">
-            Thank you for choosing Kali River Rafting.
+            Thank you for choosing Dandeli Kali River Rafting.
             We've received your inquiry and our team
             will contact you shortly to confirm the
             details.

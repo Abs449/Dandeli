@@ -263,7 +263,7 @@ writeFileSync(
   join(bookingDir, "index.html"),
   inlineCss(withPageMeta(template, {
     path: "/booking",
-    title: "Book Dandeli Rafting & Adventure Trips | Kali River Rafting",
+    title: "Book Dandeli Rafting & Adventure Trips | Dandeli Kali River Rafting",
     description:
       "Reserve white-water rafting, camping, and jungle adventure packages on the Kali River in Dandeli. Fill out the booking form and our team confirms your trip within 24 hours.",
   })),

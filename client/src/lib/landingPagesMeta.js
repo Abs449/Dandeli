@@ -11,9 +11,9 @@
 export const LANDING_PAGES = {
   rafting: {
     path: "/rafting-in-dandeli/",
-    title: "Dandeli Rafting Guide: Dandeli River Prices & Timings",
+    title: "River Rafting in Dandeli: Prices, Timings & Routes (₹700+)",
     description:
-      "Dandeli rafting on the Dandeli River (Kali River) at Ganeshgudi — short, mid, and long white-water routes. Certified guides, safety gear included, prices from ₹700. Check live river status and book online.",
+      "River rafting in Dandeli at Ganeshgudi on the Kali River: short 1km (₹700), mid 5km (₹1,350) and long 11km (₹1,750) routes, timings, age limits and safety. Certified guides. Book online.",
   },
   packages: {
     path: "/dandeli-packages/",

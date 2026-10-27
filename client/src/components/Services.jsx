@@ -20,6 +20,7 @@ import { useServices } from "../lib/data";
 import bckgroundimg from "../assets/Backgroundimg/aboutus-bg.webp";
 import { CONTACT } from "../lib/contact";
 import { getDifficultyColor } from "../lib/difficultyColor";
+import { getDamStatus } from "../lib/damStatus";
 
 // "all" is a pseudo-category — not a real value on any service — that shows
 // every activity at once. It's first in the list and selected by default,
@@ -100,28 +101,15 @@ const Services = () => {
 
   useEffect(() => {
     let active = true;
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
-    const apiUrl = import.meta.env.VITE_API_URL || "";
-    fetch(`${apiUrl}/api/dam-status`, { signal: controller.signal })
-      .then((res) => res.json())
+    getDamStatus()
       .then((data) => {
-        clearTimeout(timeoutId);
-        if (active && data.success) {
-          setDamStatus({
-            loading: false,
-            isOpen: data.status === "open",
-          });
-        }
+        if (active) setDamStatus({ loading: false, isOpen: data.status === "open" });
       })
       .catch(() => {
-        clearTimeout(timeoutId);
         if (active) setDamStatus({ loading: false, isOpen: false });
       });
     return () => {
       active = false;
-      clearTimeout(timeoutId);
-      controller.abort();
     };
   }, []);
 
